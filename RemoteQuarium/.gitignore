@@ -1,0 +1,15 @@
+RemoteQuarium/*.iml
+RemoteQuarium/.gradle
+RemoteQuarium/local.properties
+RemoteQuarium/.idea/caches
+RemoteQuarium/.idea/libraries
+RemoteQuarium/.idea/modules.xml
+RemoteQuarium/.idea/workspace.xml
+RemoteQuarium/.idea/navEditor.xml
+RemoteQuarium/.idea/assetWizardSettings.xml
+RemoteQuarium/.DS_Store
+RemoteQuarium/build
+RemoteQuarium/captures
+RemoteQuarium/.externalNativeBuild
+RemoteQuarium/.cxx
+RemoteQuarium/local.properties
