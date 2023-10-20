@@ -1,8 +1,8 @@
 #ifndef AQESPWifiConfig_h
 #define AQESPWifiConfig_h
 #include "Arduino.h"
-#include "ESP8266WiFi.h"
 #include "ESP8266WebServer.h"
+#include "ESP8266WiFi.h"
 #include "MemoryHandler.h"
 
 //////////////////////////////////////////////////////////////////
@@ -12,23 +12,24 @@
 //////////////////////////////////////////////////////////////////
 class AQWiFiConfig {
 private:
-  static bool isConfigDoneFlag;
-  String WIFI_SSID;
-  String WIFI_PASS;
-  static MemoryHandler* memHandler;
-  static ESP8266WebServer* configServer;
-  static void createSiteForWiFiLogin();
-  void loadCredentials();
-  static void saveCredentials();
+    static bool isConfigDoneFlag;
+    String WIFI_SSID;
+    String WIFI_PASS;
+    static MemoryHandler* memHandler;
+    static ESP8266WebServer* configServer;
+    static void createSiteForWiFiLogin();
+    void loadCredentials();
+    static void saveCredentials();
+
 public:
-  AQWiFiConfig();
-  ~AQWiFiConfig(){};
-  bool connectToNetwork();
-  bool isConnected();
-  String getWiFiStatus();
-  void forgetNetwork();
-  void initializeNetwork();
-  ESP8266WebServer* getServer();
+    AQWiFiConfig();
+    ~AQWiFiConfig() {};
+    bool connectToNetwork();
+    bool isConnected();
+    String getWiFiStatus();
+    void forgetNetwork();
+    void initializeNetwork();
+    ESP8266WebServer* getServer();
 };
 
 #endif
