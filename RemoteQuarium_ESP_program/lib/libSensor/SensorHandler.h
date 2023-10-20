@@ -1,6 +1,5 @@
 #ifndef SensorHandler_h
 #define SensorHandler_h
-#include "MemoryHandler.h"
 #include "SensorData.h"
 
 ///////////////////////////////////////////////////////////////
@@ -9,7 +8,6 @@
 
 class SensorHandler {
 private:
-    static MemoryHandler* memHandler;
     std::vector<SensorData> dailyData;
     uint16_t readTempSensor(); // get functions will call the read functions
     uint16_t readLightSensor();
@@ -23,7 +21,7 @@ private:
 
 public:
     SensorHandler();
-    void saveSensorData();
+    void saveSensorDataToDB();
     std::vector<SensorData> getDailyData();
     SensorData getNthSample(const uint16_t& n);
 };

@@ -1,6 +1,7 @@
 #ifndef AQESPWifiConfig_h
 #define AQESPWifiConfig_h
 #include "Arduino.h"
+#include "DebugUtils.h"
 #include "ESP8266WebServer.h"
 #include "ESP8266WiFi.h"
 #include "MemoryHandler.h"
