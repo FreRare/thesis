@@ -1,33 +1,47 @@
-USE DATABASE utazasco_remoteQuarium;
 
-CREATE TABLE IF NOT EXISTS users{
-    email VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY,
+DROP TABLE IF EXISTS haveAquarium;
+DROP TABLE IF EXISTS configs;
+DROP TABLE IF EXISTS sensorSamples;
+
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS aquariums;
+
+
+CREATE TABLE IF NOT EXISTS users(
+    email VARCHAR(255) NOT NULL UNIQUE,
     firstName VARCHAR(255) NOT NULL,
     lastName VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
-};
+    password VARCHAR(255) NOT NULL,
 
-CREATE TABLE IF NOT EXISTS aquariums{
-    id BIGINT NOT NULL UNIQUE PRIMARY KEY AUTO_INCREMENT,
+    PRIMARY KEY (email)
+);
+
+CREATE TABLE IF NOT EXISTS aquariums(
+    id BIGINT NOT NULL UNIQUE AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
     length INT NOT NULL,
     height INT NOT NULL,
-    depth INT NOT NULL
-};
+    depth INT NOT NULL,
 
-CREATE TABLE IF NOT EXISTS haveAquarium{
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS haveAquarium(
     email VARCHAR(255) NOT NULL,
     id BIGINT NOT NULL,
 
+    PRIMARY KEY (email, id),
+
     FOREIGN KEY(email)
-    REFERENCES usres(email)
+    REFERENCES users(email)
     ON DELETE CASCADE ON UPDATE CASCADE,
 
     FOREIGN KEY(id)
     REFERENCES aquariums(id)
     ON DELETE CASCADE ON UPDATE CASCADE
-};
+);
 
-CREATE TABLE IF NOT EXISTS condfigs{
+CREATE TABLE IF NOT EXISTS configs(
     id BIGINT NOT NULL,
     minTemp INT NOT NULL,
     maxTemp INT NOT NULL,
@@ -41,26 +55,29 @@ CREATE TABLE IF NOT EXISTS condfigs{
     airOff INT NOT NULL,
     waterLvlAlert INT NOT NULL,
     prefLight INT NOT NULL,
-    feedingTime ONT NOT NULL,
+    feedingTime INT NOT NULL,
+    foodPortions INT NOT NULL,
     filterClean INT NOT NULL,
     waterChange INT NOT NULL,
-    sampleTime INT NOT NULL,
-    lasModifiedDate DATETIME NOT NULL,
+    samplePeriod INT NOT NULL,
+    lastModifiedDate DATETIME NOT NULL,
 
     FOREIGN KEY (id)
     REFERENCES aquariums(id)
     ON DELETE CASCADE ON UPDATE CASCADE 
-};
+);
 
-CREATE TABLE IF NOT EXISTS sensorSamples{
+CREATE TABLE IF NOT EXISTS sensorSamples(
     id BIGINT NOT NULL,
-    sampleTime DATETIME NOT NULL PRIMARY KEY,
+    sampleTime DATETIME NOT NULL,
     temp INT NOT NULL,
     ph INT NOT NULL,
     waterLvl INT NOT NULL,
-    lightAmount INT NOT NULL
+    lightAmount INT NOT NULL,
+
+    PRIMARY KEY (id, sampleTime),
 
     FOREIGN KEY(id)
     REFERENCES aquariums(id)
     ON DELETE CASCADE ON UPDATE CASCADE
-};
+);
