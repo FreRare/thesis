@@ -2,7 +2,7 @@
     require_once($_SERVER["DOCUMENT_ROOT"] . '/DAO/DAO.php');
 
     $DAO = AQDAO::getInstance();
-    $sql = file_get_contents($_SERVER["DOCUMENT_ROOT"] . '/DAO/Config/remoteQuarium.sql');
+    $sql = file_get_contents($_SERVER["DOCUMENT_ROOT"] . '/DAO/Config/initTables.sql');
     $queries = explode(';', $sql);
     foreach($queries as $query){
             if($query == '') continue;

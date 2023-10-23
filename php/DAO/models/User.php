@@ -6,7 +6,7 @@ class User{
     private $firstName;
     private $lastName;
 
-    public function __construct(string $email, string $password, string $firtName, string $lastName){
+    public function __construct(string $email = "", string $password = "", string $firtName = "", string $lastName= ""){
         $this->email = $email;
         $this->password = $password;
         $this->firstName = $firtName;
@@ -17,7 +17,7 @@ class User{
 
 	public function getPassword() {return $this->password;}
 
-	public function getfirstName() {return $this->firstName;}
+	public function getFirstName() {return $this->firstName;}
 
 	public function getLastName() {return $this->lastName;}
 public function getFullName() {return ($this->firstName . $this->lastName);}
