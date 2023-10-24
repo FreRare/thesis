@@ -33,6 +33,10 @@ class AQDAO implements AQDAOI
     const CREATE_SENSOR_SAMPLE = "INSERT INTO sensorSamples (id, sampleTime, temp, ph, waterLvl, lightAmount) VALUES (?, ?, ?, ?, ?, ?)";
     const DELETE_SENSOR_SAMPLE = "DELETE FROM sensorSamples WHERE id = ?";
     const UPDATE_SENSOR_SAMPLE = "UPDATE sensorSamples SET sampleTime = ?, temp = ?, ph = ?, waterLvl = ?, lightAmount = ? WHERE id = ?";
+    const CREATE_HAVE_AQUARIUM = "INSERT INTO haveAquarium (email, id) VALUES (?, ?)";
+    const SELECT_USER_AQUARIUM_IDS = "SELECT id FROM haveAquarium WHERE email = ?";
+    const DELETE_HAVE_AQUARIUM_BY_ID = "DELETE FROM haveAquarium WHERE id = ?";
+    const DELETE_HAVE_AQUARIUM_BY_USER = "DELETE FROM haveAquarium WHERE email = ?";
     private function __construct()
     {
         $this->config = new DBConfig();
@@ -62,11 +66,6 @@ class AQDAO implements AQDAOI
         }
         return self::$instance;
     }
-    /**
-     * Executes the given string to the DB
-     * @param string $queryString
-     * @return mixed the result of the query
-     */
     public function __query(string $queryString = "")
     {
         if ($queryString == "") {
@@ -79,7 +78,6 @@ class AQDAO implements AQDAOI
             return $res;
         }
     }
-
     function selectUserByEmail(string $email)
     {
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_BY_EMAIL);
@@ -342,6 +340,60 @@ class AQDAO implements AQDAOI
         $id = $sample->getId();
 
         $stm->bind_param("sisiii", $sampleTime, $temp, $ph, $waterLvl, $lightAmount, $id);
+        $success = $stm->execute();
+        $stm->close();
+        return $success;
+    }
+
+    function createAquariumConnection(User $user, Aquarium $aquarium): bool
+    {
+        if (!$user instanceof User || empty($id))
+            return false;
+
+        $stm = $this->connection->prepare(AQDAO::CREATE_HAVE_AQUARIUM);
+        $email = $user->getEmail();
+        $id = $aquarium->getId();
+        $stm->bind_param("ss", $email, $id);
+        $success = $stm->execute();
+        $stm->close();
+        return $success;
+    }
+    function selectUserAquariums(User $user): array
+    {
+        if (!$user instanceof User || empty($user))
+            return [];
+        $stm = $this->connection->prepare(AQDAO::SELECT_USER_AQUARIUM_IDS);
+        $mail = $user->getEmail();
+        $stm->bind_param("s", $mail);
+        $stm->execute();
+        $resultIds = $stm->get_result();
+        $stm->close();
+        $resultAquariums = [];
+        if ($resultIds->num_rows > 0) {
+            while ($row = $resultIds->fetch_assoc()) {
+                $resultAquariums[] = $this->selectAquariumById($row["id"]);
+            }
+        }
+        return $resultAquariums;
+    }
+    function deleteAquariumConnectionByAquarium(Aquarium $aquarium): bool
+    {
+        if (empty($id))
+            return false;
+        $stm = $this->connection->prepare(AQDAO::DELETE_HAVE_AQUARIUM_BY_ID);
+        $id = $aquarium->getId();
+        $stm->bind_param("i", $id);
+        $success = $stm->execute();
+        $stm->close();
+        return $success;
+    }
+    function deleteAquariumConnectionByUser(User $user): bool
+    {
+        if (empty($user) || !$user instanceof User)
+            return false;
+        $stm = $this->connection->prepare(AQDAO::DELETE_HAVE_AQUARIUM_BY_USER);
+        $email = $user->getEmail();
+        $stm->bind_param("s", $email);
         $success = $stm->execute();
         $stm->close();
         return $success;
