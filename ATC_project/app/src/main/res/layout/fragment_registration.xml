@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/base_blue">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:text="@string/registration_activity_title"
+        android:textColor="#000"
+        android:textSize="40sp" />
+
+    <!-- Email -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reg_act_email"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:layout_marginTop="40dp"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:layout_gravity="center_horizontal"
+        />
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/reg_act_email_space_holder"
+        android:padding="12dp"
+        android:autofillHints="emailAddress"
+        android:inputType="textEmailAddress"
+        android:layout_gravity="center_horizontal"/>
+
+    <!-- First Name -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reg_act_first_name"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:layout_gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/editTextFirstName"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/reg_act_first_name_space_holder"
+        android:padding="8dp"
+        android:autofillHints="name"
+        android:inputType="textPersonName"
+        android:layout_gravity="center_horizontal"/>
+
+    <!-- Last Name -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reg_act_last_name"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:layout_gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/editTextLastName"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/reg_act_last_name_space_holder"
+        android:padding="8dp"
+        android:autofillHints="name"
+        android:inputType="textPersonName"
+        android:layout_gravity="center_horizontal"/>
+
+    <!-- Password -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reg_act_password"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:layout_gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/reg_act_password_space_holder"
+        android:padding="8dp"
+        android:inputType="textPassword"
+        android:autofillHints="password"
+        android:layout_gravity="center_horizontal"/>
+
+    <!-- Confirm Password -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reg_act_password_confirm"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:layout_gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/editTextConfirmPassword"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/reg_act_password_confirm_space_holder"
+        android:padding="8dp"
+        android:inputType="textPassword"
+        android:autofillHints="password"
+        android:layout_gravity="center_horizontal"/>
+
+    <!-- Aquarium ID -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reg_act_aquarium_id"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:layout_gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/editTextAquariumId"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/reg_act_aquarium_id_space_holder"
+        android:padding="8dp"
+        android:autofillHints="id"
+        android:inputType="number"
+        android:layout_gravity="center_horizontal"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:padding="20dp"
+        android:textColor="#000"
+        android:background="@drawable/rounded_button"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/reg_act_confirm_btn"/>
+
+</LinearLayout>

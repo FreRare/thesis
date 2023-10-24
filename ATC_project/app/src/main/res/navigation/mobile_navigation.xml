@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.thesis.atc_project.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_aquariums"
+        android:name="com.thesis.atc_project.ui.aquariums.AquariumFragment"
+        android:label="@string/menu_aquariums"
+        tools:layout="@layout/fragment_aquariums" />
+
+    <fragment
+        android:id="@+id/nav_configurator"
+        android:name="com.thesis.atc_project.ui.configurator.ConfiguratorFragment"
+        android:label="@string/menu_configurator"
+        tools:layout="@layout/fragment_configurator" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.thesis.atc_project.ui.configurator.ConfiguratorFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="com.thesis.atc_project.ui.configurator.ConfiguratorFragment"
+        android:label="@string/menu_logout"
+        tools:layout="@layout/fragment_logout" />
+</navigation>

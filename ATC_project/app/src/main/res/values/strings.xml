@@ -1,0 +1,50 @@
+<resources>
+    <!--Drawer descriptions and options-->
+    <string name="app_name">ATC_project</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">ATC</string>
+    <string name="nav_header_subtitle">Aquarium Tech Control</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <!--Drawer menu items-->
+    <string name="menu_home">Home</string>
+    <string name="menu_aquariums">Aquariums</string>
+    <string name="menu_configurator">Configurations</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_logout">Log out</string>
+    <string name="menu_login">Log in</string>
+    <string name="menu_registration">Registration</string>
+    <string name="menu_help">Help</string>
+
+    <!--Registration page-->
+    <string name="registration_activity_title">Registration</string>
+    <string name="reg_act_email">Email address</string>
+    <string name="reg_act_email_space_holder">example@gmail.com</string>
+    <string name="reg_act_first_name">First name</string>
+    <string name="reg_act_first_name_space_holder">Ex. John</string>
+    <string name="reg_act_last_name">Last name</string>
+    <string name="reg_act_last_name_space_holder">Ex. Doe</string>
+    <string name="reg_act_password">Password</string>
+    <string name="reg_act_password_space_holder">********</string>
+    <string name="reg_act_password_confirm">Confirm password</string>
+    <string name="reg_act_password_confirm_space_holder">********</string>
+    <string name="reg_act_aquarium_id">Aquarium ID</string>
+    <string name="reg_act_aquarium_id_space_holder">Ex. 3245</string>
+    <string name="reg_act_confirm_btn">Confirm</string>
+
+    <!--Home page-->
+    <string name="home_act_welcome">Welcome to ATC! Where you can monitor and configure your aquariums!</string>
+
+    <!--Login page-->
+    <string name="login_act_title">Log in</string>
+    <string name="login_act_email">Email address</string>
+    <string name="login_act_email_space_holder">example@gmail.com</string>
+    <string name="login_act_password">Password</string>
+    <string name="login_act_password_space_holder">********</string>
+    <string name="login_act_button_text">Continue</string>
+
+
+
+</resources>
