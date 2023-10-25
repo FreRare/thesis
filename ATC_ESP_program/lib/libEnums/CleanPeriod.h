@@ -4,7 +4,7 @@ The enum to provide info about the cleaning/water changing of the aquarium (used
 Each element is a period of time
 ---------------------------------------*/
 enum CleanPeriod : byte{
-  P_3_DAYS,
+  P_3_DAYS = 1,
   P_5_DAYS,
   P_1_WEEK,
   P_2_WEEKS,

@@ -3,7 +3,7 @@
 The enum to track how often samples should be taken
 ------------------------------------------*/
 enum SamplePeriod : byte {
-  S_15_MIN,
+  S_15_MIN = 1,
   S_30_MIN,
   S_1_HOUR,
   S_1_HOUR_30_MIN,

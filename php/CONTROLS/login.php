@@ -15,7 +15,7 @@ $hashedPass = hash("sha256", $password);
 $tryUser = $DAO->selectUserByEmail($email); // Trying to get user by email provided
 
 if(empty($tryUser) || $tryUser->getPassword() != $hashedPass){
-    die("Invalid email address or password!");
+    die("ERROR: Invalid email address or password!");
 }
 // If found user and password matches give back the User data
 echo($tryUser->toJson());

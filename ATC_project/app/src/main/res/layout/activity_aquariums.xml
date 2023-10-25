@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.configurator.ConfiguratorFragment">
+    tools:context=".ui.">
 
     <TextView
-        android:id="@+id/text_configurator"
+        android:id="@+id/text_aquariums"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

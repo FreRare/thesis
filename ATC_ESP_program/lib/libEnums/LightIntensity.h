@@ -4,7 +4,7 @@ The enum to follow the intensity of light
 Used both by config and samples
 ------------------------------------------------*/
 enum LightIntensity : byte{
-  DARK,
+  DARK = 1,
   SHADY,
   MEDIUM,
   LIGHT,

@@ -2,30 +2,36 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/general_menu_group">
         <item
             android:id="@+id/nav_home"
             android:icon="@android:drawable/ic_menu_view"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_aquariums"
             android:icon="@android:drawable/ic_menu_info_details"
             android:title="@string/menu_aquariums" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_configurator"
             android:icon="@android:drawable/ic_menu_manage"
             android:title="@string/menu_configurator" />
-        <item
-            android:id="@+id/nav_profile"
-            android:icon="@android:drawable/ic_menu_set_as"
-            android:title="@string/menu_profile"
-            />
-        <item
-            android:id="@+id/nav_logout"
-            android:icon="@android:drawable/ic_menu_revert"
-            android:title="@string/menu_logout"
-            android:onClick=""
-            />
     </group>
+
+    <item android:title="@string/menu_profile"
+        android:id="@+id/profile_menu_group_title">
+        <menu>
+            <group android:checkableBehavior="single"
+                android:id="@+id/profile_menu_group">
+                <item
+                    android:id="@+id/nav_profile"
+                    android:icon="@android:drawable/ic_menu_set_as"
+                    android:title="@string/menu_profile" />
+                <item
+                    android:id="@+id/nav_logout"
+                    android:icon="@android:drawable/ic_menu_revert"
+                    android:title="@string/menu_logout" />
+            </group>
+        </menu>
+    </item>
 </menu>

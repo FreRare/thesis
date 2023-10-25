@@ -3,35 +3,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@id/nav_home"
+    tools:ignore="InvalidNavigation">
 
-    <fragment
+    <activity
         android:id="@+id/nav_home"
-        android:name="com.thesis.atc_project.ui.home.HomeFragment"
+        android:name="com.thesis.atc_project.ui.activities.Home"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/activity_home"/>
 
-    <fragment
+    <activity
         android:id="@+id/nav_aquariums"
-        android:name="com.thesis.atc_project.ui.aquariums.AquariumFragment"
+        android:name="com.thesis.atc_project.ui.activities.Aquariums"
         android:label="@string/menu_aquariums"
-        tools:layout="@layout/fragment_aquariums" />
+        tools:layout="@layout/activity_aquariums" />
 
-    <fragment
+    <activity
         android:id="@+id/nav_configurator"
-        android:name="com.thesis.atc_project.ui.configurator.ConfiguratorFragment"
+        android:name="com.thesis.atc_project.ui.activities.Configurator"
         android:label="@string/menu_configurator"
-        tools:layout="@layout/fragment_configurator" />
+        tools:layout="@layout/activity_configurator" />
 
-    <fragment
+    <activity
         android:id="@+id/nav_profile"
-        android:name="com.thesis.atc_project.ui.configurator.ConfiguratorFragment"
+        android:name="com.thesis.atc_project.ui.activities.Profile"
         android:label="@string/menu_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/activity_profile" />
 
-    <fragment
+    <activity
         android:id="@+id/nav_logout"
-        android:name="com.thesis.atc_project.ui.configurator.ConfiguratorFragment"
+        android:name="com.thesis.atc_project.ui.activities.Logout"
         android:label="@string/menu_logout"
-        tools:layout="@layout/fragment_logout" />
+        tools:layout="@layout/activity_logout" />
+    <activity
+        android:id="@+id/nav_login"
+        android:name="com.thesis.atc_project.ui.activities.Login"
+        android:label="@string/menu_login"
+        tools:layout="@layout/activity_login"/>
+    <activity
+        android:id="@+id/nav_register"
+        android:name="com.thesis.atc_project.ui.activities.Registration"
+        android:label="@string/menu_registration"
+        tools:layout="@layout/activity_registration"/>
 </navigation>

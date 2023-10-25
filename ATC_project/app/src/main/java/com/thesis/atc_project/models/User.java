@@ -1,9 +1,15 @@
 package com.thesis.atc_project.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
+    @SerializedName("email")
     private String email;
+    @SerializedName("password")
     private String password;
+    @SerializedName("firstName")
     private String firstName;
+    @SerializedName("lastName")
     private String lastName;
 
     public User(String email, String password, String firstName, String lastName){

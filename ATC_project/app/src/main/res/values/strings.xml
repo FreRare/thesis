@@ -1,6 +1,6 @@
 <resources>
     <!--Drawer descriptions and options-->
-    <string name="app_name">ATC_project</string>
+    <string name="app_name">ATC</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">ATC</string>
@@ -8,7 +8,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <!--Drawer menu items-->
+    <!--Drawer menu-->
     <string name="menu_home">Home</string>
     <string name="menu_aquariums">Aquariums</string>
     <string name="menu_configurator">Configurations</string>
@@ -17,6 +17,10 @@
     <string name="menu_login">Log in</string>
     <string name="menu_registration">Registration</string>
     <string name="menu_help">Help</string>
+    <string name="menu_general_title">General</string>
+    <string name="menu_drawer_open">Open side navigation</string>
+    <string name="menu_drawer_close">Close side navigation</string>
+
 
     <!--Registration page-->
     <string name="registration_activity_title">Registration</string>

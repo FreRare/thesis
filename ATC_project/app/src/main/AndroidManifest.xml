@@ -15,7 +15,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.ATC_project.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,6 +22,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activities.Home"/>
+        <activity android:name=".ui.activities.Login"/>
+        <activity android:name=".ui.activities.Registration"/>
+        <activity android:name=".ui.activities.Aquariums"/>
+        <activity android:name=".ui.activities.Configurator"/>
+        <activity android:name=".ui.activities.Profile"/>
+        <activity android:name=".ui.activities.Logout"/>
     </application>
+    <uses-permission android:name="android.permission.INTERNET"
+        tools:ignore="ManifestOrder" />
 
 </manifest>

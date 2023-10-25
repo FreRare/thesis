@@ -15,26 +15,26 @@ class User
         $this->lastName = $lastName;
     }
 
-    public function getEmail()
+    public function getEmail() : string
     {
         return $this->email;
     }
 
-    public function getPassword()
+    public function getPassword() : string
     {
         return $this->password;
     }
 
-    public function getFirstName()
+    public function getFirstName() : string
     {
         return $this->firstName;
     }
 
-    public function getLastName()
+    public function getLastName(): string
     {
         return $this->lastName;
     }
-    public function getFullName()
+    public function getFullName(): string
     {
         return ($this->firstName . $this->lastName);
     }
