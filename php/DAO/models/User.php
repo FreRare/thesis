@@ -38,14 +38,4 @@ class User
     {
         return ($this->firstName . $this->lastName);
     }
-
-    public final function toJson()
-    {
-        $t = [];
-        $t["firstName"] = $this->getFirstName();
-        $t["lastName"] = $this->getLastName();
-        $t["email"] = $this->getEmail();
-        $t["password"] = $this->getPassword();
-        return json_encode(["user" => $t]);
-    }
 }

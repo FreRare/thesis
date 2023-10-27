@@ -5,4 +5,6 @@ export default {
   menuBarBackground: "#F0F0FF",
   textPrimary: "black",
   textSecondary: "#949494",
+  black: "black",
+  errorColor: "red",
 };

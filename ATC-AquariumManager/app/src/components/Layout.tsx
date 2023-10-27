@@ -17,7 +17,7 @@ function Layout(props: LayoutComponentProps) {
       scrollEnabled={false}
     >
       {props.children}
-      {/*<MenuBar navigation={props.navigation}></MenuBar>*/}
+      <MenuBar navigation={props.navigation}></MenuBar>
     </KeyboardAwareScrollView>
   );
 }

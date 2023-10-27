@@ -1,28 +1,20 @@
 import React from "react";
-import {
-  ImageBackground,
-  View,
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-} from "react-native";
-import MenuBar from "../components/MenuBar";
+import { ImageBackground, StyleSheet } from "react-native";
 import Layout from "../components/Layout";
-import strings from "../../config/strings";
-import colors from "../../config/colors";
-import { TextInput } from "react-native";
 import LoginForm from "../components/LoginForm";
+import Logo from "../components/Logo";
 
 interface WelcomeScreenProps {
   navigation: any;
 }
 
-function WelcomeScreen({ navigation }: WelcomeScreenProps) {
+function WelcomeScreen(props: WelcomeScreenProps) {
   const welcomeImageUri = require("../../assets/ATC_app_welcome_screen_picture.jpg");
   return (
-    <Layout navigation={navigation}>
+    <Layout navigation={props.navigation}>
       <ImageBackground style={styles.backgroundImage} source={welcomeImageUri}>
-        <LoginForm navigation={navigation}></LoginForm>
+        <Logo />
+        <LoginForm navigation={props.navigation} />
       </ImageBackground>
     </Layout>
   );
@@ -30,11 +22,11 @@ function WelcomeScreen({ navigation }: WelcomeScreenProps) {
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    // flex: 1,
+    flex: 1,
     width: "100%",
     height: "100%",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
 });
 

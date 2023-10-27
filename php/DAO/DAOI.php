@@ -7,7 +7,7 @@ interface AQDAOI
      * Usage is only possible trought the instance returned by this function
      * @return AQDAO
      */
-    function getInstance();
+    static function getInstance() : AQDAO;
        /**
      * Executes the given string to the DB
      * @param string $queryString

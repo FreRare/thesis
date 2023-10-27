@@ -5,18 +5,96 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text,
+  ScrollView,
 } from "react-native";
 import strings from "../../config/strings";
 import colors from "../../config/colors";
-import Icon from "react-native-vector-icons/AntDesign";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import User from "../models/User";
 
 function LoginForm(navigation: any) {
   const [email, setEmail] = React.useState("");
   const [pass, setPass] = React.useState("");
+  const [error, setError] = React.useState("");
+
+  const validateLoginFields = () => {
+    if (email.length <= 0) {
+      setError(strings.missingEmailError);
+      return false;
+    }
+    if (pass.length <= 0) {
+      setError(strings.missingPasswordError);
+      return false;
+    }
+    const checkEmail = RegExp(
+      /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i
+    );
+    if (!checkEmail.test(email)) {
+      setError(strings.invalidEmailError);
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
+  const handleLogin = async () => {
+    if (!validateLoginFields()) {
+      return;
+    }
+    // All fields are valid, we can post to API
+    const headers = {
+      Accept: "application/json",
+      "Content-Type": "application.json",
+    };
+    const loginData = JSON.stringify({
+      email: email,
+      password: pass,
+    });
+    fetch(strings.loginApiUrl, {
+      method: "POST",
+      headers: headers,
+      body: loginData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          alert(
+            "Unexpected error occured! Response status: " + response.status
+          );
+        }
+        return response.json();
+      })
+      .then((responseData) => {
+        const data = responseData["data"];
+        if (data["error"]) {
+          setError(data["error"]);
+        } else if (data["user"]) {
+          setError(strings.successfulLogin);
+          const userData = data["user"];
+          const user = new User(
+            userData.email,
+            userData.firstName,
+            userData.lastName
+          );
+          alert(user.toString());
+        }
+      })
+      .catch((e) => {
+        alert("Error: " + e);
+      });
+  };
 
   return (
     <View style={styles.container}>
-      <Icon name="user" size={50} style={styles.icon} />
+      <View style={styles.icon}>
+        <Icon name="user-alt" size={40} />
+      </View>
+      {error && (
+        <ScrollView>
+          <Text id="errorMsg" style={styles.errorMsg}>
+            {error}
+          </Text>
+        </ScrollView>
+      )}
       <TextInput
         id="email"
         placeholder={strings.emailInputPlaceholder}
@@ -32,10 +110,7 @@ function LoginForm(navigation: any) {
         onChangeText={(t) => setPass(t)}
         secureTextEntry={true}
       ></TextInput>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate(strings.login)}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text>{strings.login}</Text>
       </TouchableOpacity>
       <Text>{strings.or}</Text>
@@ -56,33 +131,59 @@ const styles = StyleSheet.create({
     width: "75%",
     backgroundColor: colors.background,
     borderColor: colors.textSecondary,
-    borderWidth: 10,
+    borderWidth: 5,
     alignItems: "center",
     justifyContent: "flex-start",
     flex: 1,
     flexDirection: "column",
-    paddingTop: 30,
+    padding: 20,
     marginTop: "10%",
     marginBottom: "10%",
   },
   icon: {
-    marginBottom: 10,
+    marginBottom: 20,
+    borderColor: colors.black,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 3,
+    borderRadius: 50,
+    padding: 10,
   },
   input: {
     flex: 1,
-    width: "80%",
+    width: "90%",
     padding: 10,
     margin: "5%",
     backgroundColor: colors.menuBarBackground,
     maxHeight: 50,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: colors.primary,
+  },
+  focusedInput: {
+    flex: 1,
+    width: "95%",
+    padding: 10,
+    margin: "5%",
+    backgroundColor: colors.menuBarBackground,
+    maxHeight: 50,
+    borderRadius: 10,
   },
   button: {
-    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+    borderWidth: 4,
+    borderRadius: 50,
+    backgroundColor: colors.menuBarBackground,
     alignItems: "center",
     justifyContent: "center",
     width: "60%",
-    padding: "8%",
-    margin: "10%",
+    padding: "5%",
+    margin: "5%",
+  },
+  errorMsg: {
+    color: colors.errorColor,
+    flex: 1.5,
+    fontSize: 15,
   },
 });
 

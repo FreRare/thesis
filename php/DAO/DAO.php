@@ -37,7 +37,7 @@ class AQDAO implements AQDAOI
     const SELECT_USER_AQUARIUM_IDS = "SELECT id FROM haveAquarium WHERE email = ?";
     const DELETE_HAVE_AQUARIUM_BY_ID = "DELETE FROM haveAquarium WHERE id = ?";
     const DELETE_HAVE_AQUARIUM_BY_USER = "DELETE FROM haveAquarium WHERE email = ?";
-    private function __construct()
+    protected function __construct()
     {
         $this->config = new DBConfig();
         $this->connection = new mysqli(
@@ -52,14 +52,14 @@ class AQDAO implements AQDAOI
         } else {
             try {
                 if ($this->connection->query("USE " . $this->config->getDatabase("DAO"))) {
-                    echo ("Using DB " . $this->config->getDatabase("DAO"));
+                    // echo ("Using DB " . $this->config->getDatabase("DAO"));
                 }
             } catch (Error $e) {
-                echo ("Error while connecting => " . $this->connection->error);
+                error_log("Error while connecting => " . $this->connection->error);
             }
         }
     }
-    public static function getInstance()
+    public static function getInstance(): AQDAO
     {
         if (self::$instance === null) {
             self::$instance = new self();

@@ -1,4 +1,5 @@
 export default {
+  loginApiUrl: "https://atc.takacsnet.hu/CONTROLS/login.php",
   home: "Home",
   login: "Log in",
   welcome: "Welcome",
@@ -12,4 +13,8 @@ export default {
   or: "Or",
   emailInputPlaceholder: "Your email address",
   passInputPlaceHolder: "Your password",
+  missingEmailError: "Missing email address!",
+  missingPasswordError: "Missing password!",
+  invalidEmailError: "Invalid email address!",
+  successfulLogin: "Successful login!",
 };
