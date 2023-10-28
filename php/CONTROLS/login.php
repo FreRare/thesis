@@ -30,6 +30,5 @@ if(!empty($_POST["email"]) && !empty($_POST["password"])){
 }
 // Making valid json from the response
 $responseJson = json_encode(["data" => $response]);
-error_log($responseJson);
 header("Content-Type: application/json");
 echo($responseJson);

@@ -3,7 +3,7 @@
 ConfigData::ConfigData(const uint16_t& minTemp, const uint16_t& maxTemp, const uint16_t& waterLvlAlert,
     const uint16_t& lightOnTime, const uint16_t& lightOffTime, const uint16_t& filterOnTime,
     const uint16_t& filterOffTime, const uint16_t& airOnTime, const uint16_t& airOffTime, const uint16_t& feedingTime,
-    const float& minPh, const float& maxPh, const byte& feedingPortions, const LightIntensity& prefLight,
+    const float& minPh, const float& maxPh, const uint8_t& feedingPortions, const LightIntensity& prefLight,
     const CleanPeriod& filterChange, const CleanPeriod& waterChange, const SamplePeriod& sample)
     : minTemp(minTemp)
     , maxTemp(maxTemp)
@@ -107,7 +107,7 @@ void ConfigData::SetFeedingTime(uint16_t feedingTime)
 
 void ConfigData::SetSamplePeriod(SamplePeriod samplePeriod) { samplePeriod = samplePeriod; }
 
-void ConfigData::SetFeedingPortions(byte feedingPortions) { feedingPortions = feedingPortions; }
+void ConfigData::SetFeedingPortions(uint8_t feedingPortions) { feedingPortions = feedingPortions; }
 
 /*******************************************
  * End of setters

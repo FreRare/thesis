@@ -1,11 +1,12 @@
-#include "Arduino.h"
+#ifdef ConfigStatus_h
+#define ConfigStatus_h
 /***********************************************
 The enumeration to provide info about the status of the aquarium
 Each element represents a state which can trigger actions if detected
 ***********************************************/
 
-enum ConfigStatus : byte {
-    OK_STATUS,
+enum ConfigStatus : uint8_t {
+    OK_STATUS = 0,
     LOW_TEMP,
     HIGH_TEMP,
     LOW_LIGHT,
@@ -26,3 +27,5 @@ enum ConfigStatus : byte {
     FEEDING_TIME,
     ERROR = 255,
 };
+
+#endif

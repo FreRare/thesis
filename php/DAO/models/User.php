@@ -6,13 +6,15 @@ class User
     private $password; // will be hashed with sha256
     private $firstName;
     private $lastName;
+    private $deviceToken;
 
-    public function __construct(string $email = "", string $password = "", string $firtName = "", string $lastName = "")
+    public function __construct(string $email = "", string $password = "", string $firtName = "", string $lastName = "", string $deviceToken="")
     {
         $this->email = $email;
         $this->password = $password;
         $this->firstName = $firtName;
         $this->lastName = $lastName;
+        $this->deviceToken = $deviceToken;
     }
 
     public function getEmail() : string
@@ -37,5 +39,8 @@ class User
     public function getFullName(): string
     {
         return ($this->firstName . $this->lastName);
+    }
+    public function getDeviceToken() : string{
+        return $this->deviceToken;
     }
 }

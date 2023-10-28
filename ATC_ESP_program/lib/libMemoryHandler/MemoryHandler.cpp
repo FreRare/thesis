@@ -1,7 +1,7 @@
-#include "MemoryHandler.h"
-#include "Arduino.h"
-#include "DebugUtils.h"
-#include "EEPROM.h"
+#include <Arduino.h>
+#include <DebugUtils.h>
+#include <ESP_EEPROM.h>
+#include <MemoryHandler.h>
 
 // The instance pointer to return when want to use class
 MemoryHandler* MemoryHandler::instancePtr = new MemoryHandler();

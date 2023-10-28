@@ -11,7 +11,7 @@ interface WelcomeScreenProps {
 function WelcomeScreen(props: WelcomeScreenProps) {
   const welcomeImageUri = require("../../assets/ATC_app_welcome_screen_picture.jpg");
   return (
-    <Layout navigation={props.navigation}>
+    <Layout navigation={props.navigation} shouldDisplayMenuBar={false}>
       <ImageBackground style={styles.backgroundImage} source={welcomeImageUri}>
         <Logo />
         <LoginForm navigation={props.navigation} />

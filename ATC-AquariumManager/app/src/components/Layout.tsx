@@ -7,6 +7,7 @@ import colors from "../../config/colors";
 interface LayoutComponentProps {
   children: ReactNode;
   navigation: any;
+  shouldDisplayMenuBar: boolean;
 }
 
 function Layout(props: LayoutComponentProps) {
@@ -17,7 +18,9 @@ function Layout(props: LayoutComponentProps) {
       scrollEnabled={false}
     >
       {props.children}
-      <MenuBar navigation={props.navigation}></MenuBar>
+      {props.shouldDisplayMenuBar && (
+        <MenuBar navigation={props.navigation}></MenuBar>
+      )}
     </KeyboardAwareScrollView>
   );
 }

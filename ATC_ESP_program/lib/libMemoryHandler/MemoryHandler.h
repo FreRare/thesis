@@ -2,7 +2,8 @@
 #define MemoryHandler_h
 #include "Arduino.h"
 #include "ConfigData.h"
-#include "EEPROM.h"
+#include <ESP_EEPROM.h>
+
 ////////////////////////////////////////////////////////////////////////////////////
 // This class is responsible for the EEPROM interactions
 // It is a Singleton, preventing any problems occuring from same time memory actions

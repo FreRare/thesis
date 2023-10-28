@@ -1,9 +1,10 @@
 #ifndef ConfigHanler_h
 #define ConfigHanlder_h
-#include "ConfigData.h"
-#include "ConfigStatus.h"
 #include "SensorData.h"
 #include "time.h"
+#include <ConfigData.h>
+#include <ConfigStatus.h>
+#include <MemoryHandler.h>
 
 ////////////////////////////////////////////////////////////////////
 // This class is handling the configurations and it's staisfactory
@@ -18,7 +19,7 @@ public:
     ConfigHandler();
     ConfigData readConfigData();
     void SaveConfigData(const ConfigData& data);
-    ConfigStatus checkFullfillmentStatus(const SensorData& data, const time_t& timeNow);
+    uint8_t checkFullfillmentStatus(const SensorData& data, const time_t& timeNow);
 };
 
 #endif

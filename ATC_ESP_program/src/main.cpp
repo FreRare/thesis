@@ -1,16 +1,13 @@
-#include <AQWiFiConfig.h>
 #include <Arduino.h>
-#include <ConfigHandler.h>
-#include <SensorHandler.h>
-
-#define DEBUG
+#include <UIHandler.h>
+int counter = 0;
 
 void setup()
 {
-    // put your setup code here, to run once:
+    UIHandler* ui = new UIHandler();
+    ui->writeLine("HELLOOO", 1);
+    ui->writeLine("SAVE MEEE", 2);
+    ui->writeLine("OR JUST KILL ME", 4);
 }
 
-void loop()
-{
-    // put your main code here, to run repeatedly:
-}
+void loop() { }

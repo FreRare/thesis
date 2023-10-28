@@ -1,8 +1,10 @@
-#include "Arduino.h"
+#ifndef SamplePeriod_h
+#define SamplePeriod_h
+
 /*----------------------------------------
 The enum to track how often samples should be taken
 ------------------------------------------*/
-enum SamplePeriod : byte {
+enum SamplePeriod {
   S_15_MIN = 1,
   S_30_MIN,
   S_1_HOUR,
@@ -13,3 +15,5 @@ enum SamplePeriod : byte {
   S_12_HOUR,
   S_1_DAY,
 };
+
+#endif // !SamplePeriod_h

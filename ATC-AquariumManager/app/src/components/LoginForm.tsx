@@ -12,7 +12,11 @@ import colors from "../../config/colors";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import User from "../models/User";
 
-function LoginForm(navigation: any) {
+interface LoginScreenProps {
+  navigation: any;
+}
+
+function LoginForm(props: LoginScreenProps) {
   const [email, setEmail] = React.useState("");
   const [pass, setPass] = React.useState("");
   const [error, setError] = React.useState("");
@@ -44,7 +48,7 @@ function LoginForm(navigation: any) {
     // All fields are valid, we can post to API
     const headers = {
       Accept: "application/json",
-      "Content-Type": "application.json",
+      "Content-Type": "application/json",
     };
     const loginData = JSON.stringify({
       email: email,
@@ -57,11 +61,10 @@ function LoginForm(navigation: any) {
     })
       .then((response) => {
         if (!response.ok) {
-          alert(
-            "Unexpected error occured! Response status: " + response.status
-          );
+          throw(new Error(strings.unexpectedStatusErrorMessage + response.status))
+        }else{
+          return response.json();
         }
-        return response.json();
       })
       .then((responseData) => {
         const data = responseData["data"];
@@ -76,6 +79,7 @@ function LoginForm(navigation: any) {
             userData.lastName
           );
           alert(user.toString());
+          props.navigation.navigate(strings.home);  // Redirect to homepage
         }
       })
       .catch((e) => {
@@ -116,7 +120,7 @@ function LoginForm(navigation: any) {
       <Text>{strings.or}</Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate(strings.regitration)}
+        onPress={() => props.navigation.navigate(strings.registration)}
       >
         <Text>{strings.signup}</Text>
       </TouchableOpacity>

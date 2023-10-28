@@ -1,8 +1,9 @@
 #ifndef ConfigData_h
 #define ConfigData_h
-#include "CleanPeriod.h"
+#include <CleanPeriod.h>
 #include "LightIntensity.h"
 #include "SamplePeriod.h"
+#include <ctype.h>
 
 #define MAX_TIMING_VAL 1440 // the maximum value the timings can have (24*60)
 // 1 is 0:01 and 1440 is 0:00, 0 means no timing -> this is handled in the confighandler
@@ -33,13 +34,13 @@ private:
     uint16_t airOffTime;
     uint16_t feedingTime;
     SamplePeriod samplePeriod;
-    byte feedingPortions; // According to this data length is 20 + 5 + 8 = 33 byte
+    uint8_t feedingPortions; // According to this data length is 20 + 5 + 8 = 33 byte
 
 public:
     ConfigData(const uint16_t& minTemp, const uint16_t& maxTemp, const uint16_t& waterLvlAlert,
         const uint16_t& lightOnTime, const uint16_t& lightOffTime, const uint16_t& filterOnTime,
         const uint16_t& filterOffTime, const uint16_t& airOnTime, const uint16_t& airOffTime,
-        const uint16_t& feedingTime, const float& minPh, const float& maxPh, const byte& feedingPortions,
+        const uint16_t& feedingTime, const float& minPh, const float& maxPh, const uint8_t& feedingPortions,
         const LightIntensity& prefLight, const CleanPeriod& filterChange, const CleanPeriod& waterChange,
         const SamplePeriod& sample);
     // Getters
@@ -75,7 +76,7 @@ public:
 
     SamplePeriod GetSamplePeriod() const { return samplePeriod; }
 
-    byte GetFeedingPortions() const { return feedingPortions; }
+    uint8_t GetFeedingPortions() const { return feedingPortions; }
 
     // Setters
     void SetMinTemp(uint16_t minTemp);
@@ -110,7 +111,7 @@ public:
 
     void SetSamplePeriod(SamplePeriod samplePeriod);
 
-    void SetFeedingPortions(byte feedingPortions);
+    void SetFeedingPortions(uint8_t feedingPortions);
 };
 
 #endif
