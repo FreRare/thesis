@@ -1,8 +1,8 @@
 #ifndef ConfigData_h
 #define ConfigData_h
 #include <CleanPeriod.h>
-#include "LightIntensity.h"
-#include "SamplePeriod.h"
+#include <LightIntensity.h>
+#include <SamplePeriod.h>
 #include <ctype.h>
 
 #define MAX_TIMING_VAL 1440 // the maximum value the timings can have (24*60)

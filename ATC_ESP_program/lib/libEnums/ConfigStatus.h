@@ -5,8 +5,8 @@ The enumeration to provide info about the status of the aquarium
 Each element represents a state which can trigger actions if detected
 ***********************************************/
 
-enum ConfigStatus : uint8_t {
-    OK_STATUS = 0,
+enum ConfigStatus {
+    OK_STATUS,
     LOW_TEMP,
     HIGH_TEMP,
     LOW_LIGHT,

@@ -1,5 +1,6 @@
 #ifndef SensorData_h
 #define SensorData_h
+#include <LightIntensity.h>
 #include <time.h>
 
 ///////////////////////////////////////////////////////////////////
