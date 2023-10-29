@@ -8,6 +8,7 @@ interface LayoutComponentProps {
   children: ReactNode;
   navigation: any;
   shouldDisplayMenuBar: boolean;
+  activeScreen: string;
 }
 
 function Layout(props: LayoutComponentProps) {
@@ -19,7 +20,10 @@ function Layout(props: LayoutComponentProps) {
     >
       {props.children}
       {props.shouldDisplayMenuBar && (
-        <MenuBar navigation={props.navigation}></MenuBar>
+        <MenuBar
+          navigation={props.navigation}
+          activeScreen={props.activeScreen}
+        ></MenuBar>
       )}
     </KeyboardAwareScrollView>
   );
@@ -27,7 +31,7 @@ function Layout(props: LayoutComponentProps) {
 
 const styles = StyleSheet.create({
   layout: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.background,
     flex: 1,
     flexDirection: "column",
     alignItems: "center",

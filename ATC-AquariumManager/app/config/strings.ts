@@ -15,6 +15,10 @@ export default {
   signup: "Sign up",
   confirm: "Confirm",
   or: "Or",
+  temperature: "Temperature",
+  ph: "Ph",
+  waterLevel: "Water Level",
+  light: "Light",
   emailInputPlaceholder: "Your email address",
   passInputPlaceHolder: "Your password",
   passAgainInputPlaceholder: "Your password again",
@@ -33,6 +37,7 @@ export default {
   successfulLogin: "Successful login!",
   successfulSignup: "Successfully signed up!",
   unexpectedStatusErrorMessage: "Unexpected error occured! Response status: ",
-  pushNotificationsDeniedAlertMessage: "Push notifications are disabled! You won't get notifications about your aquarium's status!",
-  noDeviceTokenString: "NO_DEVICE_TOKEN"
+  pushNotificationsDeniedAlertMessage:
+    "Push notifications are disabled! You won't get notifications about your aquarium's status!",
+  noDeviceTokenString: "NO_DEVICE_TOKEN",
 };

@@ -3,6 +3,7 @@ import { ImageBackground, StyleSheet } from "react-native";
 import Layout from "../components/Layout";
 import LoginForm from "../components/LoginForm";
 import Logo from "../components/Logo";
+import strings from "../../config/strings";
 
 interface WelcomeScreenProps {
   navigation: any;
@@ -11,7 +12,11 @@ interface WelcomeScreenProps {
 function WelcomeScreen(props: WelcomeScreenProps) {
   const welcomeImageUri = require("../../assets/ATC_app_welcome_screen_picture.jpg");
   return (
-    <Layout navigation={props.navigation} shouldDisplayMenuBar={false}>
+    <Layout
+      navigation={props.navigation}
+      shouldDisplayMenuBar={false}
+      activeScreen={strings.welcome}
+    >
       <ImageBackground style={styles.backgroundImage} source={welcomeImageUri}>
         <Logo />
         <LoginForm navigation={props.navigation} />
