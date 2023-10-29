@@ -40,10 +40,21 @@ String MemoryHandler::readWord()
     char word[EEPROM_ADDRESS_DIFF] = "";
     EEPROM.get(this->actualAddress, word);
     String data = word;
-    for (int i = 0; i < EEPROM_ADDRESS_DIFF; i++) {
-        Serial.println(word[i]);
-    }
     this->actualAddress += EEPROM_ADDRESS_DIFF;
+    return data;
+}
+
+void MemoryHandler::writeInt(const uint16_t& i)
+{
+    EEPROM.put(this->actualAddress, i);
+    this->actualAddress += EEPROM_ADDRESS_DIFF;
+    EEPROM.commit();
+}
+
+uint16_t MemoryHandler::readInt()
+{
+    uint16_t data = 0;
+    EEPROM.get(this->actualAddress, data);
     return data;
 }
 
@@ -58,7 +69,6 @@ void MemoryHandler::clearMemory(const int& addr1, const int& addr2)
 {
     this->actualAddress = addr1;
     for (; this->actualAddress < addr2; this->actualAddress++) {
-        Serial.println("Deleting..." + (char)EEPROM.read(this->actualAddress));
         EEPROM.write(this->actualAddress, 0);
     }
     Serial.println("Memory cleared from " + String(addr1) + " - " + String(addr2) + "! (upper address discluded)");

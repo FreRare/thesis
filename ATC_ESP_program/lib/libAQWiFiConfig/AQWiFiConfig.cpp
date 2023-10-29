@@ -6,10 +6,6 @@
 #include "MemoryHandler.h"
 #include <UIHandler.h>
 
-#define DEBUG
-
-#define CONN_TIMEOUT 30 // Connection timeout = timeout * 2 seconds
-
 ESP8266WebServer* AQWiFiConfig::configServer = new ESP8266WebServer(80);
 MemoryHandler* AQWiFiConfig::memHandler = MemoryHandler::getInstance();
 bool AQWiFiConfig::isConfigDoneFlag = false;
@@ -23,52 +19,29 @@ AQWiFiConfig::AQWiFiConfig()
     // If creds are loaded
     if (this->WIFI_SSID.length() > 0 && this->WIFI_PASS.length() > 0) {
         isConfigDoneFlag = true;
-        Serial.println(this->WIFI_SSID + "::" + this->WIFI_SSID.length() + "::" + this->WIFI_PASS
-            + "::" + this->WIFI_PASS.length());
         UIHandler::getInstance()->writeLine("Successful", 1);
-        UIHandler::getInstance()->writeLine("connection!", 2);
-        Serial.println("Credential loaded successfully!");
+        UIHandler::getInstance()->writeLine("configuration!", 2);
     } else {
-        UIHandler::getInstance()->writeLine("Please add a WiFi network!", 1);
-        delay(2000);
-        Serial.println("No credentials found.. Please add a wifi network");
         this->initializeNetwork();
     }
     // Wait until config is done
     while (!isConfigDoneFlag) {
         Serial.println("Wifi config in progress...");
         AQWiFiConfig::configServer->handleClient();
-        delay(2000);
+        delay(1000);
     }
-    Serial.println("Wifi config completed!");
+}
+
+String AQWiFiConfig::getSSID() { return this->WIFI_SSID; }
+String AQWiFiConfig::getPassword() { return this->WIFI_PASS; }
+uint16_t AQWiFiConfig::getSystemID() { return this->systemID; }
+void AQWiFiConfig::saveSystemID(const uint16_t& id)
+{
+    AQWiFiConfig::memHandler->actualAddress = AQWiFiConfig::memHandler->systemIdentificationNumberAddress;
+    AQWiFiConfig::memHandler->writeInt(id);
 }
 
 ESP8266WebServer* AQWiFiConfig::getServer() { return AQWiFiConfig::configServer; }
-
-// Tries to connect to a network with the given credentials
-//  Returns true when successful
-bool AQWiFiConfig::connectToNetwork()
-{
-    // Start connection
-    WiFi.begin(this->WIFI_SSID, this->WIFI_PASS);
-    int connectionTimeout = 0;
-    while (WiFi.status() != WL_CONNECTED) {
-        Serial.println("WiFi connecting...");
-        // When we reach timeout reset the ESP and try to get credentials again
-        if (connectionTimeout == CONN_TIMEOUT) {
-            Serial.println("Connection timed out!");
-            Serial.println("The device will forget the network and try to get access again...");
-            // Forgetting network than restarting the device
-            this->forgetNetwork();
-            Serial.println("Resetting...");
-            ESP.restart();
-        }
-        delay(2000);
-        connectionTimeout++;
-    }
-    Serial.println("WiFi connected!");
-    return true;
-}
 
 // Saves the credentials to the memory (starts at 0 address)
 // If called without args it's from the config server
@@ -106,20 +79,18 @@ void AQWiFiConfig::loadCredentials()
     // Increment address with the length of str
     this->WIFI_PASS = AQWiFiConfig::memHandler->readWord();
     Serial.println("Read pass: " + this->WIFI_PASS);
+    AQWiFiConfig::memHandler->actualAddress = AQWiFiConfig::memHandler->systemIdentificationNumberAddress;
+    this->systemID = AQWiFiConfig::memHandler->readInt(); // System ID is 0 if not saved before
+    Serial.println("SYSTEM ID: " + String(this->systemID));
 }
 
 void AQWiFiConfig::initializeNetwork()
 {
+    String SSID = "ATC_portal";
     WiFi.mode(WIFI_AP);
-    WiFi.softAP("ATC_portal", "");
+    WiFi.softAP(SSID, "");
     IPAddress serverIP = WiFi.softAPIP();
-    Serial.println("Ap IP is: ");
-    Serial.println(serverIP);
-    UIHandler::getInstance()->clear();
-    UIHandler::getInstance()->writeLine("To do so connect to", 1);
-    UIHandler::getInstance()->writeLine("the network provided here!", 2);
-    UIHandler::getInstance()->writeLine("SSID: ATC_portal", 3);
-    UIHandler::getInstance()->writeLine("IP: " + serverIP.toString(), 4);
+    UIHandler::getInstance()->makeWiFiConfigMessage(SSID, serverIP.toString());
 
     // Config webpage
     AQWiFiConfig::configServer->on("/", HTTP_GET, AQWiFiConfig::createSiteForWiFiLogin);
@@ -132,8 +103,8 @@ void AQWiFiConfig::createSiteForWiFiLogin()
 {
     String html = "<html><body>";
     html += "<h1>WiFi Configuration</h1>";
-    html += "<form action='/save' method='post'>";
-    html += "SSID: <input type='text' name='ssid' value=''><br>";
+    html += "<form style='margin: 3%;' action='/save' method='post'>";
+    html += "SSID: <input style='margin: 3%;' type='text' name='ssid' value=''><br>";
     html += "Password: <input type='password' name='password' value=''><br>";
     html += "<input type='submit' value='Save'>";
     html += "</form></body></html>";
@@ -146,6 +117,6 @@ void AQWiFiConfig::forgetNetwork()
 {
     AQWiFiConfig::memHandler->actualAddress = AQWiFiConfig::memHandler->wifiConfigDataStartAddress;
     AQWiFiConfig::memHandler->clearMemory(
-        this->memHandler->wifiConfigDataStartAddress, this->WIFI_SSID.length() + this->WIFI_PASS.length());
+        this->memHandler->wifiConfigDataStartAddress, this->memHandler->configDataStartAddress);
     Serial.println("Network credentials deleted!");
 }

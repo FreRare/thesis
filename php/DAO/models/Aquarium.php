@@ -25,4 +25,5 @@ class Aquarium
 	public function getHeight() {return $this->height;}
 
 	public function getWidth() {return $this->width;}
+    public function toString() {return "AQUARIUM: " . $this->getName() . "::" . $this->getId() . "::" . $this->getLength() . "::" . $this->getHeight() . "::" . $this->getWidth();}
 }

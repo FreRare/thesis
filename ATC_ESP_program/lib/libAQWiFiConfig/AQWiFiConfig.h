@@ -3,7 +3,6 @@
 #include "Arduino.h"
 #include "DebugUtils.h"
 #include "ESP8266WebServer.h"
-#include "ESP8266WiFi.h"
 #include "MemoryHandler.h"
 
 //////////////////////////////////////////////////////////////////
@@ -16,6 +15,7 @@ private:
     static bool isConfigDoneFlag;
     String WIFI_SSID;
     String WIFI_PASS;
+    uint16_t systemID;
     static MemoryHandler* memHandler;
     static ESP8266WebServer* configServer;
     static void createSiteForWiFiLogin();
@@ -25,7 +25,10 @@ private:
 public:
     AQWiFiConfig();
     ~AQWiFiConfig() {};
-    bool connectToNetwork();
+    String getSSID();
+    String getPassword();
+    uint16_t getSystemID();
+    void saveSystemID(const uint16_t& id);
     bool isConnected();
     String getWiFiStatus();
     void forgetNetwork();

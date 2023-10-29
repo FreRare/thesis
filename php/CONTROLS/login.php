@@ -25,7 +25,7 @@ if(!empty($_POST["email"]) && !empty($_POST["password"])){
         $response["error"] = "Invalid email address or password!";
     }else{
         // If found user and password matches set response to the user
-        $response["user"] = $tryUser;
+        $response = $tryUser->toJSON();
     }
 }
 // Making valid json from the response

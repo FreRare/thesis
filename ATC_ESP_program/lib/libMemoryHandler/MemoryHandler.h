@@ -18,9 +18,9 @@ private:
     explicit MemoryHandler(); // only explicit constructor is allowed
 public:
     const uint16_t wifiConfigDataStartAddress = 0;
-    const uint16_t configDataStartAddress = 256; // WiFi credentials should be less than 256 bytes
-    const uint16_t sensorDataStartAddress = 528; // TODO depends on config data size
-    const uint16_t sensorRecordLength = 128; // TODO depends on sensorData class size
+    const uint16_t systemIdentificationNumberAddress
+        = EEPROM_ADDRESS_DIFF * 4; // WiFi credentials are 40 char * 2 + 40 diff * 2 = 40*4
+    const uint16_t configDataStartAddress = EEPROM_ADDRESS_DIFF * 6; //
     uint16_t sensorRecordCount;
     uint16_t actualAddress; // Stores the address where [the memory pointer is/will be
     ~MemoryHandler();
@@ -37,6 +37,8 @@ public:
      * Make sure to set it to the correct address before!
      */
     String readWord();
+    void writeInt(const uint16_t& i);
+    uint16_t readInt();
     void writeConfigData(const ConfigData& data);
     ConfigData readConfigData();
     /**

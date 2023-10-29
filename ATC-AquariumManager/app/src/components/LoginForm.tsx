@@ -68,15 +68,17 @@ function LoginForm(props: LoginScreenProps) {
       })
       .then((responseData) => {
         const data = responseData["data"];
+        // alert(JSON.stringify(data))
         if (data["error"]) {
           setError(data["error"]);
-        } else if (data["user"]) {
+        } else { 
+          const parsedData = JSON.parse(data)// ! need to parse again bc on backend it was encoded twice
           setError(strings.successfulLogin);
-          const userData = data["user"];
+          const userData = parsedData["user"];
           const user = new User(
-            userData.email,
-            userData.firstName,
-            userData.lastName
+            userData["email"],
+            userData["first_name"],
+            userData["last_name"]
           );
           alert(user.toString());
           props.navigation.navigate(strings.home);  // Redirect to homepage

@@ -21,9 +21,9 @@ class AQDAO implements AQDAOI
     private const SELECT_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
     private const UPDATE_USER = "UPDATE users SET email = ?, password = ?, firstName = ?, lastName = ?, deviceToken = ? WHERE email = ?";
     const SELECT_AQUARIUM = "SELECT * FROM aquariums WHERE id = ?";
-    const CREATE_AQUARIUM = "INSERT INTO aquariums (name, length, height, width) VALUES (?, ?, ?, ?)";
+    const CREATE_AQUARIUM = "INSERT INTO aquariums (name, length, height, depth) VALUES (?, ?, ?, ?)";
     const DELETE_AQUARIUM = "DELETE FROM aquariums WHERE id = ?";
-    const UPDATE_AQUARIUM = "UPDATE aquariums SET name = ?, length = ?, height = ?, width = ? WHERE id = ?";
+    const UPDATE_AQUARIUM = "UPDATE aquariums SET name = ?, length = ?, height = ?, depth = ? WHERE id = ?";
     const SELECT_CONFIG_FOR_AQUARIUM = "SELECT * FROM configs WHERE id = ?";
     const CREATE_CONFIG = "INSERT INTO configs (id, minTemp, maxTemp, minPh, maxPh, lightOn, lightOff, filterOn, filterOff, airOn, airOff, waterLvlAlert, prefLight, feedingTime, foodPortions, filterClean, waterChange, samplePeriod, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     const DELETE_CONFIG = "DELETE FROM configs WHERE id = ?";
@@ -82,6 +82,7 @@ class AQDAO implements AQDAOI
     {
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_BY_EMAIL);
         $stm->bind_param("s", $email);
+        $stm->execute();
         $stm->bind_result($mail, $pass, $fname, $lname, $token);
         $stm->fetch();
         $stm->close();
@@ -140,8 +141,9 @@ class AQDAO implements AQDAOI
     {
         $stm = $this->connection->prepare(AQDAO::SELECT_AQUARIUM);
         $stm->bind_param("i", $id);
-        $stm->bind_result($id, $name, $length, $height, $width);
         $stm->execute();
+        $stm->bind_result($id, $name, $length, $height, $width);
+        $stm->fetch();
         $stm->close();
         if (empty($id) || empty($name) || empty($length) || empty($height) || empty($width)) {
             return null;
@@ -195,8 +197,9 @@ class AQDAO implements AQDAOI
     {
         $stm = $this->connection->prepare(AQDAO::SELECT_CONFIG_FOR_AQUARIUM);
         $stm->bind_param("i", $id);
-        $stm->bind_result($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $wAlert, $prefLi, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDate);
         $stm->execute();
+        $stm->bind_result($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $wAlert, $prefLi, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDate);
+        $stm->fetch();
         $stm->close();
         if (empty($id) || empty($minT) || empty($maxT) || empty($minP) || empty($maxPh) || empty($liOn) || empty($liOff) || empty($filOn) || empty($filOff) || empty($airOn) || empty($airOff) || empty($wAlert) || empty($prefLi) || empty($feedT) || empty($foodPort) || empty($filC) || empty($waterC) || empty($samplePeriod) || empty($lModDate)) {
             return null;

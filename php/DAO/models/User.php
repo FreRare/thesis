@@ -43,4 +43,12 @@ class User
     public function getDeviceToken() : string{
         return $this->deviceToken;
     }
+
+    public function toJSON() : string{
+        $t = [];
+        $t["email"] = $this->email;
+        $t["first_name"] = $this->firstName;
+        $t["last_name"] = $this->lastName;
+        return json_encode(["user" => $t]);
+    }   
 }
