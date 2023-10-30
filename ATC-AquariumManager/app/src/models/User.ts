@@ -1,33 +1,36 @@
-import UserInterface from "./UserInterface";
+export default class User {
+  private _email: string;
+  private _authToken: string; // For device saving and auto authorization
+  private _firstName: string;
+  private _lastName: string;
 
-export default class User implements UserInterface {
-  email: String;
-  firstName: string;
-  lastName: string;
-
-  constructor(email = "", firstName = "", lastName = "") {
-    this.email = email;
-    this.firstName = firstName;
-    this.lastName = lastName;
+  constructor(email = "", authToken = "", firstName = "", lastName = "") {
+    this._email = email;
+    this._authToken = authToken;
+    this._firstName = firstName;
+    this._lastName = lastName;
   }
 
   // All fields should be initialized after constructor and no changes should be made
   getName(): string {
-    throw new Error("Method not implemented.");
+    return this._firstName + " " + this._lastName;
   }
   getFirstName(): string {
-    throw new Error("Method not implemented.");
+    return this._firstName;
   }
   getLastName(): string {
-    throw new Error("Method not implemented.");
+    return this._lastName;
   }
   getEmail(): string {
-    throw new Error("Method not implemented.");
+    return this._email;
+  }
+  getToken(): string{
+    return this._authToken;
   }
   toString(): string {
     return (
       "User with the following data: " +
-      [this.firstName, this.lastName, this.email].join("::")
+      [this.getFirstName(), this.getLastName(), this.getEmail()].join("::")
     );
   }
 }

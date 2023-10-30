@@ -12,9 +12,13 @@ import strings from "../../config/strings";
 import colors from "../../config/colors";
 import * as Notifications from "expo-notifications";
 import User from "../models/User";
+import AuthService from "../services/AuthService";
+import LoadingAnimation from "./LoadingAnimation";
 
 interface RegistrationFormProps {
   navigation: any;
+  setUser: (u: User | undefined | null) => void;
+  setIsLogin: (l: boolean) => void;
 }
 
 function RegistrationForm(props: RegistrationFormProps) {
@@ -25,19 +29,24 @@ function RegistrationForm(props: RegistrationFormProps) {
   const [password, setPassword] = React.useState("");
   const [passwordAgain, setPasswordAgain] = React.useState("");
   const [aqId, setAqId] = React.useState(""); // need to convert to number
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   // this function handles the app for push notifications
   // registeres the app and gets the token for the device what we can store in db later
-  const registerForPushNotifications = async (): Promise<boolean | string> => {
+  const registerForPushNotifications = async (): Promise<false | string> => {
     const { granted } = await Notifications.getPermissionsAsync();
     if (!granted) {
       const { status } = await Notifications.requestPermissionsAsync();
       if (status !== "granted") {
-        alert("Permission denied!");
+        alert("Permission denied for push notifications!");
         return false;
       }
     }
-    const token = (await Notifications.getExpoPushTokenAsync({projectId: strings.expoProjectId})).data;
+    const token = (
+      await Notifications.getExpoPushTokenAsync({
+        projectId: strings.expoProjectId,
+      })
+    ).data;
     return token;
     // Token stores the device registration token it can be sent to server
   };
@@ -45,9 +54,9 @@ function RegistrationForm(props: RegistrationFormProps) {
   /**
    * Validates all the fields in the form.
    * Sets the error message if an error occured.
-   * @returns False if there's a problem, parsed aquarium ID otherwise (still should be checked if present in DB)
+   * @returns False if there's a problem, parsed aquarium ID otherwise (still should be checked if present in DB on server side)
    */
-  const validateSignupInputs = (): boolean | number => {
+  const validateSignupInputs = (): false | number => {
     if (email.length <= 0) {
       setError(strings.missingEmailError);
       return false;
@@ -89,63 +98,44 @@ function RegistrationForm(props: RegistrationFormProps) {
   };
 
   const handleSignup = async () => {
-    const validForm = validateSignupInputs();
-    if (validForm === false) {
+    setLoading(true);
+    const aquariumID = validateSignupInputs();
+    if (aquariumID === false) {
+      setLoading(false);
       return;
     }
     // Wait until we get the notifications permission and the device's token
     let token = await registerForPushNotifications();
-    if(token === false){
+    if (token === false) {
+      // Just to make sure
       alert(strings.pushNotificationsDeniedAlertMessage);
-      token = strings.noDeviceTokenString // if notifications aren't allowed
-    }else{
-      alert("Device token: " + token);
+      token = strings.noDeviceTokenString; // if notifications aren't allowed
+    } else {
+      // alert("Device token: " + token);
     }
-
-    // TODO: Handle signup
-    const headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    };
-    const content = JSON.stringify({
-      email: email,
-      password: password,
-      first_name: firstName,
-      last_name: lastName,
-      aquarium_id: validForm,
-      device_token: token
-    });
-
-    // We can perform the fetch
-    fetch(strings.registrationApiUrl, {
-      method: "POST",
-      headers: headers,
-      body: content
-    }).then(response=>{
-      if(!response.ok){
-        throw(new Error(strings.unexpectedStatusErrorMessage + response.status))
-      }else{
-        return response.json()
-      }
-    }).then(responseData=>{
-      const data = responseData["data"];
-      if(data["error"]){
-        setError(data["error"]);
-      }else if(data["user"]){
-        setError(strings.successfulSignup);
-        const userData = data["user"];
-        const newUser = new User(userData.email, userData.firstName, userData.lastName);
-        alert(newUser.toString());
-        props.navigation.navigate(strings.home);
-      }
-      
-    }).catch(e=>{
-      alert("ERROR while signing up: " + e);
-    })
+    // We can perform registartion
+    const authResult = await AuthService.signUpUser(
+      email,
+      firstName,
+      lastName,
+      password,
+      aquariumID,
+      token
+    );
+    // If we have a registarted user
+    if (authResult instanceof User) {
+      props.setUser(authResult);
+      setLoading(false);
+      props.navigation.navigate(strings.home);
+    } else {
+      setError(authResult);
+    }
+    setLoading(false);
   };
 
   return (
     <View style={styles.container}>
+      {loading && <LoadingAnimation />}
       <View style={styles.icon}>
         <Icon name="user-plus" size={30} />
       </View>
@@ -203,9 +193,9 @@ function RegistrationForm(props: RegistrationFormProps) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => props.navigation.navigate(strings.info)}
+          onPress={() => props.setIsLogin(true)}
         >
-          <Text>{strings.info}</Text>
+          <Text>{strings.cancel}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -213,6 +203,7 @@ function RegistrationForm(props: RegistrationFormProps) {
 }
 const styles = StyleSheet.create({
   container: {
+    position: "relative",
     borderRadius: 50,
     opacity: 0.8,
     width: "75%",
@@ -276,14 +267,14 @@ const styles = StyleSheet.create({
     padding: "5%",
     margin: "5%",
   },
-  errorContainer:{
+  errorContainer: {
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   errorMsg: {
     color: colors.errorColor,
     fontSize: 15,
-    textAlign: "center"
+    textAlign: "center",
   },
 });
 

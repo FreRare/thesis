@@ -11,15 +11,20 @@ import strings from "../../config/strings";
 import colors from "../../config/colors";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import User from "../models/User";
+import AuthService from "../services/AuthService";
+import LoadingAnimation from "./LoadingAnimation";
 
 interface LoginScreenProps {
   navigation: any;
+  setIsLogin: (l: boolean) => void;
+  setUser: (u: User | undefined | null) => void;
 }
 
 function LoginForm(props: LoginScreenProps) {
   const [email, setEmail] = React.useState("");
   const [pass, setPass] = React.useState("");
   const [error, setError] = React.useState("");
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const validateLoginFields = () => {
     if (email.length <= 0) {
@@ -42,55 +47,24 @@ function LoginForm(props: LoginScreenProps) {
   };
 
   const handleLogin = async () => {
+    setLoading(true);
     if (!validateLoginFields()) {
       return;
     }
-    // All fields are valid, we can post to API
-    const headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    };
-    const loginData = JSON.stringify({
-      email: email,
-      password: pass,
-    });
-    fetch(strings.loginApiUrl, {
-      method: "POST",
-      headers: headers,
-      body: loginData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw(new Error(strings.unexpectedStatusErrorMessage + response.status))
-        }else{
-          return response.json();
-        }
-      })
-      .then((responseData) => {
-        const data = responseData["data"];
-        // alert(JSON.stringify(data))
-        if (data["error"]) {
-          setError(data["error"]);
-        } else { 
-          const parsedData = JSON.parse(data)// ! need to parse again bc on backend it was encoded twice
-          setError(strings.successfulLogin);
-          const userData = parsedData["user"];
-          const user = new User(
-            userData["email"],
-            userData["first_name"],
-            userData["last_name"]
-          );
-          alert(user.toString());
-          props.navigation.navigate(strings.home);  // Redirect to homepage
-        }
-      })
-      .catch((e) => {
-        alert("Error: " + e);
-      });
+    const loginData = await AuthService.tryLogin(email, pass);
+    if (loginData instanceof User) {
+      props.setUser(loginData); // Save user
+      setLoading(false);
+      props.navigation.naviagte(strings.home);
+    } else {
+      setError(loginData);
+    }
+    setLoading(false);
   };
 
   return (
     <View style={styles.container}>
+      {loading && <LoadingAnimation />}
       <View style={styles.icon}>
         <Icon name="user-alt" size={40} />
       </View>
@@ -122,7 +96,7 @@ function LoginForm(props: LoginScreenProps) {
       <Text>{strings.or}</Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => props.navigation.navigate(strings.registration)}
+        onPress={() => props.setIsLogin(false)}
       >
         <Text>{strings.signup}</Text>
       </TouchableOpacity>
@@ -132,6 +106,7 @@ function LoginForm(props: LoginScreenProps) {
 
 const styles = StyleSheet.create({
   container: {
+    position: "relative",
     borderRadius: 50,
     opacity: 0.8,
     width: "75%",
@@ -142,12 +117,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     flex: 1,
     flexDirection: "column",
-    padding: 20,
     marginTop: "10%",
     marginBottom: "10%",
   },
   icon: {
     marginBottom: 20,
+    marginTop: 20,
     borderColor: colors.black,
     alignItems: "center",
     justifyContent: "center",

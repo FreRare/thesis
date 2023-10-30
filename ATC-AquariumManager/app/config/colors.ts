@@ -6,6 +6,7 @@ export default {
   textPrimary: "black",
   textSecondary: "#949494",
   black: "black",
+  white: "#FFFFFF",
   errorColor: "red",
   menuBorder: "#9AA0A6",
   menuTopBorder: "#0D652D",
@@ -13,4 +14,5 @@ export default {
   menuHighlightBG: "#F1F3F4",
   dataCircleBorder: "#34A853",
   dataTextBorder: "#CEEAD6",
+  loadinAnimationColor: "#174EA6",
 };
