@@ -37,11 +37,10 @@ String AQWiFiConfig::getPassword() { return this->WIFI_PASS; }
 uint16_t AQWiFiConfig::getSystemID() { return this->systemID; }
 void AQWiFiConfig::saveSystemID(const uint16_t& id)
 {
+    this->systemID = id;
     AQWiFiConfig::memHandler->actualAddress = AQWiFiConfig::memHandler->systemIdentificationNumberAddress;
     AQWiFiConfig::memHandler->writeInt(id);
 }
-
-ESP8266WebServer* AQWiFiConfig::getServer() { return AQWiFiConfig::configServer; }
 
 // Saves the credentials to the memory (starts at 0 address)
 // If called without args it's from the config server

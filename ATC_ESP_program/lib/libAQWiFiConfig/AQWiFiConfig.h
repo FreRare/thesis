@@ -29,11 +29,8 @@ public:
     String getPassword();
     uint16_t getSystemID();
     void saveSystemID(const uint16_t& id);
-    bool isConnected();
-    String getWiFiStatus();
     void forgetNetwork();
     void initializeNetwork();
-    ESP8266WebServer* getServer();
 };
 
 #endif
