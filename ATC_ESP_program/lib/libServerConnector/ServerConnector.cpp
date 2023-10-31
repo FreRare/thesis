@@ -13,7 +13,7 @@ ServerConnector::ServerConnector()
         UIHandler::getInstance()->clear();
         UIHandler::getInstance()->writeLine("Successful", 1);
         UIHandler::getInstance()->writeLine("      connection!", 2);
-        UIHandler::getInstance()->writeLine("Your system ID:" + String(this->config->getSystemID()), 3);
+        UIHandler::getInstance()->writeLine("Your system ID: " + String(this->config->getSystemID()), 3);
         UIHandler::getInstance()->makeScrollingText("Use this ID for registration inside the app!", 4, 300, 2);
     } else {
         UIHandler::getInstance()->clear();

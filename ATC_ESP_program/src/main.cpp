@@ -3,10 +3,8 @@
 #include "ServerConnector.h"
 #include <Arduino.h>
 
-void setup()
-{
-    Serial.begin(9600);
-    ServerConnector* server = new ServerConnector();
-}
+const ServerConnector* server = new ServerConnector();
+
+void setup() { Serial.begin(9600); }
 
 void loop() { }

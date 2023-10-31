@@ -16,9 +16,10 @@ class AQDAO implements AQDAOI
     private static $instance = null;
     private $connection = null;
     private $config = null;
-    private const CREATE_USER = "INSERT INTO users (email, firstName, lastName, password, deviceToken) VALUES (?, ?, ?, ?, ?)";
+    private const CREATE_USER = "INSERT INTO users (email, firstName, lastName, password, deviceToken, authToken) VALUES (?, ?, ?, ?, ?, ?)";
     private const DELETE_USER = "DELETE FROM users WHERE email = ?";
     private const SELECT_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
+    private const SELECT_USER_BY_TOKEN = "SELECT * FROM users WHERE authToken = ?";
     private const UPDATE_USER = "UPDATE users SET email = ?, password = ?, firstName = ?, lastName = ?, deviceToken = ? WHERE email = ?";
     const SELECT_AQUARIUM = "SELECT * FROM aquariums WHERE id = ?";
     const CREATE_AQUARIUM = "INSERT INTO aquariums (name, length, height, depth) VALUES (?, ?, ?, ?)";
@@ -83,13 +84,27 @@ class AQDAO implements AQDAOI
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_BY_EMAIL);
         $stm->bind_param("s", $email);
         $stm->execute();
-        $stm->bind_result($mail, $pass, $fname, $lname, $token);
+        $stm->bind_result($mail, $pass, $fname, $lname, $token, $authToken);
         $stm->fetch();
         $stm->close();
-        if (empty($mail) || empty($pass) || empty($fname) || empty($lname) || empty($token)) {
+        if (empty($mail) || empty($pass) || empty($fname) || empty($lname) || empty($token) || empty($authToken)) {
             return null;
         } else {
-            return new User($mail, $pass, $fname, $lname, $token);
+            return new User($mail, $pass, $fname, $lname, $token, $authToken);
+        }
+    }
+
+    function selectUserByToken(string $token){
+        $stm = $this->connection->prepare(AQDAO::SELECT_USER_BY_TOKEN);
+        $stm->bind_param("s", $token);
+        $stm->execute();
+        $stm->bind_result($user, $pass, $fname, $lname, $token, $authToken);
+        $stm->fetch();
+        $stm->close();
+        if (empty($user) || empty($pass) || empty($fname) || empty($lname) || empty($token) || empty($authToken)) {
+            return null; 
+        } else {
+            return new User($user, $pass, $fname, $lname, $token, $authToken);
         }
     }
 
@@ -105,7 +120,7 @@ class AQDAO implements AQDAOI
         $fName = $user->getFirstName();
         $lName = $user->getLastName();
         $token = $user->getDeviceToken();
-        $statement->bind_param("sssss", $email, $pass, $fName, $lName, $token);
+        $statement->bind_param("ssssss", $email, $pass, $fName, $lName, $token, $authToken);
 
         $success = $statement->execute();
         $statement->close();

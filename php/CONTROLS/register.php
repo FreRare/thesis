@@ -23,6 +23,11 @@ if(!empty($_POST["email"]) && !empty($_POST["password"]) && !empty($_POST["first
     $lastName = $_POST["last_name"];
     $aquariumId = $_POST["aquarium_id"];
     $deviceToken = $_POST["device_token"];
+    
+    $authToken = uniqid(more_entropy:true); // generate unique token for user
+    while($DAO->selectUserByToken($authToken) !== null){ // make sure it's unique
+        $authToken = uniqid(more_entropy:true);
+    }
 
     // If email is taken
     if($DAO->selectUserByEmail($email) !== null){
@@ -45,7 +50,7 @@ if(!empty($_POST["email"]) && !empty($_POST["password"]) && !empty($_POST["first
         $result["error"] = "Invalid aquarium ID provided (System with given ID not exists)!";
     }else{
         // User created from data
-        $newUser = new User($email, $hashPass, $firstName, $lastName, $deviceToken);
+        $newUser = new User($email, $hashPass, $firstName, $lastName, $deviceToken, $authToken);
         // Upload to db
         $DAO->createUser($newUser); // The new user
         $DAO->createAquariumConnection($newUser, $foudAuarium); // Connect the user to an existing system

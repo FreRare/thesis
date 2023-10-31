@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS users(
     lastName VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     deviceToken VARCHAR(255) NOT NULL,
+    authToken VARCHAR(23) NOT NULL,
 
     PRIMARY KEY (email)
 );

@@ -20,6 +20,14 @@ interface AQDAOI
      * @return User|null
      */
     function selectUserByEmail(string $email);
+
+    /**
+     * Selects a user by it's login token
+     * @param string $token The user's token
+     * @return User | null The user if found null otherwise
+     */
+    function selectUserByToken(string $token);
+
     /**
      * Creates a user in the DB from the given Object
      * @param User $userToCreate
