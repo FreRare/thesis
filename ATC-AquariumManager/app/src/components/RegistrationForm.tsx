@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import strings from "../../config/strings";
 import colors from "../../config/colors";
 import * as Notifications from "expo-notifications";
@@ -17,7 +18,7 @@ import LoadingAnimation from "./LoadingAnimation";
 
 interface RegistrationFormProps {
   navigation: any;
-  setUser: (u: User | undefined | null) => void;
+  setUser: (u: User | undefined | null, rememberMe?: boolean) => void;
   setIsLogin: (l: boolean) => void;
 }
 
@@ -29,6 +30,7 @@ function RegistrationForm(props: RegistrationFormProps) {
   const [password, setPassword] = React.useState("");
   const [passwordAgain, setPasswordAgain] = React.useState("");
   const [aqId, setAqId] = React.useState(""); // need to convert to number
+  const [isRememberMe, setIsRememberMe] = React.useState<boolean>(true);
   const [loading, setLoading] = React.useState<boolean>(false);
 
   // this function handles the app for push notifications
@@ -122,10 +124,11 @@ function RegistrationForm(props: RegistrationFormProps) {
       aquariumID,
       token
     );
+    // alert("Auth result:" + authResult);
     // If we have a registarted user
     if (authResult instanceof User) {
-      props.setUser(authResult);
-      setLoading(false);
+      props.setUser(authResult, isRememberMe);
+      // alert("User logged in!");
       props.navigation.navigate(strings.home);
     } else {
       setError(authResult);
@@ -151,18 +154,24 @@ function RegistrationForm(props: RegistrationFormProps) {
         style={styles.input}
         value={email}
         onChangeText={(e) => setEmail(e)}
+        autoCapitalize="none"
+        autoComplete="email"
       />
       <TextInput
         placeholder={strings.firstNameInputPlaceholder}
         style={styles.input}
         value={firstName}
         onChangeText={(e) => setFirstName(e)}
+        autoCapitalize="words"
+        autoComplete="given-name"
       />
       <TextInput
         placeholder={strings.lastNameInputPlaceholder}
         style={styles.input}
         value={lastName}
         onChangeText={(e) => setLastName(e)}
+        autoCapitalize="words"
+        autoComplete="family-name"
       />
       <TextInput
         placeholder={strings.passInputPlaceHolder}
@@ -170,6 +179,7 @@ function RegistrationForm(props: RegistrationFormProps) {
         value={password}
         onChangeText={(t) => setPassword(t)}
         secureTextEntry={true}
+        autoCapitalize="none"
       />
       <TextInput
         placeholder={strings.passAgainInputPlaceholder}
@@ -177,6 +187,7 @@ function RegistrationForm(props: RegistrationFormProps) {
         value={passwordAgain}
         onChangeText={(t) => setPasswordAgain(t)}
         secureTextEntry={true}
+        autoCapitalize="none"
       />
       <TextInput
         placeholder={strings.aquariumIdInputPlaceholder}
@@ -186,6 +197,18 @@ function RegistrationForm(props: RegistrationFormProps) {
         maxLength={10}
         keyboardType="numeric"
         onChangeText={(t) => setAqId(t)}
+      />
+      <BouncyCheckbox
+        size={25}
+        style={{ flex: 1 }}
+        fillColor={colors.checkBoxColor}
+        innerIconStyle={{ borderWidth: 2 }}
+        text={strings.rememberMe}
+        textStyle={{ color: colors.checkBoxColor, textDecorationLine: "none" }}
+        isChecked={isRememberMe}
+        onPress={() => {
+          setIsRememberMe(!isRememberMe);
+        }}
       />
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleSignup}>
@@ -215,12 +238,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     padding: 20,
-    marginTop: "10%",
-    marginBottom: "10%",
+    marginTop: "3%",
+    marginBottom: "3%",
   },
   buttonContainer: {
-    borderTopColor: colors.textSecondary,
-    borderTopWidth: 2,
     flex: 5,
     justifyContent: "center",
     alignItems: "center",
@@ -228,7 +249,7 @@ const styles = StyleSheet.create({
     width: "75%",
   },
   icon: {
-    marginBottom: 20,
+    marginBottom: 10,
     borderColor: colors.black,
     alignItems: "center",
     justifyContent: "center",

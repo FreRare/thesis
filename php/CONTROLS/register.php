@@ -24,9 +24,9 @@ if(!empty($_POST["email"]) && !empty($_POST["password"]) && !empty($_POST["first
     $aquariumId = $_POST["aquarium_id"];
     $deviceToken = $_POST["device_token"];
     
-    $authToken = uniqid(more_entropy:true); // generate unique token for user
+    $authToken = uniqid('', true); // generate unique token for user
     while($DAO->selectUserByToken($authToken) !== null){ // make sure it's unique
-        $authToken = uniqid(more_entropy:true);
+        $authToken = uniqid('', true);
     }
 
     // If email is taken
@@ -37,7 +37,7 @@ if(!empty($_POST["email"]) && !empty($_POST["password"]) && !empty($_POST["first
         die();
     }
     // If system ID is taken
-    if($DAO->selectAquariumById($aquariumId) !== null){
+    if($DAO->selectUserForAquarium($aquariumId) !== null){
         $result["error"] = "This aquarium ID is already owned by a user!";
         $responseJson = json_encode(["data" => $result]);
         echo($responseJson);
@@ -45,19 +45,20 @@ if(!empty($_POST["email"]) && !empty($_POST["password"]) && !empty($_POST["first
     }
 
     // Check if the given ID is valid for an existing system
-    $foudAuarium = $DAO->selectAquariumById($aquariumId);
-    if(!$foudAuarium instanceof Aquarium){
+    $foundAuarium = $DAO->selectAquariumById($aquariumId);
+    if(!$foundAuarium instanceof Aquarium){
         $result["error"] = "Invalid aquarium ID provided (System with given ID not exists)!";
     }else{
         // User created from data
         $newUser = new User($email, $hashPass, $firstName, $lastName, $deviceToken, $authToken);
         // Upload to db
         $DAO->createUser($newUser); // The new user
-        $DAO->createAquariumConnection($newUser, $foudAuarium); // Connect the user to an existing system
+        $res = $DAO->createAquariumConnection($newUser, $foundAuarium); // Connect the user to an existing system
+        error_log("Connection result: " . ($res ? "true" : "false"));
         // Return the new user to react
         $result = $newUser->toJSON();
     }
 }
-error_log(json_encode($result));
+// error_log(json_encode($result));
 $responseJson = json_encode(["data" => $result]);
 echo($responseJson);

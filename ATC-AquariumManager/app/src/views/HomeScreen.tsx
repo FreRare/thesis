@@ -7,6 +7,7 @@ import { SelectList } from "react-native-dropdown-select-list";
 
 interface HomeScreenProps {
   navigation: any;
+  route: any;
 }
 
 function HomeScreen(props: HomeScreenProps) {

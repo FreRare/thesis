@@ -48,7 +48,7 @@ export default class AuthService {
             userData["first_name"],
             userData["last_name"]
           );
-          alert(user.toString());
+          // alert(user.toString());
           return user;
         }
       })
@@ -96,7 +96,7 @@ export default class AuthService {
             userData["first_name"],
             userData["last_name"]
           );
-          alert(user.toString());
+          // alert(user.toString());
           return user;
         }
       });
@@ -137,6 +137,7 @@ export default class AuthService {
       body: content,
     })
       .then((response) => {
+        alert("HTTP reponse: " + response.status);
         if (!response.ok) {
           throw new Error(
             strings.unexpectedStatusErrorMessage + response.status
@@ -149,12 +150,13 @@ export default class AuthService {
         const data = responseData["data"];
         if (data["error"]) {
           return data["error"];
-        } else if (data["user"]) {
-          const userData = data["user"];
+        } else {
+          const userData = JSON.parse(data)["user"];
           const newUser = new User(
-            userData.email,
-            userData.firstName,
-            userData.lastName
+            userData["email"],
+            userData["token"],
+            userData["first_name"],
+            userData["last_name"]
           );
           alert(newUser.toString());
           return newUser;
@@ -162,6 +164,7 @@ export default class AuthService {
       })
       .catch((e) => {
         alert("ERROR while signing up: " + e);
+        return "ERROR while signing up: " + e;
       });
   }
 }

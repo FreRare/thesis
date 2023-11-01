@@ -134,6 +134,12 @@ interface AQDAOI
      */
     function selectUserAquariums(User $user): array;
     /**
+     * Selects the user for the aquarium with the given id
+     * @param int $aquariumId
+     * @return User | null
+     */
+    function selectUserForAquarium(int $aquariumId);
+    /**
      * Deletes the connection based on the aquarium
      * @param Aquarium $obj
      * @return bool True on success

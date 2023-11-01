@@ -16,6 +16,7 @@ export default {
   cancel: "Cancel",
   signup: "Sign up",
   confirm: "Confirm",
+  rememberMe: "Remember me",
   or: "Or",
   temperature: "Temperature",
   ph: "Ph",

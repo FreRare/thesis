@@ -24,7 +24,7 @@ export default class User {
   getEmail(): string {
     return this._email;
   }
-  getToken(): string{
+  getToken(): string {
     return this._authToken;
   }
   toString(): string {

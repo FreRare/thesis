@@ -19,7 +19,7 @@ if(!empty($_POST["token"])){
     if(empty($user)){
         $result["error"] = "No user with given token found!";
     }else{
-        $result["user"] = $user->toJSON();
+        $result = $user->toJSON();
     }
 }
 $jsonResponse = json_encode(["data"=>$result]);

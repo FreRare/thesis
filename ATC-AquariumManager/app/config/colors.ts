@@ -15,4 +15,5 @@ export default {
   dataCircleBorder: "#34A853",
   dataTextBorder: "#CEEAD6",
   loadinAnimationColor: "#174EA6",
+  checkBoxColor: "#174EA6",
 };

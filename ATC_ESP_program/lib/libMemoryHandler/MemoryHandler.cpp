@@ -70,6 +70,7 @@ void MemoryHandler::clearMemory(const int& addr1, const int& addr2)
     this->actualAddress = addr1;
     for (; this->actualAddress < addr2; this->actualAddress++) {
         EEPROM.write(this->actualAddress, 0);
+        Serial.println("Deleting...");
     }
     Serial.println("Memory cleared from " + String(addr1) + " - " + String(addr2) + "! (upper address discluded)");
     EEPROM.commit();

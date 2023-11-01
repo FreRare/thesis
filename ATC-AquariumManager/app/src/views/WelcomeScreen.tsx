@@ -4,26 +4,22 @@ import Layout from "../components/Layout";
 import LoginForm from "../components/LoginForm";
 import Logo from "../components/Logo";
 import strings from "../../config/strings";
-import User from "../models/User";
-import useUser from "../utils/hooks/useUser";
 import RegistrationForm from "../components/RegistrationForm";
+import User from "../models/User";
 
 interface WelcomeScreenProps {
   navigation: any;
+  route: any;
+  setUser: (u: User | undefined | null) => void;
 }
 
 function WelcomeScreen(props: WelcomeScreenProps) {
   const [isLogin, setIsLogin] = React.useState<boolean>(true);
-  const [user, setUser] = useUser();
-  if (user instanceof User) {
-    // If we have a saved user redirect to home
-    props.navigation.navigate(strings.home);
-  }
 
   const welcomeImageUri = require("../../assets/ATC_app_welcome_screen_picture.jpg");
   return (
     <Layout
-      navigation={props.navigation}
+      navigation={props.route}
       shouldDisplayMenuBar={false}
       activeScreen={strings.welcome}
     >
@@ -32,14 +28,14 @@ function WelcomeScreen(props: WelcomeScreenProps) {
         {isLogin && (
           <LoginForm
             navigation={props.navigation}
-            setUser={setUser}
+            setUser={props.setUser}
             setIsLogin={setIsLogin}
           />
         )}
         {!isLogin && (
           <RegistrationForm
             navigation={props.navigation}
-            setUser={setUser}
+            setUser={props.setUser}
             setIsLogin={setIsLogin}
           />
         )}

@@ -36,6 +36,7 @@ class AQDAO implements AQDAOI
     const UPDATE_SENSOR_SAMPLE = "UPDATE sensorSamples SET sampleTime = ?, temp = ?, ph = ?, waterLvl = ?, lightAmount = ? WHERE id = ?";
     const CREATE_HAVE_AQUARIUM = "INSERT INTO haveAquarium (email, id) VALUES (?, ?)";
     const SELECT_USER_AQUARIUM_IDS = "SELECT id FROM haveAquarium WHERE email = ?";
+    const SELECT_USER_BY_AQUARIUM_ID = "SELECT users.email, users.firstName, users.lastName, users.password, users.deviceToken, users.authToken FROM haveAquarium INNER JOIN users ON users.email = haveAquarium.email WHERE haveAquarium.id = ?";
     const DELETE_HAVE_AQUARIUM_BY_ID = "DELETE FROM haveAquarium WHERE id = ?";
     const DELETE_HAVE_AQUARIUM_BY_USER = "DELETE FROM haveAquarium WHERE email = ?";
     protected function __construct()
@@ -94,7 +95,8 @@ class AQDAO implements AQDAOI
         }
     }
 
-    function selectUserByToken(string $token){
+    function selectUserByToken(string $token)
+    {
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_BY_TOKEN);
         $stm->bind_param("s", $token);
         $stm->execute();
@@ -114,15 +116,16 @@ class AQDAO implements AQDAOI
             return false;
         }
         $statement = $this->connection->prepare(AQDAO::CREATE_USER);
-        error_log($this->connection->error);
         $email = $user->getEmail();
         $pass = $user->getPassword();
         $fName = $user->getFirstName();
         $lName = $user->getLastName();
         $token = $user->getDeviceToken();
+        $authToken = $user->getAuthToken();
         $statement->bind_param("ssssss", $email, $pass, $fName, $lName, $token, $authToken);
 
         $success = $statement->execute();
+        error_log($this->connection->error);
         $statement->close();
         return $success;
     }
@@ -368,8 +371,9 @@ class AQDAO implements AQDAOI
 
     function createAquariumConnection(User $user, Aquarium $aquarium): bool
     {
-        if (!$user instanceof User || empty($id))
+        if (!$user instanceof User || !$aquarium instanceof Aquarium){
             return false;
+        }
 
         $stm = $this->connection->prepare(AQDAO::CREATE_HAVE_AQUARIUM);
         $email = $user->getEmail();
@@ -396,6 +400,21 @@ class AQDAO implements AQDAOI
             }
         }
         return $resultAquariums;
+    }
+    function selectUserForAquarium(int $id)
+    {
+        $stm = $this->connection->prepare(AQDAO::SELECT_USER_BY_AQUARIUM_ID);
+        error_log($this->connection->error);
+        $stm->bind_param("i", $id);
+        $stm->execute();
+        $stm->bind_result($email, $firstName, $lastName, $password, $deviceToken, $authToken);
+        error_log($email . $firstName . $lastName . $password . $deviceToken);
+        $stm->fetch();
+        $stm->close();
+        if(empty($email) || empty($firstName) || empty($lastName) || empty($password) || empty($deviceToken) || empty($authToken) || empty($deviceToken) || empty($authToken)){
+            return null;
+        }
+        return new User($email, $password, $firstName, $lastName, $deviceToken, $authToken);
     }
     function deleteAquariumConnectionByAquarium(Aquarium $aquarium): bool
     {

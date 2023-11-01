@@ -7,6 +7,7 @@ import {
   Text,
   ScrollView,
 } from "react-native";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import strings from "../../config/strings";
 import colors from "../../config/colors";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -17,12 +18,13 @@ import LoadingAnimation from "./LoadingAnimation";
 interface LoginScreenProps {
   navigation: any;
   setIsLogin: (l: boolean) => void;
-  setUser: (u: User | undefined | null) => void;
+  setUser: (u: User | undefined | null, rememberMe?: boolean) => void;
 }
 
 function LoginForm(props: LoginScreenProps) {
   const [email, setEmail] = React.useState("");
   const [pass, setPass] = React.useState("");
+  const [isRememberMe, setIsRememberMe] = React.useState<boolean>(true);
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -49,13 +51,12 @@ function LoginForm(props: LoginScreenProps) {
   const handleLogin = async () => {
     setLoading(true);
     if (!validateLoginFields()) {
+      setLoading(false);
       return;
     }
     const loginData = await AuthService.tryLogin(email, pass);
     if (loginData instanceof User) {
-      props.setUser(loginData); // Save user
-      setLoading(false);
-      props.navigation.naviagte(strings.home);
+      props.setUser(loginData, isRememberMe); // Save user
     } else {
       setError(loginData);
     }
@@ -90,6 +91,18 @@ function LoginForm(props: LoginScreenProps) {
         onChangeText={(t) => setPass(t)}
         secureTextEntry={true}
       ></TextInput>
+      <BouncyCheckbox
+        size={25}
+        style={{ flex: 1 }}
+        fillColor={colors.checkBoxColor}
+        innerIconStyle={{ borderWidth: 2 }}
+        text={strings.rememberMe}
+        textStyle={{ color: colors.checkBoxColor, textDecorationLine: "none" }}
+        isChecked={isRememberMe}
+        onPress={() => {
+          setIsRememberMe(!isRememberMe);
+        }}
+      />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text>{strings.login}</Text>
       </TouchableOpacity>
