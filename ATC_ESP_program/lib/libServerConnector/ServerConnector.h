@@ -6,24 +6,30 @@
 #include <ArduinoJson.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 
 #define CONN_TIMEOUT 60 // Connection timeout = timeout * 2 seconds
 // (2 min should be enough after power outage for the wifi to reboot)
 
 /**
  * This class is responsible for server communication
+ * Also handles Clock data from NTP server
  */
-
 class ServerConnector {
 private:
     WiFiClient client;
     HTTPClient httpClient;
+    WiFiUDP ntpUDP;
+    NTPClient* timeClient;
     AQWiFiConfig* config;
     static const String API_URL;
     static const String connectionCheckPath;
     static const String timePath;
     static const String sensorDataUploadPath;
     static const String notificationPath;
+    static const String weekDays[7];
+    static const String months[12];
 
 public:
     /**
@@ -43,6 +49,7 @@ public:
      */
     bool connectToNetwork();
     void disconnect();
+    NTPClient* getTimeClient() const;
 };
 
 #endif // ! ServerConnector_h

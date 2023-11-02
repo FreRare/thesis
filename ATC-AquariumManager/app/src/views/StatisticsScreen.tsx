@@ -1,8 +1,8 @@
 import { View } from "react-native";
 import React from "react";
 
-function ConfiguratorScreen() {
+function StatisticsScreen(props: any) {
   return <View></View>;
 }
 
-export default ConfiguratorScreen;
+export default StatisticsScreen;

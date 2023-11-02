@@ -5,16 +5,21 @@ const String ServerConnector::connectionCheckPath = "/connectionCheck.php";
 const String ServerConnector::timePath = "/getCurrentTime.php";
 const String ServerConnector::sensorDataUploadPath = "/sensorDataUpload.php";
 const String ServerConnector::notificationPath = "/notification.php";
+const String ServerConnector::weekDays[7]
+    = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+const String ServerConnector::months[12] = { "January", "February", "March", "April", "May", "June", "July", "August",
+    "September", "October", "November", "December" };
 
 ServerConnector::ServerConnector()
 {
+    this->timeClient = new NTPClient(this->ntpUDP, "pool.ntp.org");
     this->config = new AQWiFiConfig();
     if (this->connectToNetwork()) {
         UIHandler::getInstance()->clear();
         UIHandler::getInstance()->writeLine("Successful", 1);
         UIHandler::getInstance()->writeLine("      connection!", 2);
         UIHandler::getInstance()->writeLine("Your system ID: " + String(this->config->getSystemID()), 3);
-        UIHandler::getInstance()->makeScrollingText("Use this ID for registration inside the app!", 4, 300, 2);
+        UIHandler::getInstance()->makeScrollingText("Use this ID for registration inside the app!", 4, 300, 1);
     } else {
         UIHandler::getInstance()->clear();
         UIHandler::getInstance()->writeLine("Connection failed!", 1);
@@ -23,6 +28,8 @@ ServerConnector::ServerConnector()
         this->config->forgetNetwork();
         ESP.restart();
     }
+    this->timeClient->begin();
+    this->timeClient->setTimeOffset(3600);
 }
 
 ServerConnector::~ServerConnector()
@@ -30,6 +37,8 @@ ServerConnector::~ServerConnector()
     delete this->config;
     WiFi.disconnect();
 }
+
+NTPClient* ServerConnector::getTimeClient() const { return this->timeClient; }
 
 bool ServerConnector::connectToNetwork()
 {
