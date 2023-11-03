@@ -4,6 +4,7 @@ import DataDisplayCircle from "../components/DataDisplayCircle";
 import strings from "../../config/strings";
 import { View, StyleSheet, Text } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
+import colors from "../../config/colors";
 
 interface HomeScreenProps {
   navigation: any;
@@ -22,9 +23,13 @@ function HomeScreen(props: HomeScreenProps) {
     <Layout navigation={props.navigation} shouldDisplayMenuBar={true}>
       <View style={styles.horizontalSelectContainer}>
         <SelectList
-          boxStyles={{ backgroundColor: "red", width: 300 }}
-          inputStyles={{ color: "blue" }}
-          dropdownStyles={{ backgroundColor: "green", opacity: 1, zIndex: 99 }}
+          boxStyles={{ backgroundColor: colors.menuBarBackground, width: 300 }}
+          inputStyles={{ color: colors.black }}
+          dropdownStyles={{
+            backgroundColor: colors.menuBarBackground,
+            opacity: 1,
+            zIndex: 99,
+          }}
           placeholder={strings.aquariumSelctorPlaceholder}
           setSelected={(val: string) => setSelected(val)}
           data={data}
