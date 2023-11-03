@@ -106,7 +106,7 @@ const useUser = (): [
         if (storagePermissionAllowed) {
           if (rememberMe) {
             // Store user token
-            await SecureStorage.setItemAsync("user_token", user.getToken());
+            await SecureStorage.setItemAsync("user_token", user.authToken);
           }
           // store session data
           await AsyncStorage.setItem("user_session", JSON.stringify(user));
@@ -164,7 +164,7 @@ const useUser = (): [
               AsyncStorage.setItem("user_session", JSON.stringify(authResult));
             }
           } else {
-            // If we have no toke -> user wasn't remembered -> user is undefined
+            // If we have no token -> user wasn't remembered -> user is undefined
             _setUser(undefined);
           }
         }

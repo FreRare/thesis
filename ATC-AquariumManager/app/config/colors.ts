@@ -1,6 +1,7 @@
 export default {
   primary: "#0D652D",
   secondary: "#34A853",
+  third: "#B0FFB0",
   background: "#D2E3FC",
   menuBarBackground: "#F1F3F4",
   textPrimary: "black",

@@ -26,11 +26,8 @@ function Navigation() {
           <item.component {...props} setUser={setUser} />
         )}
         options={{
-          tabBarStyle: [styles.tabBarStyle],
+          tabBarStyle: styles.tabBarStyle,
           tabBarShowLabel: false,
-          tabBarIcon: ({ color }) => (
-            <Icon name={item.icon as string} size={30} color={color} />
-          ),
           tabBarButton: (props: any) => (
             <MenuBarButton {...props} item={item} />
           ),
@@ -39,29 +36,27 @@ function Navigation() {
     );
   });
   return (
-    <>
-      <Tab.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        {user ? (
-          bottomNav
-        ) : (
-          <>
-            <Tab.Screen
-              name={strings.welcome}
-              initialParams={{ user: user }}
-              options={{
-                tabBarStyle: { display: "none" },
-              }}
-            >
-              {(props: any) => <WelcomeScreen {...props} setUser={setUser} />}
-            </Tab.Screen>
-          </>
-        )}
-      </Tab.Navigator>
-    </>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      {user ? (
+        bottomNav
+      ) : (
+        <>
+          <Tab.Screen
+            name={strings.welcome}
+            initialParams={{ user: user }}
+            options={{
+              tabBarStyle: { display: "none" },
+            }}
+          >
+            {(props: any) => <WelcomeScreen {...props} setUser={setUser} />}
+          </Tab.Screen>
+        </>
+      )}
+    </Tab.Navigator>
   );
 }
 

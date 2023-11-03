@@ -31,7 +31,7 @@ function Layout(props: LayoutComponentProps) {
 const styles = StyleSheet.create({
   layout: {
     marginTop: Platform.OS === "android" ? 30 : 0,
-    marginBottom: 80,
+    paddingBottom: 80,
     backgroundColor: colors.background,
     flex: 1,
     flexDirection: "column",
