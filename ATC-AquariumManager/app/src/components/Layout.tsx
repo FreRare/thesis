@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import MenuBar from "./MenuBar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import colors from "../../config/colors";
@@ -9,7 +9,6 @@ interface LayoutComponentProps {
   children: ReactNode;
   navigation: any;
   shouldDisplayMenuBar: boolean;
-  activeScreen: string;
 }
 
 function Layout(props: LayoutComponentProps) {
@@ -20,13 +19,10 @@ function Layout(props: LayoutComponentProps) {
         contentContainerStyle={styles.layout}
         scrollEnabled={false}
       >
-        {props.children}
-        {false && (
-          <MenuBar
-            navigation={props.navigation}
-            activeScreen={props.activeScreen}
-          ></MenuBar>
+        {props.shouldDisplayMenuBar && (
+          <MenuBar navigation={props.navigation} />
         )}
+        {props.children}
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
@@ -34,6 +30,8 @@ function Layout(props: LayoutComponentProps) {
 
 const styles = StyleSheet.create({
   layout: {
+    marginTop: Platform.OS === "android" ? 30 : 0,
+    marginBottom: 80,
     backgroundColor: colors.background,
     flex: 1,
     flexDirection: "column",

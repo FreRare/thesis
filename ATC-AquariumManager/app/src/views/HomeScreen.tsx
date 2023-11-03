@@ -2,7 +2,7 @@ import React from "react";
 import Layout from "../components/Layout";
 import DataDisplayCircle from "../components/DataDisplayCircle";
 import strings from "../../config/strings";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 
 interface HomeScreenProps {
@@ -19,20 +19,18 @@ function HomeScreen(props: HomeScreenProps) {
   ];
 
   return (
-    <Layout
-      navigation={props.navigation}
-      shouldDisplayMenuBar={true}
-      activeScreen={strings.home}
-    >
-      <View style={styles.horizontalContainer}>
+    <Layout navigation={props.navigation} shouldDisplayMenuBar={true}>
+      <View style={styles.horizontalSelectContainer}>
         <SelectList
-          placeholder="Select your aquarium"
+          boxStyles={{ backgroundColor: "red", width: 300 }}
+          inputStyles={{ color: "blue" }}
+          dropdownStyles={{ backgroundColor: "green", opacity: 1, zIndex: 99 }}
+          placeholder={strings.aquariumSelctorPlaceholder}
           setSelected={(val: string) => setSelected(val)}
           data={data}
           save="value"
         />
       </View>
-      <View style={styles.horizontalContainer}></View>
       <View style={styles.horizontalDataContainer}>
         <DataDisplayCircle
           title={strings.temperature}
@@ -47,13 +45,23 @@ function HomeScreen(props: HomeScreenProps) {
           data="20%"
         ></DataDisplayCircle>
       </View>
+      <View style={styles.horizontalInfoContainer}>
+        <Text>Last measured: 2023.10.23. 12:56</Text>
+      </View>
     </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  horizontalContainer: {
-    flex: 0.6,
+  horizontalInfoContainer: {
+    flex: 0.5,
+    alignContent: "center",
+    justifyContent: "center",
+    marginTop: -20,
+  },
+  horizontalSelectContainer: {
+    flex: 0.4,
+    margin: 30,
   },
   horizontalDataContainer: {
     flex: 1,

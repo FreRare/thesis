@@ -20,6 +20,7 @@ void setup()
     server = new ServerConnector();
     actuatorHandler = new ActuatorHandler();
     pinMode(LAMP_RELAY_PIN, OUTPUT);
+    ActuatorHandler::isChannel1Active = false;
 }
 
 void loop()
@@ -27,9 +28,14 @@ void loop()
     server->getTimeClient()->update();
     // This little logic should turn on relay at 8 and turn it off at 20
     int currentHours = server->getTimeClient()->getHours();
-    if (currentHours >= 8 && !ActuatorHandler::isChannel1Active) {
+    int currentMins = server->getTimeClient()->getMinutes();
+    int currentSecs = server->getTimeClient()->getSeconds();
+    UIHandler::getInstance()->clear();
+    UIHandler::getInstance()->writeLine("Clock " + String(currentHours) + ":" + String(currentMins) + ":" + currentSecs, 1);
+    if (currentHours >= 8 && currentHours <= 20 && !ActuatorHandler::isChannel1Active) {
         actuatorHandler->toggleChannel1();
-    } else if (currentHours >= 20 && ActuatorHandler::isChannel1Active) {
+    } else if ((currentHours > 20 || currentHours < 8) && ActuatorHandler::isChannel1Active) {
         actuatorHandler->toggleChannel1();
     }
+    delay(1000);
 }

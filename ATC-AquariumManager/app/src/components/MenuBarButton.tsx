@@ -30,7 +30,13 @@ function MenuBarButton(props: any) {
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={1}
-      style={[styles.container, { flex: selected ? 1 : 0.6 }]}
+      style={[
+        styles.container,
+        {
+          flex: selected ? 1 : 0.6,
+          display: item.displayOnBottom ? "flex" : "none",
+        },
+      ]}
     >
       <View>
         <Animatable.View

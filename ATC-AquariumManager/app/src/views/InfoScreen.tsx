@@ -1,7 +1,7 @@
 import React from "react";
 
 function InfoScreen() {
-  return <div></div>;
+  return <></>;
 }
 
 export default InfoScreen;

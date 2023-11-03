@@ -16,23 +16,19 @@ function ProfileScreen(props: ProfileScreenProps) {
   };
 
   return (
-    <Layout
-      navigation={props.navigation}
-      shouldDisplayMenuBar={true}
-      activeScreen={strings.profile}
-    >
+    <Layout navigation={props.navigation} shouldDisplayMenuBar={true}>
       <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={handleLogout}>
-        <Text>LOGOUT</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleLogout}>
+          <Text>LOGOUT</Text>
+        </TouchableOpacity>
       </View>
     </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  container:{
-    flex: 1
+  container: {
+    flex: 1,
   },
   button: {
     margin: 30,

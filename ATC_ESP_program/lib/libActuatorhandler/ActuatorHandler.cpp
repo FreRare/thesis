@@ -6,6 +6,6 @@ bool ActuatorHandler::isChannel3Active = false;
 
 ActuatorHandler::ActuatorHandler() { pinMode(RELAY_CHANNEL_1_PIN, OUTPUT); }
 
-void ActuatorHandler::toggleChannel1() { ActuatorHandler::isChannel1Active = !ActuatorHandler::isChannel1Active; }
+void ActuatorHandler::toggleChannel1() { ActuatorHandler::isChannel1Active = !ActuatorHandler::isChannel1Active; digitalWrite(RELAY_CHANNEL_1_PIN, ActuatorHandler::isChannel1Active ? HIGH : LOW); }
 void ActuatorHandler::toggleChannel2() { ActuatorHandler::isChannel2Active = !ActuatorHandler::isChannel2Active; }
 void ActuatorHandler::toggleChannel3() { ActuatorHandler::isChannel3Active = !ActuatorHandler::isChannel3Active; }

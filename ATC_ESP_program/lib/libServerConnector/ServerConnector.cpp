@@ -57,6 +57,7 @@ bool ServerConnector::connectToNetwork()
             return false;
         }
         delay(2000);
+        Serial.println("Connecting...");
         connectionTimeout++;
     }
     // If connection is ok let's check the connection

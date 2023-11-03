@@ -1,120 +1,82 @@
 import React from "react";
-import { View, Button, Text } from "react-native";
+import { View, Text } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import colors from "../../config/colors";
 import strings from "../../config/strings";
-import { TouchableHighlight, StyleSheet } from "react-native";
-import { TouchableNativeFeedback } from "react-native";
+import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native";
-
-interface MenuBarProps {
-  navigation: any;
-  activeScreen: string;
-}
+import { Menu, MenuItem } from "react-native-material-menu";
+import NavigationScreens from "../utils/NavigationScreens";
 
 /**
- *
+ * This is the top menuBar, for additional sites like profile, settings and info
  * @param props Should give it the navigation prop so it can navigate properly
  * @returns The menu bar used to navigate between pages for an authenticated user
  */
+
+type MenuBarProps = {
+  navigation: any;
+};
+
 function MenuBar(props: MenuBarProps) {
+  const [menuVisible, setMenuVisible] = React.useState(false);
+
+  const showMenu = () => setMenuVisible(true);
+
+  const hideMenu = () => setMenuVisible(false);
+
+  const topNavItems = NavigationScreens.filter(
+    (val: any) => !val.displayOnBottom
+  );
+
+  const menuItems = topNavItems.map((item, index) => {
+    return (
+      <MenuItem
+        key={index}
+        onPress={() => {
+          hideMenu;
+          props.navigation.navigate(item.name);
+        }}
+      >
+        <Icon name={item.icon} size={20} />
+        <View style={{ paddingHorizontal: 10 }}>
+          <Text>{item.title}</Text>
+        </View>
+      </MenuItem>
+    );
+  });
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={
-          props.activeScreen === strings.aquariums
-            ? styles.activeTouchable
-            : styles.touchable
+      <Text style={styles.title}>{strings.projetName}</Text>
+      <Menu
+        visible={menuVisible}
+        anchor={
+          <TouchableOpacity onPress={showMenu}>
+            <Icon name="bars" size={30} />
+          </TouchableOpacity>
         }
-        onPress={() => props.navigation.navigate(strings.aquariums)}
+        onRequestClose={hideMenu}
       >
-        <Icon name="dotchart" size={30} color={colors.primary} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={
-          props.activeScreen === strings.configs
-            ? styles.activeTouchable
-            : styles.touchable
-        }
-        onPress={() => props.navigation.navigate(strings.configs)}
-      >
-        <Icon name="tool" size={30} color={colors.primary} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={
-          props.activeScreen === strings.home
-            ? styles.activeTouchable
-            : styles.touchable
-        }
-        onPress={() => props.navigation.navigate(strings.home)}
-      >
-        <Icon name="home" size={30} color={colors.primary} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={
-          props.activeScreen === strings.statistics
-            ? styles.activeTouchable
-            : styles.touchable
-        }
-        onPress={() => props.navigation.navigate(strings.statistics)}
-      >
-        <Icon name="barchart" size={30} color={colors.primary} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={
-          props.activeScreen === strings.profile
-            ? styles.activeTouchable
-            : styles.touchable
-        }
-        onPress={() => props.navigation.navigate(strings.profile)}
-      >
-        <Icon name="user" size={30} color={colors.primary} />
-      </TouchableOpacity>
+        {menuItems}
+      </Menu>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.menuBarBackground,
+    paddingRight: 20,
     flexDirection: "row",
-    alignContent: "flex-end",
+    height: 60,
     width: "100%",
-    height: 80,
-    padding: 5,
-    borderTopStartRadius: 30,
-    borderTopEndRadius: 30,
-    borderTopColor: colors.menuTopBorder,
-    borderStartColor: colors.menuTopBorder,
-    borderEndColor: colors.menuTopBorder,
-    borderTopWidth: 3,
-    borderStartWidth: 1,
-    borderEndWidth: 1,
-  },
-  touchable: {
+    backgroundColor: colors.menuBarBackground,
     alignItems: "center",
-    alignContent: "center",
-    justifyContent: "center",
-    flex: 1,
-    marginLeft: 6,
-    marginRight: 6,
-    borderWidth: 2,
-    padding: 3,
-    borderRadius: 100,
-    borderColor: colors.menuBorder,
+    justifyContent: "flex-end",
   },
-  activeTouchable: {
-    alignItems: "center",
-    alignContent: "center",
-    justifyContent: "center",
-    flex: 2.5,
-    marginLeft: 6,
-    marginRight: 6,
-    borderWidth: 2,
-    padding: 3,
-    borderRadius: 100,
-    borderColor: colors.menuHighlightBorder,
-    backgroundColor: colors.menuHighlightBG,
+  title: {
+    marginRight: 100,
+    fontSize: 20,
   },
 });
 
