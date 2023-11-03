@@ -3,7 +3,7 @@ import User from "../../models/User";
 import * as SecureStorage from "expo-secure-store";
 import AuthService from "../../services/AuthService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { PermissionsAndroid } from "react-native";
+import { PermissionsAndroid, Platform } from "react-native";
 
 /**
  * Function to request storage permissions
@@ -89,7 +89,9 @@ const useUser = (): [
     rememberMe: boolean = false
   ): Promise<void> => {
     const storagePermissionAllowed =
-      await requestStoragePermissionsForAndroid();
+      Platform.OS === "web"
+        ? false
+        : await requestStoragePermissionsForAndroid();
 
     if (user === null) {
       // If we have null means we want to delete token

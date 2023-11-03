@@ -6,14 +6,16 @@ class Aquarium
     private $length;
     private $height;
     private $width;
+    private $fishCount;
 
-    public function __construct($id, $name, $length, $height, $width)
+    public function __construct($id, $name, $length, $height, $width, $fishCount)
     {
         $this->id = $id;
         $this->name = $name;
         $this->length = $length;
         $this->height = $height;
         $this->width = $width;
+        $this->fishCount = $fishCount;
     }
 
     public function getId() {return $this->id;}
@@ -25,5 +27,6 @@ class Aquarium
 	public function getHeight() {return $this->height;}
 
 	public function getWidth() {return $this->width;}
+    public function getfishCount() {return $this->fishCount;}
     public function toString() {return "AQUARIUM: " . $this->getName() . "::" . $this->getId() . "::" . $this->getLength() . "::" . $this->getHeight() . "::" . $this->getWidth();}
 }

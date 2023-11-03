@@ -10,6 +10,7 @@ export default class Aquarium {
   private _length: Number;
   private _height: Number;
   private _width: Number;
+  private _fishCount: Number;
   private _config: AquariumConfiguration;
   private _samples: Array<SensorSample>;
 
@@ -19,6 +20,7 @@ export default class Aquarium {
     length = 60,
     height = 30,
     width = 30,
+    fishCount = 10,
     config = new AquariumConfiguration(),
     samples = []
   ) {
@@ -27,6 +29,7 @@ export default class Aquarium {
     this._length = length;
     this._height = height;
     this._width = width;
+    this._fishCount = fishCount;
     this._config = config;
     this._samples = samples;
   }
@@ -75,5 +78,12 @@ export default class Aquarium {
   }
   public set samples(value: Array<SensorSample>) {
     this._samples = value;
+  }
+
+  public get fishCount(): Number {
+    return this._fishCount;
+  }
+  public set fishCount(value: Number) {
+    this._fishCount = value;
   }
 }

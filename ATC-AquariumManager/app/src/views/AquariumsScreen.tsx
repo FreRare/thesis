@@ -37,6 +37,13 @@ function AquariumsScreen(props: AquariumsScreenProps) {
   const [aquariums, setAquariums] =
     React.useState<Array<Aquarium>>(loadedAquariums); // To store the aquaiums list
 
+  const sortMethodChangeHandler = () => {
+    const sorted = aquariums.sort(
+      AquariumSortingMethodsList.find((val) => val.key === sortingMethod)?.value
+    );
+    setAquariums(sorted);
+  };
+
   // Callback for the editor form
   const editHandler = (aq: Aquarium) => {
     setEdited(null);
@@ -76,11 +83,19 @@ function AquariumsScreen(props: AquariumsScreenProps) {
         ]}
       >
         <SelectList
-          boxStyles={{ backgroundColor: "red", width: 300 }}
-          inputStyles={{ color: "blue" }}
-          dropdownStyles={{ backgroundColor: "green", opacity: 1, zIndex: 99 }}
+          boxStyles={{
+            backgroundColor: colors.menuBarBackground,
+            width: 300,
+          }}
+          inputStyles={{ color: colors.black }}
+          dropdownStyles={{
+            backgroundColor: colors.menuBarBackground,
+            opacity: 1,
+            zIndex: 9,
+          }}
           placeholder={strings.sortSelectorPlaceholder}
-          setSelected={(val: any) => setSortingMethod(val)}
+          setSelected={(val: string) => setSortingMethod(val)}
+          onSelect={() => sortMethodChangeHandler()}
           data={AquariumSortingMethodsSelectList}
           save="value"
         />

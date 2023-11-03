@@ -2,8 +2,8 @@ import React from "react";
 import Aquarium from "../models/Aquarium";
 import { View, Text, StyleSheet } from "react-native";
 import colors from "../../config/colors";
-import strings from "../../config/strings";
 import Icon from "react-native-vector-icons/AntDesign";
+import strings from "../../config/strings";
 
 type AquariumCardProps = {
   navigation: any;
@@ -16,22 +16,36 @@ function AquariumCard(props: AquariumCardProps) {
   return (
     <View style={styles.card}>
       <View style={styles.horizontal}>
-        <Text style={{ marginRight: 170 }}>{props.item.name}</Text>
-        <Icon
-          name="edit"
-          size={25}
-          onPress={() => {
-            props.setEdited(props.item);
-            props.setEditing(true);
-          }}
-        />
+        <View style={styles.vertical}>
+          <Text style={{ marginRight: "20%" }}>{props.item.name}</Text>
+        </View>
+        <View style={styles.verticalRight}>
+          <Icon
+            name="edit"
+            size={25}
+            onPress={() => {
+              props.setEdited(props.item);
+              props.setEditing(true);
+            }}
+          />
+        </View>
       </View>
       <View style={styles.horizontal}>
         <Text>
           {"Dimensions: " +
             [props.item.length, props.item.height, props.item.width].join(
               " * "
-            )}
+            ) +
+            " ( " +
+            String(
+              (props.item.length * props.item.height * props.item.width) / 1000
+            ) +
+            " L)"}
+        </Text>
+      </View>
+      <View style={styles.horizontal}>
+        <Text>
+          {strings.currentFishCount + ": " + String(props.item.fishCount)}
         </Text>
       </View>
     </View>
@@ -40,7 +54,7 @@ function AquariumCard(props: AquariumCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    height: 200,
+    height: 140,
     width: "100%",
     borderWidth: 4,
     borderColor: colors.menuHighlightBG,
@@ -51,8 +65,21 @@ const styles = StyleSheet.create({
   },
   horizontal: {
     flex: 1,
+    width: "100%",
     flexDirection: "row",
     paddingHorizontal: 10,
+  },
+  vertical: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    flexDirection: "column",
+  },
+  verticalRight: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-end",
+    flexDirection: "column",
   },
 });
 

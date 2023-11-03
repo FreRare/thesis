@@ -7,12 +7,12 @@ class AQConfig
     private $maxTemp;
     private $minPh;
     private $maxPh;
-    private $lightOn;
-    private $lightOff;
-    private $filterOn;
-    private $filterOff;
-    private $airOn;
-    private $airOff;
+    private $onOutlet1;
+    private $offOutlet1;
+    private $onOutlet2;
+    private $offOutlet2;
+    private $onOutet3;
+    private $offOutlet3;
     private $waterLvlAlert;
     private $prefLight;
     private $feedingTime;
@@ -22,19 +22,19 @@ class AQConfig
     private $samplePeriod;
     private $lastModifiedDate;
 
-    public function __construct($AquariumId, $minTemp, $maxTemp, $minPh, $maxPh, $lightOn, $lightOff, $filterOn, $filterOff, $airOn, $airOff, $waterLvlAlert, $prefLight, $feedingTime, $foodPortions, $filterClean, $waterChange, $samplePeriod, $lastModifiedDate)
+    public function __construct($AquariumId, $minTemp, $maxTemp, $minPh, $maxPh, $onOutlet1, $offOutlet1, $onOutlet2, $offOutlet2, $onOutet3, $offOutlet3, $waterLvlAlert, $prefLight, $feedingTime, $foodPortions, $filterClean, $waterChange, $samplePeriod, $lastModifiedDate)
     {
         $this->AquariumId = $AquariumId;
         $this->minTemp = $minTemp;
         $this->maxTemp = $maxTemp;
         $this->minPh = $minPh;
         $this->maxPh = $maxPh;
-        $this->lightOn = $lightOn;
-        $this->lightOff = $lightOff;
-        $this->filterOn = $filterOn;
-        $this->filterOff = $filterOff;
-        $this->airOn = $airOn;
-        $this->airOff = $airOff;
+        $this->onOutlet1 = $onOutlet1;
+        $this->offOutlet1 = $offOutlet1;
+        $this->onOutlet2 = $onOutlet2;
+        $this->offOutlet2 = $offOutlet2;
+        $this->onOutet3 = $onOutet3;
+        $this->offOutlet3 = $offOutlet3;
         $this->waterLvlAlert = $waterLvlAlert;
         $this->prefLight = $prefLight;
         $this->feedingTime = $feedingTime;
@@ -70,34 +70,34 @@ class AQConfig
         return $this->maxPh;
     }
 
-    public function getLightOn()
+    public function getOnOutlet1()
     {
-        return $this->lightOn;
+        return $this->onOutlet1;
     }
 
-    public function getLightOff()
+    public function getOffOutlet1()
     {
-        return $this->lightOff;
+        return $this->offOutlet1;
     }
 
-    public function getFilterOn()
+    public function getOnOutlet2()
     {
-        return $this->filterOn;
+        return $this->onOutlet2;
     }
 
-    public function getFilterOff()
+    public function getOffOutlet2()
     {
-        return $this->filterOff;
+        return $this->offOutlet2;
     }
 
-    public function getAirOn()
+    public function getOnOutlet3()
     {
-        return $this->airOn;
+        return $this->onOutet3;
     }
 
-    public function getAirOff()
+    public function getOffOutlet3()
     {
-        return $this->airOff;
+        return $this->offOutlet3;
     }
 
     public function getWaterLvlAlert()

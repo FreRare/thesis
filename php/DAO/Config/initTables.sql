@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS aquariums(
     length INT NOT NULL,
     height INT NOT NULL,
     depth INT NOT NULL,
+    fishCount INT,
 
     PRIMARY KEY (id)
 );
@@ -49,12 +50,12 @@ CREATE TABLE IF NOT EXISTS configs(
     maxTemp INT NOT NULL,
     minPh FLOAT(2, 2) NOT NULL,
     maxPh FLOAT(2, 2) NOT NULL,
-    lightOn INT NOT NULL,
-    lightOff INT NOT NULL,
-    filterOn INT NOT NULL,
-    filterOff INT NOT NULL,
-    airOn INT NOT NULL,
-    airOff INT NOT NULL,
+    OnOutlet1 INT NOT NULL,
+    OffOutlet1 INT NOT NULL,
+    OnOutlet2 INT NOT NULL,
+    OffOutlet2 INT NOT NULL,
+    OnOutlet3 INT NOT NULL,
+    OffOutlet3 INT NOT NULL,
     waterLvlAlert INT NOT NULL,
     prefLight INT NOT NULL,
     feedingTime INT NOT NULL,

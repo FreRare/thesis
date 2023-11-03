@@ -21,24 +21,24 @@ class AQDAO implements AQDAOI
     private const SELECT_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
     private const SELECT_USER_BY_TOKEN = "SELECT * FROM users WHERE authToken = ?";
     private const UPDATE_USER = "UPDATE users SET email = ?, password = ?, firstName = ?, lastName = ?, deviceToken = ? WHERE email = ?";
-    const SELECT_AQUARIUM = "SELECT * FROM aquariums WHERE id = ?";
-    const CREATE_AQUARIUM = "INSERT INTO aquariums (name, length, height, depth) VALUES (?, ?, ?, ?)";
-    const DELETE_AQUARIUM = "DELETE FROM aquariums WHERE id = ?";
-    const UPDATE_AQUARIUM = "UPDATE aquariums SET name = ?, length = ?, height = ?, depth = ? WHERE id = ?";
-    const SELECT_CONFIG_FOR_AQUARIUM = "SELECT * FROM configs WHERE id = ?";
-    const CREATE_CONFIG = "INSERT INTO configs (id, minTemp, maxTemp, minPh, maxPh, lightOn, lightOff, filterOn, filterOff, airOn, airOff, waterLvlAlert, prefLight, feedingTime, foodPortions, filterClean, waterChange, samplePeriod, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    const DELETE_CONFIG = "DELETE FROM configs WHERE id = ?";
-    const UPDATE_CONFIG = "UPDATE configs SET minTemp = ?, maxTemp = ?, minPh = ?, maxPh = ?, lightOn = ?, lightOff = ?, filterOn = ?, filterOff = ?, airOn = ?, airOff = ?, waterLvlAlert = ?, prefLight = ?, feedingTime = ?, foodPortions = ?, filterClean = ?, waterChange = ?, samplePeriod = ?, lastModifiedDate = ? WHERE id = ?";
-    const SELECT_SENSOR_SAMPLES_FOR_AQUARIUM = "SELECT * FROM sensorSamples WHERE id = ?";
-    const SELECT_SENSOR_SAMPLES_FOR_AQUARIUM_IN_RANGE = "SELECT * FROM sensorSamples WHERE id = ? AND sampleTime >= ? AND sampleTime <= ?";
-    const CREATE_SENSOR_SAMPLE = "INSERT INTO sensorSamples (id, sampleTime, temp, ph, waterLvl, lightAmount) VALUES (?, ?, ?, ?, ?, ?)";
-    const DELETE_SENSOR_SAMPLE = "DELETE FROM sensorSamples WHERE id = ?";
-    const UPDATE_SENSOR_SAMPLE = "UPDATE sensorSamples SET sampleTime = ?, temp = ?, ph = ?, waterLvl = ?, lightAmount = ? WHERE id = ?";
-    const CREATE_HAVE_AQUARIUM = "INSERT INTO haveAquarium (email, id) VALUES (?, ?)";
-    const SELECT_USER_AQUARIUM_IDS = "SELECT id FROM haveAquarium WHERE email = ?";
-    const SELECT_USER_BY_AQUARIUM_ID = "SELECT users.email, users.firstName, users.lastName, users.password, users.deviceToken, users.authToken FROM haveAquarium INNER JOIN users ON users.email = haveAquarium.email WHERE haveAquarium.id = ?";
-    const DELETE_HAVE_AQUARIUM_BY_ID = "DELETE FROM haveAquarium WHERE id = ?";
-    const DELETE_HAVE_AQUARIUM_BY_USER = "DELETE FROM haveAquarium WHERE email = ?";
+    private const SELECT_AQUARIUM = "SELECT * FROM aquariums WHERE id = ?";
+    private const CREATE_AQUARIUM = "INSERT INTO aquariums (name, length, height, depth, fishCount) VALUES (?, ?, ?, ?, ?)";
+    private const DELETE_AQUARIUM = "DELETE FROM aquariums WHERE id = ?";
+    private const UPDATE_AQUARIUM = "UPDATE aquariums SET name = ?, length = ?, height = ?, depth = ?, fishCount = ? WHERE id = ?";
+    private const SELECT_CONFIG_FOR_AQUARIUM = "SELECT * FROM configs WHERE id = ?";
+    private const CREATE_CONFIG = "INSERT INTO configs (id, minTemp, maxTemp, minPh, maxPh, OnOUtuet1, OffOutlet1, OnOutlet2, OffOutlet2, OnOutlet3, OffOutlet3, waterLvlAlert, prefLight, feedingTime, foodPortions, filterClean, waterChange, samplePeriod, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private const DELETE_CONFIG = "DELETE FROM configs WHERE id = ?";
+    private const UPDATE_CONFIG = "UPDATE configs SET minTemp = ?, maxTemp = ?, minPh = ?, maxPh = ?, OnOutlet1 = ?, OffOutlet1 = ?, OnOutlet2 = ?, OffOutlet2 = ?, OnOutlet3 = ?, OffOutlet3 = ?, waterLvlAlert = ?, prefLight = ?, feedingTime = ?, foodPortions = ?, filterClean = ?, waterChange = ?, samplePeriod = ?, lastModifiedDate = ? WHERE id = ?";
+    private const SELECT_SENSOR_SAMPLES_FOR_AQUARIUM = "SELECT * FROM sensorSamples WHERE id = ?";
+    private const SELECT_SENSOR_SAMPLES_FOR_AQUARIUM_IN_RANGE = "SELECT * FROM sensorSamples WHERE id = ? AND sampleTime >= ? AND sampleTime <= ?";
+    private const CREATE_SENSOR_SAMPLE = "INSERT INTO sensorSamples (id, sampleTime, temp, ph, waterLvl, lightAmount) VALUES (?, ?, ?, ?, ?, ?)";
+    private const DELETE_SENSOR_SAMPLE = "DELETE FROM sensorSamples WHERE id = ?";
+    private const UPDATE_SENSOR_SAMPLE = "UPDATE sensorSamples SET sampleTime = ?, temp = ?, ph = ?, waterLvl = ?, lightAmount = ? WHERE id = ?";
+    private const CREATE_HAVE_AQUARIUM = "INSERT INTO haveAquarium (email, id) VALUES (?, ?)";
+    private const SELECT_USER_AQUARIUM_IDS = "SELECT id FROM haveAquarium WHERE email = ?";
+    private const SELECT_USER_BY_AQUARIUM_ID = "SELECT users.email, users.firstName, users.lastName, users.password, users.deviceToken, users.authToken FROM haveAquarium INNER JOIN users ON users.email = haveAquarium.email WHERE haveAquarium.id = ?";
+    private const DELETE_HAVE_AQUARIUM_BY_ID = "DELETE FROM haveAquarium WHERE id = ?";
+    private const DELETE_HAVE_AQUARIUM_BY_USER = "DELETE FROM haveAquarium WHERE email = ?";
     protected function __construct()
     {
         $this->config = new DBConfig();
@@ -160,13 +160,13 @@ class AQDAO implements AQDAOI
         $stm = $this->connection->prepare(AQDAO::SELECT_AQUARIUM);
         $stm->bind_param("i", $id);
         $stm->execute();
-        $stm->bind_result($id, $name, $length, $height, $width);
+        $stm->bind_result($id, $name, $length, $height, $width, $fishCount);
         $stm->fetch();
         $stm->close();
-        if (empty($id) || empty($name) || empty($length) || empty($height) || empty($width)) {
+        if (empty($id) || empty($name) || empty($length) || empty($height) || empty($width) || empty($fishCount)) {
             return null;
         } else {
-            return new Aquarium($id, $name, $length, $height, $width);
+            return new Aquarium($id, $name, $length, $height, $width, $fishCount);
         }
     }
 
@@ -177,12 +177,13 @@ class AQDAO implements AQDAOI
         $length = $aquarium->getLength();
         $height = $aquarium->getHeight();
         $width = $aquarium->getWidth();
-        $stm->bind_param("siii", $name, $length, $height, $width);
+        $fishCount = $aquarium->getfishCount();
+        $stm->bind_param("siii", $name, $length, $height, $width, $fishCount);
         $success = $stm->execute();
         $newId = $stm->insert_id;
         $stm->close();
         if ($success) {
-            return new Aquarium($newId, $name, $length, $height, $width);
+            return new Aquarium($newId, $name, $length, $height, $width, $fishCount);
         } else {
             return null;
         }
@@ -206,7 +207,8 @@ class AQDAO implements AQDAOI
         $height = $aquarium->getHeight();
         $width = $aquarium->getWidth();
         $id = $aquarium->getId();
-        $stm->bind_param("siiii", $name, $length, $height, $width, $id);
+        $fishC = $aquarium->getfishCount();
+        $stm->bind_param("siiii", $name, $length, $height, $width, $id, $fishC);
         $success = $stm->execute();
         $stm->close();
         return $success;
@@ -234,12 +236,12 @@ class AQDAO implements AQDAOI
         $maxTemp = $aqConfig->getMaxTemp();
         $minPh = $aqConfig->getMinPh();
         $maxPh = $aqConfig->getMaxPh();
-        $lightOn = $aqConfig->getLightOn();
-        $lightOff = $aqConfig->getLightOff();
-        $filterOn = $aqConfig->getFilterOn();
-        $filterOff = $aqConfig->getFilterOff();
-        $airOn = $aqConfig->getAirOn();
-        $airOff = $aqConfig->getAirOff();
+        $lightOn = $aqConfig->getOnOutlet1();
+        $lightOff = $aqConfig->getOffOutlet1();
+        $filterOn = $aqConfig->getOnOutlet2();
+        $filterOff = $aqConfig->getOffOutlet2();
+        $airOn = $aqConfig->getOnOutlet3();
+        $airOff = $aqConfig->getOffOutlet3();
         $waterLvlAlert = $aqConfig->getWaterLvlAlert();
         $prefLight = $aqConfig->getPrefLight();
         $feedingTime = $aqConfig->getFeedingTime();
@@ -272,12 +274,12 @@ class AQDAO implements AQDAOI
         $maxTemp = $aqConfig->getMaxTemp();
         $minPh = $aqConfig->getMinPh();
         $maxPh = $aqConfig->getMaxPh();
-        $lightOn = $aqConfig->getLightOn();
-        $lightOff = $aqConfig->getLightOff();
-        $filterOn = $aqConfig->getFilterOn();
-        $filterOff = $aqConfig->getFilterOff();
-        $airOn = $aqConfig->getAirOn();
-        $airOff = $aqConfig->getAirOff();
+        $lightOn = $aqConfig->getOnOutlet1();
+        $lightOff = $aqConfig->getOffOutlet1();
+        $filterOn = $aqConfig->getOnOutlet2();
+        $filterOff = $aqConfig->getOffOutlet2();
+        $airOn = $aqConfig->getOnOutlet3();
+        $airOff = $aqConfig->getOffOutlet3();
         $waterLvlAlert = $aqConfig->getWaterLvlAlert();
         $prefLight = $aqConfig->getPrefLight();
         $feedingTime = $aqConfig->getFeedingTime();

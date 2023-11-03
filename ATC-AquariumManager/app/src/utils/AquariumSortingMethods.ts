@@ -3,20 +3,20 @@ import Aquarium from "../models/Aquarium";
 
 const sortByName = (a: Aquarium, b: Aquarium) => a.name.localeCompare(b.name);
 const sortByLength = (a: Aquarium, b: Aquarium) => {
-  return a.length > b.length ? 1 : 0;
+  return a.length >= b.length ? -1 : 1;
 };
 const sortByHeight = (a: Aquarium, b: Aquarium) => {
-  return a.height > b.height ? 1 : 0;
+  return a.height >= b.height ? -1 : 1;
 };
 const sortByWidth = (a: Aquarium, b: Aquarium) => {
-  return a.width > b.width ? 1 : 0;
+  return a.width >= b.width ? -1 : 1;
 };
 
 const AquariumSortingMethodsSelectList = [
-  { key: "1", value: strings.name },
-  { key: "2", value: strings.length },
-  { key: "3", value: strings.height },
-  { key: "4", value: strings.width },
+  { key: "0", value: strings.name },
+  { key: "1", value: strings.length },
+  { key: "2", value: strings.height },
+  { key: "3", value: strings.width },
 ];
 
 const AquariumSortingMethodsList = [

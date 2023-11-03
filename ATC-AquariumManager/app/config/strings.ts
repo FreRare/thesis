@@ -7,6 +7,8 @@ export default {
   home: "Home",
   aquariumSelctorPlaceholder: "Select your aquarium",
   sortSelectorPlaceholder: "Sort by",
+  status: "Status",
+  currentFishCount: "Number of fish",
   login: "Log in",
   welcome: "Welcome",
   aquariums: "Aquarium",
