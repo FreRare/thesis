@@ -3,7 +3,6 @@ import { ImageBackground, StyleSheet } from "react-native";
 import Layout from "../components/Layout";
 import LoginForm from "../components/LoginForm";
 import Logo from "../components/Logo";
-import strings from "../../config/strings";
 import RegistrationForm from "../components/RegistrationForm";
 import User from "../models/User";
 

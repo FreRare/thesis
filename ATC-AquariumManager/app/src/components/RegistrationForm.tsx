@@ -15,6 +15,7 @@ import * as Notifications from "expo-notifications";
 import User from "../models/User";
 import AuthService from "../services/AuthService";
 import LoadingAnimation from "./LoadingAnimation";
+import commonStyles from "../utils/commonStyles";
 
 interface RegistrationFormProps {
   navigation: any;
@@ -151,7 +152,7 @@ function RegistrationForm(props: RegistrationFormProps) {
       )}
       <TextInput
         placeholder={strings.emailInputPlaceholder}
-        style={styles.input}
+        style={commonStyles.input}
         value={email}
         onChangeText={(e) => setEmail(e)}
         autoCapitalize="none"
@@ -159,7 +160,7 @@ function RegistrationForm(props: RegistrationFormProps) {
       />
       <TextInput
         placeholder={strings.firstNameInputPlaceholder}
-        style={styles.input}
+        style={commonStyles.input}
         value={firstName}
         onChangeText={(e) => setFirstName(e)}
         autoCapitalize="words"
@@ -167,7 +168,7 @@ function RegistrationForm(props: RegistrationFormProps) {
       />
       <TextInput
         placeholder={strings.lastNameInputPlaceholder}
-        style={styles.input}
+        style={commonStyles.input}
         value={lastName}
         onChangeText={(e) => setLastName(e)}
         autoCapitalize="words"
@@ -175,7 +176,7 @@ function RegistrationForm(props: RegistrationFormProps) {
       />
       <TextInput
         placeholder={strings.passInputPlaceHolder}
-        style={styles.input}
+        style={commonStyles.input}
         value={password}
         onChangeText={(t) => setPassword(t)}
         secureTextEntry={true}
@@ -183,7 +184,7 @@ function RegistrationForm(props: RegistrationFormProps) {
       />
       <TextInput
         placeholder={strings.passAgainInputPlaceholder}
-        style={styles.input}
+        style={commonStyles.input}
         value={passwordAgain}
         onChangeText={(t) => setPasswordAgain(t)}
         secureTextEntry={true}
@@ -191,7 +192,7 @@ function RegistrationForm(props: RegistrationFormProps) {
       />
       <TextInput
         placeholder={strings.aquariumIdInputPlaceholder}
-        style={styles.input}
+        style={commonStyles.input}
         value={aqId}
         inputMode="numeric"
         maxLength={10}
@@ -256,26 +257,6 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 50,
     padding: 15,
-  },
-  input: {
-    flex: 1,
-    width: "90%",
-    padding: 10,
-    margin: "5%",
-    backgroundColor: colors.menuBarBackground,
-    maxHeight: 50,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: colors.primary,
-  },
-  focusedInput: {
-    flex: 1,
-    width: "95%",
-    padding: 10,
-    margin: "5%",
-    backgroundColor: colors.menuBarBackground,
-    maxHeight: 50,
-    borderRadius: 10,
   },
   button: {
     borderColor: colors.primary,

@@ -21,7 +21,7 @@ function AquariumCard(props: AquariumCardProps) {
         </View>
         <View style={styles.verticalRight}>
           <Icon
-            name="edit"
+            name="form"
             size={25}
             onPress={() => {
               props.setEdited(props.item);
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dataTextBorder,
     borderRadius: 30,
     margin: 15,
-    padding: 20,
+    padding: 15,
   },
   horizontal: {
     flex: 1,
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   verticalRight: {
-    flex: 1,
+    flex: 0.1,
     justifyContent: "flex-start",
     alignItems: "flex-end",
     flexDirection: "column",

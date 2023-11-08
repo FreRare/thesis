@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import colors from "../../config/colors";
 import { TextInput } from "react-native";
 import strings from "../../config/strings";
+import commonStyles from "../utils/commonStyles";
 
 type EditAquariumFormProps = {
   aquarium: Aquarium;
@@ -16,6 +17,7 @@ function EditAquariumForm(props: EditAquariumFormProps) {
   const [length, setLength] = React.useState(props.aquarium.length);
   const [height, setHeight] = React.useState(props.aquarium.height);
   const [width, setWidth] = React.useState(props.aquarium.width);
+  const [fishCount, setFishCount] = React.useState(props.aquarium.fishCount);
 
   const confirmHandler = () => {
     props.aquarium.name = name;
@@ -28,42 +30,66 @@ function EditAquariumForm(props: EditAquariumFormProps) {
   return (
     <View style={styles.container}>
       <Text>Edit {props.aquarium.name}:</Text>
-      <TextInput
-        placeholder={strings.name}
-        style={styles.input}
-        value={name}
-        onChangeText={(t) => {
-          setName(t);
-        }}
-      />
-      <TextInput
-        aria-label="Length"
-        placeholder={strings.length}
-        style={styles.input}
-        value={String(length)}
-        inputMode="numeric"
-        onChangeText={(t) => {
-          setLength(t.length > 0 ? Number.parseInt(t) : 0);
-        }}
-      />
-      <TextInput
-        placeholder={strings.height}
-        style={styles.input}
-        value={String(height)}
-        inputMode="numeric"
-        onChangeText={(t) => {
-          setHeight(t.length > 0 ? Number.parseInt(t) : 0);
-        }}
-      />
-      <TextInput
-        placeholder={strings.width}
-        style={styles.input}
-        value={String(width)}
-        inputMode="numeric"
-        onChangeText={(t) => {
-          setWidth(t.length > 0 ? Number.parseInt(t) : 0);
-        }}
-      />
+      <View style={styles.horizontal}>
+        <Text>{strings.name}:</Text>
+        <TextInput
+          placeholder={strings.name}
+          style={commonStyles.input}
+          value={name}
+          onChangeText={(t) => {
+            setName(t);
+          }}
+        />
+      </View>
+      <View style={styles.horizontal}>
+        <Text>{strings.length}:</Text>
+        <TextInput
+          aria-label="Length"
+          placeholder={strings.length}
+          style={commonStyles.input}
+          value={String(length)}
+          inputMode="numeric"
+          onChangeText={(t) => {
+            setLength(t.length > 0 ? Number.parseInt(t) : 0);
+          }}
+        />
+      </View>
+      <View style={styles.horizontal}>
+        <Text>{strings.height}:</Text>
+        <TextInput
+          placeholder={strings.height}
+          style={commonStyles.input}
+          value={String(height)}
+          inputMode="numeric"
+          onChangeText={(t) => {
+            setHeight(t.length > 0 ? Number.parseInt(t) : 0);
+          }}
+        />
+      </View>
+      <View style={styles.horizontal}>
+        <Text>{strings.width}:</Text>
+        <TextInput
+          placeholder={strings.width}
+          style={commonStyles.input}
+          value={String(width)}
+          inputMode="numeric"
+          onChangeText={(t) => {
+            setWidth(t.length > 0 ? Number.parseInt(t) : 0);
+          }}
+        />
+      </View>
+      <View style={styles.horizontal}>
+        <Text>{strings.currentFishCount}:</Text>
+        <TextInput
+          placeholder={strings.currentFishCount}
+          style={commonStyles.input}
+          value={String(fishCount)}
+          inputMode="numeric"
+          onChangeText={(t) => {
+            setFishCount(t.length > 0 ? Number.parseInt(t) : 0);
+          }}
+        />
+      </View>
       <TouchableOpacity style={styles.button} onPress={() => confirmHandler()}>
         <Text>{strings.confirm}</Text>
       </TouchableOpacity>
@@ -79,7 +105,7 @@ function EditAquariumForm(props: EditAquariumFormProps) {
 
 const styles = StyleSheet.create({
   container: {
-    height: "70%",
+    height: "75%",
     width: "60%",
     alignItems: "center",
     justifyContent: "center",
@@ -90,16 +116,11 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: colors.background,
   },
-  input: {
+  horizontal: {
     flex: 1,
-    width: "90%",
-    padding: 10,
-    margin: "5%",
-    backgroundColor: colors.menuBarBackground,
-    maxHeight: 50,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: colors.primary,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   button: {
     borderColor: colors.primary,

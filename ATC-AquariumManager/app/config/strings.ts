@@ -6,7 +6,7 @@ export default {
   projetName: "ATC - Aquarium Manager",
   home: "Home",
   aquariumSelctorPlaceholder: "Select your aquarium",
-  sortSelectorPlaceholder: "Sort by",
+  searchByName: "Search by name",
   status: "Status",
   currentFishCount: "Number of fish",
   login: "Log in",

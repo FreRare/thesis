@@ -4,14 +4,11 @@ import WelcomeScreen from "../views/WelcomeScreen";
 import strings from "../../config/strings";
 import colors from "../../config/colors";
 import useUser from "./hooks/useUser";
-import Icon from "react-native-vector-icons/AntDesign";
-import NavigationScreens from "./NavigationScreens";
 import MenuBarButton from "../components/MenuBarButton";
-import { createStackNavigator } from "@react-navigation/stack";
 import { StyleSheet } from "react-native";
+import NavigationScreens from "./NavigationScreens";
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
 
 function Navigation() {
   const [user, setUser] = useUser();

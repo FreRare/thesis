@@ -14,6 +14,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import User from "../models/User";
 import AuthService from "../services/AuthService";
 import LoadingAnimation from "./LoadingAnimation";
+import commonStyles from "../utils/commonStyles";
 
 interface LoginScreenProps {
   navigation: any;
@@ -79,14 +80,14 @@ function LoginForm(props: LoginScreenProps) {
       <TextInput
         id="email"
         placeholder={strings.emailInputPlaceholder}
-        style={styles.input}
+        style={commonStyles.input}
         value={email}
         onChangeText={(e) => setEmail(e)}
       ></TextInput>
       <TextInput
         id="password"
         placeholder={strings.passInputPlaceHolder}
-        style={styles.input}
+        style={commonStyles.input}
         value={pass}
         onChangeText={(t) => setPass(t)}
         secureTextEntry={true}
@@ -142,26 +143,6 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 50,
     padding: 10,
-  },
-  input: {
-    flex: 1,
-    width: "90%",
-    padding: 10,
-    margin: "5%",
-    backgroundColor: colors.menuBarBackground,
-    maxHeight: 50,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: colors.primary,
-  },
-  focusedInput: {
-    flex: 1,
-    width: "95%",
-    padding: 10,
-    margin: "5%",
-    backgroundColor: colors.menuBarBackground,
-    maxHeight: 50,
-    borderRadius: 10,
   },
   button: {
     borderColor: colors.primary,
