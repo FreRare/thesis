@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS haveAquarium(
 
 CREATE TABLE IF NOT EXISTS configs(
     id BIGINT NOT NULL,
-    minTemp INT NOT NULL,
-    maxTemp INT NOT NULL,
+    minTemp FLOAT(2, 2) NOT NULL,
+    maxTemp FLOAT(2, 2) NOT NULL,
     minPh FLOAT(2, 2) NOT NULL,
     maxPh FLOAT(2, 2) NOT NULL,
     OnOutlet1 INT NOT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS configs(
 CREATE TABLE IF NOT EXISTS sensorSamples(
     id BIGINT NOT NULL,
     sampleTime DATETIME NOT NULL,
-    temp INT NOT NULL,
+    temp FLOAT(2, 2) NOT NULL,
     ph FLOAT(2, 2) NOT NULL,
     waterLvl INT NOT NULL,
     lightAmount INT NOT NULL,
