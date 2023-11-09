@@ -30,6 +30,15 @@ ServerConnector::ServerConnector()
     }
     this->timeClient->begin();
     this->timeClient->setTimeOffset(3600);
+    this->syncNTPTime();
+}
+
+void ServerConnector::syncNTPTime()
+{
+    this->timeClient->update();
+    time_t epochTime = this->timeClient->getEpochTime();
+    setTime(epochTime);
+    Serial.println("NTP time synced! - " + String(apochTime));
 }
 
 ServerConnector::~ServerConnector()

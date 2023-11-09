@@ -2,14 +2,11 @@
 #include "MemoryHandler.h"
 #include "ServerConnector.h"
 #include <Arduino.h>
-#include <Time.h>
 
 #define LAMP_RELAY_PIN D7
 
 ServerConnector* server;
 ActuatorHandler* actuatorHandler;
-String formattedTime = "";
-time_t epochTime;
 
 void setup()
 {
@@ -25,17 +22,19 @@ void setup()
 
 void loop()
 {
-    server->getTimeClient()->update();
-    // This little logic should turn on relay at 8 and turn it off at 20
-    int currentHours = server->getTimeClient()->getHours();
-    int currentMins = server->getTimeClient()->getMinutes();
-    int currentSecs = server->getTimeClient()->getSeconds();
-    UIHandler::getInstance()->clear();
-    UIHandler::getInstance()->writeLine("Clock " + String(currentHours) + ":" + String(currentMins) + ":" + currentSecs, 1);
-    if (currentHours >= 8 && currentHours <= 20 && !ActuatorHandler::isChannel1Active) {
+    int h = hour();
+    int min = minute();
+    int sec = second();
+    // At midnight (10 sec interval) sync the NTP time to local
+    if (h == 0 && min == 0 && sec < 10 && sec >= 0) {
+        server->syncNTPTime();
+    }
+    UIHandler::getInstance()->writeLine("Clock " + String(h) + ":" + String(min), 1);
+    // Handle relay 1
+    if (h >= 8 && h <= 20 && !ActuatorHandler::isChannel1Active) {
         actuatorHandler->toggleChannel1();
-    } else if ((currentHours > 20 || currentHours < 8) && ActuatorHandler::isChannel1Active) {
+    } else if ((h > 20 || h < 8) && ActuatorHandler::isChannel1Active) {
         actuatorHandler->toggleChannel1();
     }
-    delay(1000);
+    delay(5000);
 }
