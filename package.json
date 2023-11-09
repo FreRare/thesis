@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "native-base": "^3.4.28",
-    "react-native-elements": "^3.4.3",
-    "react-navigation": "^5.0.0"
-  }
-}
