@@ -7,6 +7,7 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
 #include <NTPClient.h>
+#include <TimeLib.h>
 #include <WiFiUdp.h>
 
 #define CONN_TIMEOUT 60 // Connection timeout = timeout * 2 seconds
@@ -48,6 +49,10 @@ public:
      * @return The provided ID or the freshly generated one
      */
     bool connectToNetwork();
+    /**
+     * Updates the NTP server time and sets it to the local RTC
+     */
+    void syncNTPTime();
     void disconnect();
     NTPClient* getTimeClient() const;
 };

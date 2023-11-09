@@ -30,6 +30,16 @@ ServerConnector::ServerConnector()
     }
     this->timeClient->begin();
     this->timeClient->setTimeOffset(3600);
+    this->syncNTPTime();
+}
+
+void ServerConnector::syncNTPTime()
+{
+    this->timeClient->update();
+    time_t epochTime = this->timeClient->getEpochTime();
+    setTime(epochTime);
+    time_t espRtcTime = now();
+    Serial.println("Internal RTC time updated: " + String(espRtcTime));
 }
 
 ServerConnector::~ServerConnector()
