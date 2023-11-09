@@ -1,23 +1,23 @@
 export default class AquariumConfiguration {
-  private _id: Number;
-  private _minTemp: Number;
-  private _maxTemp: Number;
-  private _minPh: Number;
-  private _maxPh: Number;
-  private _OnOutlet1: Number;
-  private _OffOutlet1: Number;
-  private _OnOutlet2: Number;
-  private _OffOutlet2: Number;
-  private _OnOutlet3: Number;
-  private _OffOutlet3: Number;
-  private _waterLvlAlert: Number;
-  private _preferredLight: Number;
-  private _feedingTime: Number;
-  private _foodPortions: Number;
-  private _filterClean: Number;
-  private _waterChange: Number;
-  private _samplePeriod: Number;
-  private _lastModifiedDat: Date;
+  private _id: number;
+  private _minTemp: number;
+  private _maxTemp: number;
+  private _minPh: number;
+  private _maxPh: number;
+  private _OnOutlet1: number;
+  private _OffOutlet1: number;
+  private _OnOutlet2: number;
+  private _OffOutlet2: number;
+  private _OnOutlet3: number;
+  private _OffOutlet3: number;
+  private _waterLvlAlert: number;
+  private _preferredLight: number;
+  private _feedingTime: number;
+  private _foodPortions: number;
+  private _filterClean: number;
+  private _waterChange: number;
+  private _samplePeriod: number;
+  private _lastModifiedDate: Date;
 
   constructor(
     id = -1,
@@ -58,136 +58,136 @@ export default class AquariumConfiguration {
     this._filterClean = filterClean;
     this._waterChange = waterChange;
     this._samplePeriod = samplePer;
-    this._lastModifiedDat = modDate;
+    this._lastModifiedDate = modDate;
   }
 
-  public get id(): Number {
+  public get id(): number {
     return this._id;
   }
 
-  public get minTemp(): Number {
+  public get minTemp(): number {
     return this._minTemp;
   }
-  public set minTemp(value: Number) {
+  public set minTemp(value: number) {
     this._minTemp = value;
   }
 
-  public get maxTemp(): Number {
+  public get maxTemp(): number {
     return this._maxTemp;
   }
-  public set maxTemp(value: Number) {
+  public set maxTemp(value: number) {
     this._maxTemp = value;
   }
 
-  public get minPh(): Number {
+  public get minPh(): number {
     return this._minPh;
   }
-  public set minPh(value: Number) {
+  public set minPh(value: number) {
     this._minPh = value;
   }
 
-  public get maxPh(): Number {
+  public get maxPh(): number {
     return this._maxPh;
   }
-  public set maxPh(value: Number) {
+  public set maxPh(value: number) {
     this._maxPh = value;
   }
 
-  public get OnOutlet1(): Number {
+  public get OnOutlet1(): number {
     return this._OnOutlet1;
   }
-  public set OnOutlet1(value: Number) {
+  public set OnOutlet1(value: number) {
     this._OnOutlet1 = value;
   }
 
-  public get OffOutlet1(): Number {
+  public get OffOutlet1(): number {
     return this._OffOutlet1;
   }
-  public set OffOutlet1(value: Number) {
+  public set OffOutlet1(value: number) {
     this._OffOutlet1 = value;
   }
 
-  public get OnOutlet2(): Number {
+  public get OnOutlet2(): number {
     return this._OnOutlet2;
   }
-  public set OnOutlet2(value: Number) {
+  public set OnOutlet2(value: number) {
     this._OnOutlet2 = value;
   }
 
-  public get OffOutlet2(): Number {
+  public get OffOutlet2(): number {
     return this._OffOutlet2;
   }
-  public set OffOutlet2(value: Number) {
+  public set OffOutlet2(value: number) {
     this._OffOutlet2 = value;
   }
 
-  public get OnOutlet3(): Number {
+  public get OnOutlet3(): number {
     return this._OnOutlet3;
   }
-  public set OnOutlet3(value: Number) {
+  public set OnOutlet3(value: number) {
     this._OnOutlet3 = value;
   }
 
-  public get OffOutlet3(): Number {
+  public get OffOutlet3(): number {
     return this._OffOutlet3;
   }
-  public set OffOutlet3(value: Number) {
+  public set OffOutlet3(value: number) {
     this._OffOutlet3 = value;
   }
 
-  public get waterLvlAlert(): Number {
+  public get waterLvlAlert(): number {
     return this._waterLvlAlert;
   }
-  public set waterLvlAlert(value: Number) {
+  public set waterLvlAlert(value: number) {
     this._waterLvlAlert = value;
   }
 
-  public get preferredLight(): Number {
+  public get preferredLight(): number {
     return this._preferredLight;
   }
-  public set preferredLight(value: Number) {
+  public set preferredLight(value: number) {
     this._preferredLight = value;
   }
 
-  public get feedingTime(): Number {
+  public get feedingTime(): number {
     return this._feedingTime;
   }
-  public set feedingTime(value: Number) {
+  public set feedingTime(value: number) {
     this._feedingTime = value;
   }
 
-  public get foodPortions(): Number {
+  public get foodPortions(): number {
     return this._foodPortions;
   }
-  public set foodPortions(value: Number) {
+  public set foodPortions(value: number) {
     this._foodPortions = value;
   }
 
-  public get filterClean(): Number {
+  public get filterClean(): number {
     return this._filterClean;
   }
-  public set filterClean(value: Number) {
+  public set filterClean(value: number) {
     this._filterClean = value;
   }
 
-  public get waterChange(): Number {
+  public get waterChange(): number {
     return this._waterChange;
   }
-  public set waterChange(value: Number) {
+  public set waterChange(value: number) {
     this._waterChange = value;
   }
 
-  public get samplePeriod(): Number {
+  public get samplePeriod(): number {
     return this._samplePeriod;
   }
-  public set samplePeriod(value: Number) {
+  public set samplePeriod(value: number) {
     this._samplePeriod = value;
   }
 
   public get lastModifiedDat(): Date {
-    return this._lastModifiedDat;
+    return this._lastModifiedDate;
   }
   public set lastModifiedDat(value: Date) {
-    this._lastModifiedDat = value;
+    this._lastModifiedDate = value;
   }
 }

@@ -14,7 +14,7 @@ export default {
   menuHighlightBorder: "#0D652D",
   menuHighlightBG: "#34A853",
   dataCircleBorder: "#34A853",
-  dataTextBorder: "#CEEAD6",
+  cardBackGround: "#CEEAD6",
   loadinAnimationColor: "#174EA6",
   checkBoxColor: "#174EA6",
 };

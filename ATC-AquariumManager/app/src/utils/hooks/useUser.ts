@@ -143,7 +143,8 @@ const useUser = (): [
             userData._email,
             "",
             userData._firstName,
-            userData._lastName
+            userData._lastName,
+            userData._aquariums
           );
           _setUser(user);
         } else {

@@ -8,9 +8,9 @@ function MenuBarButton(props: any) {
   const { item, onPress, accessibilityState } = props;
   const { selected } = accessibilityState;
 
-  const viewRef = useRef();
-  const textRef = useRef();
-  const iconRef = useRef();
+  const viewRef = useRef(null);
+  const textRef = useRef(null);
+  const iconRef = useRef(null);
 
   const inSelectAnim = { 0: { scale: 0 }, 1: { scale: 1 } };
   const outSelectAnim = { 0: { scale: 1 }, 1: { scale: 0 } };

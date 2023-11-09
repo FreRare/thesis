@@ -1,9 +1,9 @@
 export default class SensorSample {
   private _sampleTime: Date;
-  private _temp: Number;
-  private _ph: Number;
-  private _waterLvl: Number;
-  private _lightAmount: Number;
+  private _temp: number;
+  private _ph: number;
+  private _waterLvl: number;
+  private _lightAmount: number;
 
   constructor(sTime = new Date(), temp = 0, ph = 0, water = 0, light = 0) {
     this._sampleTime = sTime;
@@ -20,31 +20,31 @@ export default class SensorSample {
     this._sampleTime = value;
   }
 
-  public get temp(): Number {
+  public get temp(): number {
     return this._temp;
   }
-  public set temp(value: Number) {
+  public set temp(value: number) {
     this._temp = value;
   }
 
-  public get ph(): Number {
+  public get ph(): number {
     return this._ph;
   }
-  public set ph(value: Number) {
+  public set ph(value: number) {
     this._ph = value;
   }
 
-  public get waterLvl(): Number {
+  public get waterLvl(): number {
     return this._waterLvl;
   }
-  public set waterLvl(value: Number) {
+  public set waterLvl(value: number) {
     this._waterLvl = value;
   }
 
-  public get lightAmount(): Number {
+  public get lightAmount(): number {
     return this._lightAmount;
   }
-  public set lightAmount(value: Number) {
+  public set lightAmount(value: number) {
     this._lightAmount = value;
   }
 }
