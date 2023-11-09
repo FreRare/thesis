@@ -19,7 +19,7 @@ public:
     ConfigHandler();
     ConfigData readConfigData();
     void SaveConfigData(const ConfigData& data);
-    uint8_t checkFullfillmentStatus(const SensorData& data, const time_t& timeNow);
+    ConfigStatus checkFullfillmentStatus(const SensorData& data, const time_t& timeNow);
 };
 
 #endif

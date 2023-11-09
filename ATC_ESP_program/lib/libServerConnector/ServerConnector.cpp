@@ -38,7 +38,7 @@ void ServerConnector::syncNTPTime()
     this->timeClient->update();
     time_t epochTime = this->timeClient->getEpochTime();
     setTime(epochTime);
-    Serial.println("NTP time synced! - " + String(apochTime));
+    Serial.println("NTP time synced! - " + String(epochTime));
 }
 
 ServerConnector::~ServerConnector()

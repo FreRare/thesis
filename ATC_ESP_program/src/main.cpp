@@ -18,6 +18,7 @@ void setup()
     actuatorHandler = new ActuatorHandler();
     pinMode(LAMP_RELAY_PIN, OUTPUT);
     ActuatorHandler::isChannel1Active = false;
+    UIHandler::getInstance()->clear();
 }
 
 void loop()
