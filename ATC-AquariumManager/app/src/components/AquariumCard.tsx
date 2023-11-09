@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderWidth: 4,
     borderColor: colors.menuHighlightBG,
-    backgroundColor: colors.dataTextBorder,
+    backgroundColor: colors.cardBackGround,
     borderRadius: 30,
     margin: 15,
     padding: 15,

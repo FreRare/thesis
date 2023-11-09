@@ -13,6 +13,18 @@ const commonStyles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.primary,
   },
+  dropdownListBoxStyle: {
+    backgroundColor: colors.menuBarBackground,
+    width: 300,
+  },
+  dropdownListInputStyle: {
+    color: colors.black,
+  },
+  dropdownListDropdownStyles: {
+    backgroundColor: colors.menuBarBackground,
+    opacity: 1,
+    zIndex: 99,
+  },
 });
 
 export default commonStyles;

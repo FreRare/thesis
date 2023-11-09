@@ -1,5 +1,5 @@
 export default class AquariumService {
-  static getAquariums() {
+  static getAquariums(userEmail: string) {
     throw new Error("Unimplemented!");
   }
 }
