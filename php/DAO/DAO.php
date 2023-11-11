@@ -26,9 +26,9 @@ class AQDAO implements AQDAOI
     private const DELETE_AQUARIUM = "DELETE FROM aquariums WHERE id = ?";
     private const UPDATE_AQUARIUM = "UPDATE aquariums SET name = ?, length = ?, height = ?, depth = ?, fishCount = ? WHERE id = ?";
     private const SELECT_CONFIG_FOR_AQUARIUM = "SELECT * FROM configs WHERE id = ?";
-    private const CREATE_CONFIG = "INSERT INTO configs (id, minTemp, maxTemp, minPh, maxPh, OnOUtuet1, OffOutlet1, OnOutlet2, OffOutlet2, OnOutlet3, OffOutlet3, waterLvlAlert, prefLight, feedingTime, foodPortions, filterClean, waterChange, samplePeriod, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private const CREATE_CONFIG = "INSERT INTO configs (id, minTemp, maxTemp, minPh, maxPh, OnOUtuet1, OffOutlet1, OnOutlet2, OffOutlet2, OnOutlet3, OffOutlet3, waterLvlAlert, feedingTime, foodPortions, filterClean, waterChange, samplePeriod, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private const DELETE_CONFIG = "DELETE FROM configs WHERE id = ?";
-    private const UPDATE_CONFIG = "UPDATE configs SET minTemp = ?, maxTemp = ?, minPh = ?, maxPh = ?, OnOutlet1 = ?, OffOutlet1 = ?, OnOutlet2 = ?, OffOutlet2 = ?, OnOutlet3 = ?, OffOutlet3 = ?, waterLvlAlert = ?, prefLight = ?, feedingTime = ?, foodPortions = ?, filterClean = ?, waterChange = ?, samplePeriod = ?, lastModifiedDate = ? WHERE id = ?";
+    private const UPDATE_CONFIG = "UPDATE configs SET minTemp = ?, maxTemp = ?, minPh = ?, maxPh = ?, OnOutlet1 = ?, OffOutlet1 = ?, OnOutlet2 = ?, OffOutlet2 = ?, OnOutlet3 = ?, OffOutlet3 = ?, waterLvlAlert = ?, feedingTime = ?, foodPortions = ?, filterClean = ?, waterChange = ?, samplePeriod = ?, lastModifiedDate = ? WHERE id = ?";
     private const SELECT_SENSOR_SAMPLES_FOR_AQUARIUM = "SELECT * FROM sensorSamples WHERE id = ?";
     private const SELECT_SENSOR_SAMPLES_FOR_AQUARIUM_IN_RANGE = "SELECT * FROM sensorSamples WHERE id = ? AND sampleTime >= ? AND sampleTime <= ?";
     private const CREATE_SENSOR_SAMPLE = "INSERT INTO sensorSamples (id, sampleTime, temp, ph, waterLvl, lightAmount) VALUES (?, ?, ?, ?, ?, ?)";
@@ -104,7 +104,7 @@ class AQDAO implements AQDAOI
         $stm->fetch();
         $stm->close();
         if (empty($user) || empty($pass) || empty($fname) || empty($lname) || empty($token) || empty($authToken)) {
-            return null; 
+            return null;
         } else {
             return new User($user, $pass, $fname, $lname, $token, $authToken);
         }
@@ -218,13 +218,13 @@ class AQDAO implements AQDAOI
         $stm = $this->connection->prepare(AQDAO::SELECT_CONFIG_FOR_AQUARIUM);
         $stm->bind_param("i", $id);
         $stm->execute();
-        $stm->bind_result($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $wAlert, $prefLi, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDate);
+        $stm->bind_result($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $wAlert, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDate);
         $stm->fetch();
         $stm->close();
-        if (empty($id) || empty($minT) || empty($maxT) || empty($minP) || empty($maxPh) || empty($liOn) || empty($liOff) || empty($filOn) || empty($filOff) || empty($airOn) || empty($airOff) || empty($wAlert) || empty($prefLi) || empty($feedT) || empty($foodPort) || empty($filC) || empty($waterC) || empty($samplePeriod) || empty($lModDate)) {
+        if (empty($id) || empty($minT) || empty($maxT) || empty($minP) || empty($maxPh) || empty($liOn) || empty($liOff) || empty($filOn) || empty($filOff) || empty($airOn) || empty($airOff) || empty($wAlert) || empty($feedT) || empty($foodPort) || empty($filC) || empty($waterC) || empty($samplePeriod) || empty($lModDate)) {
             return null;
         } else {
-            return new AQConfig($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $wAlert, $prefLi, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDate);
+            return new AQConfig($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $wAlert, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDate);
         }
     }
 
@@ -243,7 +243,6 @@ class AQDAO implements AQDAOI
         $airOn = $aqConfig->getOnOutlet3();
         $airOff = $aqConfig->getOffOutlet3();
         $waterLvlAlert = $aqConfig->getWaterLvlAlert();
-        $prefLight = $aqConfig->getPrefLight();
         $feedingTime = $aqConfig->getFeedingTime();
         $foodPortions = $aqConfig->getFoodPortions();
         $filterClean = $aqConfig->getFilterClean();
@@ -251,7 +250,7 @@ class AQDAO implements AQDAOI
         $samplePeriod = $aqConfig->getSamplePeriod();
         $lastModifiedDate = $aqConfig->getLastModifiedDate()->format('Y-m-d H:i:s');
 
-        $stm->bind_param("iiissiiiiiiiiiiiis", $aquariumId, $minTemp, $maxTemp, $minPh, $maxPh, $lightOn, $lightOff, $filterOn, $filterOff, $airOn, $airOff, $waterLvlAlert, $prefLight, $feedingTime, $foodPortions, $filterClean, $waterChange, $samplePeriod, $lastModifiedDate);
+        $stm->bind_param("issssiiiiiiiiiiis", $aquariumId, $minTemp, $maxTemp, $minPh, $maxPh, $lightOn, $lightOff, $filterOn, $filterOff, $airOn, $airOff, $waterLvlAlert, $feedingTime, $foodPortions, $filterClean, $waterChange, $samplePeriod, $lastModifiedDate);
         $success = $stm->execute();
         $stm->close();
         return $success;
@@ -281,7 +280,6 @@ class AQDAO implements AQDAOI
         $airOn = $aqConfig->getOnOutlet3();
         $airOff = $aqConfig->getOffOutlet3();
         $waterLvlAlert = $aqConfig->getWaterLvlAlert();
-        $prefLight = $aqConfig->getPrefLight();
         $feedingTime = $aqConfig->getFeedingTime();
         $foodPortions = $aqConfig->getFoodPortions();
         $filterClean = $aqConfig->getFilterClean();
@@ -289,7 +287,7 @@ class AQDAO implements AQDAOI
         $samplePeriod = $aqConfig->getSamplePeriod();
         $lastModifiedDate = $aqConfig->getLastModifiedDate()->format('Y-m-d H:i:s');
         $id = $aqConfig->getAquariumId();
-        $stm->bind_param("iissiiiiiiiiiiiiisi", $minTemp, $maxTemp, $minPh, $maxPh, $lightOn, $lightOff, $filterOn, $filterOff, $airOn, $airOff, $waterLvlAlert, $prefLight, $feedingTime, $foodPortions, $filterClean, $waterChange, $samplePeriod, $lastModifiedDate, $id);
+        $stm->bind_param("ssssiiiiiiiiiiiisi", $minTemp, $maxTemp, $minPh, $maxPh, $lightOn, $lightOff, $filterOn, $filterOff, $airOn, $airOff, $waterLvlAlert, $feedingTime, $foodPortions, $filterClean, $waterChange, $samplePeriod, $lastModifiedDate, $id);
         $success = $stm->execute();
         $stm->close();
         return $success;
@@ -373,7 +371,7 @@ class AQDAO implements AQDAOI
 
     function createAquariumConnection(User $user, Aquarium $aquarium): bool
     {
-        if (!$user instanceof User || !$aquarium instanceof Aquarium){
+        if (!$user instanceof User || !$aquarium instanceof Aquarium) {
             return false;
         }
 
@@ -413,7 +411,7 @@ class AQDAO implements AQDAOI
         error_log($email . $firstName . $lastName . $password . $deviceToken);
         $stm->fetch();
         $stm->close();
-        if(empty($email) || empty($firstName) || empty($lastName) || empty($password) || empty($deviceToken) || empty($authToken) || empty($deviceToken) || empty($authToken)){
+        if (empty($email) || empty($firstName) || empty($lastName) || empty($password) || empty($deviceToken) || empty($authToken) || empty($deviceToken) || empty($authToken)) {
             return null;
         }
         return new User($email, $password, $firstName, $lastName, $deviceToken, $authToken);

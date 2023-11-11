@@ -14,7 +14,6 @@ class AQConfig
     private $onOutet3;
     private $offOutlet3;
     private $waterLvlAlert;
-    private $prefLight;
     private $feedingTime;
     private $foodPortions;
     private $filterClean;
@@ -22,7 +21,7 @@ class AQConfig
     private $samplePeriod;
     private $lastModifiedDate;
 
-    public function __construct($AquariumId, $minTemp, $maxTemp, $minPh, $maxPh, $onOutlet1, $offOutlet1, $onOutlet2, $offOutlet2, $onOutet3, $offOutlet3, $waterLvlAlert, $prefLight, $feedingTime, $foodPortions, $filterClean, $waterChange, $samplePeriod, $lastModifiedDate)
+    public function __construct($AquariumId, $minTemp, $maxTemp, $minPh, $maxPh, $onOutlet1, $offOutlet1, $onOutlet2, $offOutlet2, $onOutet3, $offOutlet3, $waterLvlAlert, $feedingTime, $foodPortions, $filterClean, $waterChange, $samplePeriod, $lastModifiedDate)
     {
         $this->AquariumId = $AquariumId;
         $this->minTemp = $minTemp;
@@ -36,7 +35,6 @@ class AQConfig
         $this->onOutet3 = $onOutet3;
         $this->offOutlet3 = $offOutlet3;
         $this->waterLvlAlert = $waterLvlAlert;
-        $this->prefLight = $prefLight;
         $this->feedingTime = $feedingTime;
         $this->foodPortions = $foodPortions;
         $this->filterClean = $filterClean;
@@ -103,11 +101,6 @@ class AQConfig
     public function getWaterLvlAlert()
     {
         return $this->waterLvlAlert;
-    }
-
-    public function getPrefLight()
-    {
-        return $this->prefLight;
     }
 
     public function getFeedingTime()

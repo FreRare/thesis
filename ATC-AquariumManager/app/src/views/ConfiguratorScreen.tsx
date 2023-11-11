@@ -57,7 +57,7 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
   };
 
   return (
-    <Layout navigation={props.navigation} shouldDisplayMenuBar={true}>
+    <Layout navigation={props.navigation} shouldDisplayMenuBar={edit ? false : true}>
       <ScrollView
         contentContainerStyle={[styles.container, { opacity: edit ? 0.1 : 1 }]}
       >

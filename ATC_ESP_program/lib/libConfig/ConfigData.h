@@ -20,7 +20,6 @@ class ConfigData {
 private:
     uint16_t minTemp;
     uint16_t maxTemp;
-    LightIntensity preferredLight;
     uint16_t waterLvlAlert;
     float minPh;
     float maxPh;
@@ -41,14 +40,12 @@ public:
         const uint16_t& lightOnTime, const uint16_t& lightOffTime, const uint16_t& filterOnTime,
         const uint16_t& filterOffTime, const uint16_t& airOnTime, const uint16_t& airOffTime,
         const uint16_t& feedingTime, const float& minPh, const float& maxPh, const uint8_t& feedingPortions,
-        const LightIntensity& prefLight, const CleanPeriod& filterChange, const CleanPeriod& waterChange,
+        const CleanPeriod& filterChange, const CleanPeriod& waterChange,
         const SamplePeriod& sample);
     // Getters
     uint16_t GetMinTemp() const { return minTemp; }
 
     uint16_t GetMaxTemp() const { return maxTemp; }
-
-    LightIntensity GetPreferredLight() const { return preferredLight; }
 
     uint16_t GetWaterLvlAlert() const { return waterLvlAlert; }
 
@@ -82,8 +79,6 @@ public:
     void SetMinTemp(uint16_t minTemp);
 
     void SetMaxTemp(uint16_t maxTemp);
-
-    void SetPreferredLight(LightIntensity preferredLight);
 
     void SetWaterLvlAlert(uint16_t waterLvlAlert);
 

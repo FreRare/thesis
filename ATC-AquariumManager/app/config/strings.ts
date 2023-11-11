@@ -34,6 +34,8 @@ export default {
   outlet1: "Outlet 1",
   outlet2: "Outlet 2",
   outlet3: "Outlet 3",
+  waterLevelAlert: "Water lvl. alert at",
+  prefLight: "Preferred light",
   min: "Min.",
   max: "Max.",
   on: "On",

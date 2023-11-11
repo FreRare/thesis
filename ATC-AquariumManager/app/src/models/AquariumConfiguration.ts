@@ -11,7 +11,6 @@ export default class AquariumConfiguration {
   private _OnOutlet3: number;
   private _OffOutlet3: number;
   private _waterLvlAlert: number;
-  private _preferredLight: number;
   private _feedingTime: number;
   private _foodPortions: number;
   private _filterClean: number;
@@ -52,7 +51,6 @@ export default class AquariumConfiguration {
     this._OnOutlet3 = OnO3;
     this._OffOutlet3 = OffO3;
     this._waterLvlAlert = waterLvlAlert;
-    this._preferredLight = prefLight;
     this._feedingTime = feedingTime;
     this._foodPortions = foodportions;
     this._filterClean = filterClean;
@@ -140,13 +138,6 @@ export default class AquariumConfiguration {
   }
   public set waterLvlAlert(value: number) {
     this._waterLvlAlert = value;
-  }
-
-  public get preferredLight(): number {
-    return this._preferredLight;
-  }
-  public set preferredLight(value: number) {
-    this._preferredLight = value;
   }
 
   public get feedingTime(): number {

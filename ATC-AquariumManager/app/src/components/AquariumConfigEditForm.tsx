@@ -10,6 +10,7 @@ import AquariumConfiguration from "../models/AquariumConfiguration";
 import colors from "../../config/colors";
 import strings from "../../config/strings";
 import commonStyles from "../utils/commonStyles";
+import { SelectList } from "react-native-dropdown-select-list";
 
 type AquariumConfigEditFormProps = {
   aquariumName: string;
@@ -51,9 +52,6 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
   const [waterLvlAlert, setWaterLvlAlert] = React.useState<number>(
     props.editableConfig.waterLvlAlert
   );
-  const [preferredLight, setPreferredLight] = React.useState<number>(
-    props.editableConfig.preferredLight
-  );
   const [feedingTime, setFeedingTime] = React.useState<number>(
     props.editableConfig.feedingTime
   );
@@ -78,9 +76,8 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
       <View>
         <Text>{strings.configEditLabel + props.aquariumName}</Text>
       </View>
-
       <View style={styles.horizontal}>
-        <Text>{strings.temperature}</Text>
+        <Text>{strings.temperature}:</Text>
         <TextInput
           style={commonStyles.input}
           value={String(minTemp)}
@@ -98,7 +95,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         />
       </View>
       <View style={styles.horizontal}>
-        <Text>{strings.ph}</Text>
+        <Text>{strings.ph}:</Text>
         <TextInput
           style={commonStyles.input}
           value={String(minPh)}
@@ -116,24 +113,28 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         />
       </View>
       <View style={styles.horizontal}>
-        <Text>{strings.outlet1}</Text>
+        <Text>{strings.outlet1}:</Text>
         <TextInput style={commonStyles.input} value={String(OnOutlet1)} />
         <Text style={styles.dash}>-</Text>
         <TextInput style={commonStyles.input} value={String(OffOutlet1)} />
       </View>
       <View style={styles.horizontal}>
-        <Text>{strings.outlet2}</Text>
+        <Text>{strings.outlet2}:</Text>
         <TextInput style={commonStyles.input} value={String(OnOutlet2)} />
         <Text style={styles.dash}>-</Text>
         <TextInput style={commonStyles.input} value={String(OffOutlet2)} />
       </View>
       <View style={styles.horizontal}>
-        <Text>{strings.outlet3}</Text>
+        <Text>{strings.outlet3}:</Text>
         <TextInput style={commonStyles.input} value={String(OnOutlet3)} />
         <Text style={styles.dash}>-</Text>
         <TextInput style={commonStyles.input} value={String(OffOutlet3)} />
       </View>
-
+      <View style={styles.horizontal}>
+        <Text>{strings.waterLevelAlert}:</Text>
+        <TextInput style={commonStyles.input} value={String(waterLvlAlert) + "%"} />
+      </View>
+      <View style={styles.horizontal}>
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text>{strings.confirm}</Text>
       </TouchableOpacity>
@@ -143,16 +144,18 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
       >
         <Text>{strings.cancel}</Text>
       </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: "75%",
+    height: "90%",
     width: "80%",
     alignItems: "center",
     justifyContent: "center",
+    top: 20,
     borderColor: colors.menuTopBorder,
     borderWidth: 3,
     borderRadius: 20,
@@ -167,15 +170,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
+    flex: 1,
     borderColor: colors.primary,
     borderWidth: 4,
     borderRadius: 50,
     backgroundColor: colors.menuBarBackground,
     alignItems: "center",
     justifyContent: "center",
-    width: "60%",
-    padding: "5%",
-    margin: "5%",
+    padding: 10,
+    margin: 10,
   },
   dash: {
     fontSize: 30,
