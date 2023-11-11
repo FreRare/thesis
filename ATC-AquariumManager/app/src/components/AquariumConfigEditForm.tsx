@@ -10,6 +10,12 @@ import AquariumConfiguration from "../models/AquariumConfiguration";
 import colors from "../../config/colors";
 import strings from "../../config/strings";
 import * as Clean from "../models/CleanPeriod";
+import * as Sample from "../models/SamplePeriod";
+import commonStyles from "../utils/commonStyles";
+import { SelectList } from "react-native-dropdown-select-list";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 
 type AquariumConfigEditFormProps = {
   aquariumName: string;
@@ -31,25 +37,60 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
   // Later still need assign data to the generated input
   const [data1, setData1] = React.useState<number>(-1);
   const [data2, setData2] = React.useState<number | null>(null);
+  const [labelPostFix, setLabelPostFix] = React.useState<string>("");
   const [timePickerFlag, setTimePickerFlag] = React.useState<boolean>(false);
   const [dropdownFlag, setDropdownFlag] = React.useState<boolean>(false);
+  const [showDateTimePicker, setShowDateTimePicker] =
+    React.useState<boolean>(false);
 
-  const cleanDropdownData = []; // To store data for clean dropdown
+  const cleanDropdownData: Array<{ key: number; value: string }> = []; // To store data for clean dropdown
+  const sampleDropdownData: Array<{ key: number; value: string }> = []; // To store data for sample dropdown
+
+  // Fill dropdowns with data if they're used
   useEffect(() => {
-    // Fill clean dropdown with the objects
-    if (cleanDropdownData.length <= 0) {
+    if (data1 < 0) {
+      formDataAndInputDecider();
+    }
+    if (props.label === strings.cleaning && cleanDropdownData.length <= 0) {
       for (let i = 0; i < Clean.ENUM_LENGTH; i++) {
         cleanDropdownData.push({ key: i, value: Clean.getCleanStringValue(i) });
       }
     }
+    if (
+      props.label === strings.samplePeriod &&
+      sampleDropdownData.length <= 0
+    ) {
+      for (let i = 0; i < Sample.ENUM_LENGTH; i++) {
+        sampleDropdownData.push({ key: i, value: Sample.getStringValue(i) });
+      }
+    }
   });
 
-  // Sets the data states to the edited fields of the config data, also sets the flags for different input types
+  /**
+   * Convert the given number from minutes to 24h format clock
+   * @param dat the time in minutes (between 0 and 1439)
+   */
+  const convertMinutesToTimeString = (dat: number) => {
+    if (dat >= 1440) {
+      dat = 0;
+    }
+    // Calculate minutes and hours
+    const minutes = dat % 60;
+    dat -= minutes;
+    const hours = dat / 60;
+    return String(hours) + ":" + String(minutes);
+  };
+
+  /**
+   * Sets the data states to the edited fields of the config data
+   * Also sets the flags for different input types
+   */
   const formDataAndInputDecider = () => {
     switch (props.label) {
       case strings.temperature:
         setData1(props.editableConfig.minTemp);
         setData2(props.editableConfig.maxTemp);
+        setLabelPostFix("(°C)");
         break;
       case strings.ph:
         setData1(props.editableConfig.minPh);
@@ -91,7 +132,77 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
     }
   };
 
-  // Sets the provided config's data to the modified one
+  // This is only used with timepicker -> the outlet config times
+  const outletTimePickerOnChange = (
+    event: DateTimePickerEvent,
+    selectedTime: Date | undefined
+  ) => {
+    const currentTime = selectedTime;
+    if (currentTime) {
+      // This data should be saved to config (the minute of the day)
+      const selectedTimeAsMinutes =
+        currentTime?.getHours() * 60 + currentTime?.getMinutes();
+      setData1(selectedTimeAsMinutes);
+    }
+    setShowDateTimePicker(false);
+  };
+
+  const dynamicFormBody = (
+    <>
+      {!timePickerFlag && !dropdownFlag && (
+        <View style={styles.horizontal}>
+          <TextInput
+            style={commonStyles.input}
+            value={String(data1)}
+            onChangeText={(t: string) => {
+              setData1(t.length > 0 ? Number.parseFloat(t) : 0);
+            }}
+          />
+          <Text style={styles.dash}>-</Text>
+          <TextInput
+            style={commonStyles.input}
+            value={String(data2)}
+            onChangeText={(t: string) => {
+              setData2(t.length > 0 ? Number.parseFloat(t) : 0);
+            }}
+          />
+        </View>
+      )}
+      {dropdownFlag && (
+        <View style={styles.horizontal}>
+          <SelectList
+            data={
+              props.label === strings.cleaning
+                ? cleanDropdownData
+                : sampleDropdownData
+            }
+            save="key"
+            setSelected={(k: number) => {
+              setData1(k);
+            }}
+          />
+        </View>
+      )}
+      {timePickerFlag && (
+        // This is only generated for the outlet configs
+        <View style={styles.horizontal}>
+          <TouchableOpacity onPress={() => setShowDateTimePicker(true)}>
+            <Text>{convertMinutesToTimeString(data1)}</Text>
+          </TouchableOpacity>
+          {showDateTimePicker && (
+            <DateTimePicker
+              is24Hour={true}
+              mode="time"
+              value={new Date(data1)}
+              onChange={outletTimePickerOnChange}
+            />
+          )}
+        </View>
+      )}
+    </>
+  );
+
+  // Sets the provided config's data to the modified one (using decision by the label)
   const handleSubmit = () => {};
 
   return (
@@ -100,8 +211,9 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         <Text>{strings.configEditLabel + props.aquariumName}</Text>
       </View>
       <View style={styles.horizontal}>
-        <Text>{props.label}:</Text>
+        <Text>{props.label + " " + labelPostFix}:</Text>
       </View>
+      {dynamicFormBody}
       <View style={styles.horizontal}>
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text>{strings.confirm}</Text>
@@ -119,11 +231,10 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
 
 const styles = StyleSheet.create({
   container: {
-    height: "90%",
+    height: "40%",
     width: "80%",
     alignItems: "center",
     justifyContent: "center",
-    top: 20,
     borderColor: colors.menuTopBorder,
     borderWidth: 3,
     borderRadius: 20,

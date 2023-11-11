@@ -11,7 +11,7 @@ enum CleanPeriod {
   CLEAN_3_MONTHS = 7,
 }
 
-function getCleanStringValue(val: number): string {
+const getCleanStringValue = (val: number): string => {
   switch (val) {
     case CleanPeriod.CLEAN_NEVER:
       return strings.never;
@@ -32,6 +32,6 @@ function getCleanStringValue(val: number): string {
     default:
       return strings.choose;
   }
-}
+};
 
 export { ENUM_LENGTH, getCleanStringValue, CleanPeriod };
