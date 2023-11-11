@@ -2,18 +2,10 @@ import React, { useEffect } from "react";
 import Layout from "../components/Layout";
 import { SelectList } from "react-native-dropdown-select-list";
 import strings from "../../config/strings";
-import {
-  ScrollView,
-  StyleSheet,
-  Dimensions,
-  View,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { ScrollView, StyleSheet, Dimensions, View } from "react-native";
 import ConfiguratorDataDisplayer from "../components/ConfiguratorDataDisplayer";
 import Aquarium from "../models/Aquarium";
 import commonStyles from "../utils/commonStyles";
-import Icon from "react-native-vector-icons/AntDesign";
 import AquariumConfiguration from "../models/AquariumConfiguration";
 import AquariumConfigEditForm from "../components/AquariumConfigEditForm";
 
@@ -46,6 +38,7 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
   );
   // The flag for editing
   const [edit, setEdit] = React.useState<boolean>(false);
+  const [editLabel, setEditLabel] = React.useState<string>("");
 
   const handleSelect = (val: string) => {
     setSelectedAquarium(aquariums.find((aq) => (aq.name = val)) as Aquarium);
@@ -56,8 +49,17 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
     setEdit(false);
   };
 
+  // Sets the editable label true, also displays the form
+  const editCallback = (label: string) => {
+    setEditLabel(label);
+    setEdit(true);
+  };
+
   return (
-    <Layout navigation={props.navigation} shouldDisplayMenuBar={edit ? false : true}>
+    <Layout
+      navigation={props.navigation}
+      shouldDisplayMenuBar={edit ? false : true}
+    >
       <ScrollView
         contentContainerStyle={[styles.container, { opacity: edit ? 0.1 : 1 }]}
       >
@@ -71,22 +73,17 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
             setSelected={(val: string) => handleSelect(val)}
             data={aquariumSelectList}
           />
-          <TouchableOpacity
-            style={{ marginLeft: 20 }}
-            onPress={() => setEdit(true)}
-          >
-            <Text>{strings.edit}</Text>
-            <Icon name="form" size={25} />
-          </TouchableOpacity>
         </View>
         <ConfiguratorDataDisplayer
           aquariumConfigData={selectedAquarium.config}
+          editCallback={editCallback}
         />
       </ScrollView>
       {edit && (
         <AquariumConfigEditForm
           aquariumName={selectedAquarium.name}
           editableConfig={selectedAquarium.config}
+          label={editLabel}
           cancelCallBack={setEdit}
           submitCallback={() => handleEditSubmit}
         />

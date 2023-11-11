@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import strings from "../../config/strings";
 import colors from "../../config/colors";
+import Icon from "react-native-vector-icons/AntDesign";
 
 // Stores the labels as a concatenated string for the datasegment labels
 // So label.includes can be used to determine the labels for the data
@@ -28,10 +29,13 @@ type ConfiguratorDataSegmentDisplayerProps = {
   label: string;
   data1: number;
   data2: number | null;
+  editCallback: (label: string) => void;
 };
 
 /** This component displays the segments of the configuration data, usually in pairs for temp or ph
- *If data is single, the second data will be null which case will be dynamically handled
+ *  If data is single, the second data will be null which case will be dynamically handled
+ *  Also it has an edit icon on it, on pressing it calls the editCallback with the label it has,
+ *  so the main screen will know which data we want to edit.
  */
 function ConfiguratorDataSegmentDisplayer(
   props: ConfiguratorDataSegmentDisplayerProps
@@ -57,6 +61,12 @@ function ConfiguratorDataSegmentDisplayer(
     <View style={styles.conatiner}>
       <View style={styles.horizontal}>
         <Text style={styles.label}>{props.label}</Text>
+        <TouchableOpacity
+          style={styles.horizontalRight}
+          onPress={() => props.editCallback(props.label)}
+        >
+          <Icon name="form" size={25} />
+        </TouchableOpacity>
       </View>
       <View style={styles.dataContainer}>
         <View style={styles.dataSegment}>
@@ -115,6 +125,11 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     paddingHorizontal: 10,
+  },
+  horizontalRight: {
+    flex: 1,
+    marginLeft: 20,
+    alignItems: "flex-end",
   },
 });
 

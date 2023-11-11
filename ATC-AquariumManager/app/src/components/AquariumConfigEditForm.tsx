@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -9,66 +9,89 @@ import {
 import AquariumConfiguration from "../models/AquariumConfiguration";
 import colors from "../../config/colors";
 import strings from "../../config/strings";
-import commonStyles from "../utils/commonStyles";
-import { SelectList } from "react-native-dropdown-select-list";
+import * as Clean from "../models/CleanPeriod";
 
 type AquariumConfigEditFormProps = {
   aquariumName: string;
   editableConfig: AquariumConfiguration;
+  label: string;
   cancelCallBack: (val: boolean) => void;
   submitCallback: (config: AquariumConfiguration) => void;
 };
 
+/**
+ * This component is a dynamic form for the configuration edit.
+ * It decides which data we want to modify and what kind of inputs we need for it by the label provided.
+ * On submit rewrites the provided editableConfig's modified fields, and calls the submitCallback, sending the config back to the screen.
+ * @param props The propeties needed see @ AquariumConfigEditFormProps
+ * @returns The edit form
+ */
 function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
-  //--------------------------
-  // FORM USE-STATES
-  //---------------------------
-  const [minTemp, setMinTemp] = React.useState<number>(
-    props.editableConfig.minTemp
-  );
-  const [maxTemp, setMaxTemp] = React.useState<number>(
-    props.editableConfig.maxTemp
-  );
-  const [minPh, setMinPh] = React.useState<number>(props.editableConfig.minPh);
-  const [maxPh, setMaxPh] = React.useState<number>(props.editableConfig.maxPh);
-  const [OnOutlet1, setOnOutlet1] = React.useState<number>(
-    props.editableConfig.OnOutlet1
-  );
-  const [OffOutlet1, setOffOutlet1] = React.useState<number>(
-    props.editableConfig.OffOutlet1
-  );
-  const [OnOutlet2, setOnOutlet2] = React.useState<number>(
-    props.editableConfig.OnOutlet2
-  );
-  const [OffOutlet2, setOffOutlet2] = React.useState<number>(
-    props.editableConfig.OffOutlet2
-  );
-  const [OnOutlet3, setOnOutlet3] = React.useState<number>(
-    props.editableConfig.OnOutlet3
-  );
-  const [OffOutlet3, setOffOutlet3] = React.useState<number>(
-    props.editableConfig.OffOutlet3
-  );
-  const [waterLvlAlert, setWaterLvlAlert] = React.useState<number>(
-    props.editableConfig.waterLvlAlert
-  );
-  const [feedingTime, setFeedingTime] = React.useState<number>(
-    props.editableConfig.feedingTime
-  );
-  const [foodPortions, setFoodPortions] = React.useState<number>(
-    props.editableConfig.foodPortions
-  );
-  const [filterClean, setFilterClean] = React.useState<number>(
-    props.editableConfig.filterClean
-  );
-  const [waterChange, setWaterChange] = React.useState<number>(
-    props.editableConfig.waterChange
-  );
-  const [samplePeriod, setSamplePeriod] = React.useState<number>(
-    props.editableConfig.samplePeriod
-  );
-  //-------------------------------
+  // We have 1 or two data, data2 can be null if we have only 1 (ex. waterLvlAlert)
+  // Later still need assign data to the generated input
+  const [data1, setData1] = React.useState<number>(-1);
+  const [data2, setData2] = React.useState<number | null>(null);
+  const [timePickerFlag, setTimePickerFlag] = React.useState<boolean>(false);
+  const [dropdownFlag, setDropdownFlag] = React.useState<boolean>(false);
 
+  const cleanDropdownData = []; // To store data for clean dropdown
+  useEffect(() => {
+    // Fill clean dropdown with the objects
+    if (cleanDropdownData.length <= 0) {
+      for (let i = 0; i < Clean.ENUM_LENGTH; i++) {
+        cleanDropdownData.push({ key: i, value: Clean.getCleanStringValue(i) });
+      }
+    }
+  });
+
+  // Sets the data states to the edited fields of the config data, also sets the flags for different input types
+  const formDataAndInputDecider = () => {
+    switch (props.label) {
+      case strings.temperature:
+        setData1(props.editableConfig.minTemp);
+        setData2(props.editableConfig.maxTemp);
+        break;
+      case strings.ph:
+        setData1(props.editableConfig.minPh);
+        setData2(props.editableConfig.maxPh);
+        break;
+      case strings.outlet1:
+        setData1(props.editableConfig.OnOutlet1);
+        setData2(props.editableConfig.OffOutlet1);
+        setTimePickerFlag(true);
+        break;
+      case strings.outlet2:
+        setData1(props.editableConfig.OnOutlet2);
+        setData2(props.editableConfig.OffOutlet2);
+        setTimePickerFlag(true);
+        break;
+      case strings.outlet3:
+        setData1(props.editableConfig.OnOutlet3);
+        setData2(props.editableConfig.OffOutlet3);
+        setTimePickerFlag(true);
+        break;
+      case strings.feeding:
+        setData1(props.editableConfig.feedingTime);
+        setData2(props.editableConfig.foodPortions);
+        break;
+      case strings.cleaning:
+        setData1(props.editableConfig.filterClean);
+        setData2(props.editableConfig.waterChange);
+        setDropdownFlag(true);
+        break;
+      case strings.waterLevelAlert:
+        setData1(props.editableConfig.waterLvlAlert);
+        setData2(null);
+        break;
+      case strings.samplePeriod:
+        setData1(props.editableConfig.samplePeriod);
+        setData2(null);
+        setDropdownFlag(true);
+        break;
+    }
+  };
+
+  // Sets the provided config's data to the modified one
   const handleSubmit = () => {};
 
   return (
@@ -77,73 +100,18 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         <Text>{strings.configEditLabel + props.aquariumName}</Text>
       </View>
       <View style={styles.horizontal}>
-        <Text>{strings.temperature}:</Text>
-        <TextInput
-          style={commonStyles.input}
-          value={String(minTemp)}
-          onChangeText={(val: string) =>
-            setMinTemp(val.length > 0 ? Number.parseFloat(val) : 0)
-          }
-        />
-        <Text style={styles.dash}>-</Text>
-        <TextInput
-          style={commonStyles.input}
-          value={String(maxTemp)}
-          onChangeText={(val: string) =>
-            setMaxTemp(val.length > 0 ? Number.parseFloat(val) : 0)
-          }
-        />
+        <Text>{props.label}:</Text>
       </View>
       <View style={styles.horizontal}>
-        <Text>{strings.ph}:</Text>
-        <TextInput
-          style={commonStyles.input}
-          value={String(minPh)}
-          onChangeText={(val: string) =>
-            setMinPh(val.length > 0 ? Number.parseFloat(val) : 0)
-          }
-        />
-        <Text style={styles.dash}>-</Text>
-        <TextInput
-          style={commonStyles.input}
-          value={String(maxPh)}
-          onChangeText={(val: string) =>
-            setMaxPh(val.length > 0 ? Number.parseFloat(val) : 0)
-          }
-        />
-      </View>
-      <View style={styles.horizontal}>
-        <Text>{strings.outlet1}:</Text>
-        <TextInput style={commonStyles.input} value={String(OnOutlet1)} />
-        <Text style={styles.dash}>-</Text>
-        <TextInput style={commonStyles.input} value={String(OffOutlet1)} />
-      </View>
-      <View style={styles.horizontal}>
-        <Text>{strings.outlet2}:</Text>
-        <TextInput style={commonStyles.input} value={String(OnOutlet2)} />
-        <Text style={styles.dash}>-</Text>
-        <TextInput style={commonStyles.input} value={String(OffOutlet2)} />
-      </View>
-      <View style={styles.horizontal}>
-        <Text>{strings.outlet3}:</Text>
-        <TextInput style={commonStyles.input} value={String(OnOutlet3)} />
-        <Text style={styles.dash}>-</Text>
-        <TextInput style={commonStyles.input} value={String(OffOutlet3)} />
-      </View>
-      <View style={styles.horizontal}>
-        <Text>{strings.waterLevelAlert}:</Text>
-        <TextInput style={commonStyles.input} value={String(waterLvlAlert) + "%"} />
-      </View>
-      <View style={styles.horizontal}>
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text>{strings.confirm}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => props.cancelCallBack(false)}
-      >
-        <Text>{strings.cancel}</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text>{strings.confirm}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => props.cancelCallBack(false)}
+        >
+          <Text>{strings.cancel}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

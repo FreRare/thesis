@@ -31,7 +31,6 @@ export default class AquariumConfiguration {
     OnO3 = 0,
     OffO3 = 0,
     waterLvlAlert = 0,
-    prefLight = 0,
     feedingTime = 0,
     foodportions = 0,
     filterClean = 0,
