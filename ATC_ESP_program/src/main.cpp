@@ -7,6 +7,8 @@
 
 ServerConnector* server;
 ActuatorHandler* actuatorHandler;
+int h = 0;
+int minutes = 0;
 
 void setup()
 {
@@ -23,15 +25,20 @@ void setup()
 
 void loop()
 {
-    int h = hour();
-    int min = minute();
-    int sec = second();
+    h = hour();
+    minutes = minute();
     // At midnight (10 sec interval) sync the NTP time to local
-    if (h == 0 && min == 0 && sec < 10 && sec >= 0) {
-        server->syncNTPTime();
+    if (h == 0) {
+        int sec = second();
+        if (minutes == 0 && sec < 10 && sec >= 0) {
+            server->syncNTPTime();
+        }
     }
-    UIHandler::getInstance()->writeLine("Clock " + String(h) + ":" + String(min), 1);
+    UIHandler::getInstance()->clearLine(1);
+    UIHandler::getInstance()->writeLine("Clock " + String(h) + ":" + String(minutes), 1);
     // Handle relay 1
+    Serial.println(
+        "Hour: " + String(h) + "Relay is " + (ActuatorHandler::isChannel1Active ? "active" : "inactive") + ".");
     if (h >= 8 && h <= 20 && !ActuatorHandler::isChannel1Active) {
         actuatorHandler->toggleChannel1();
     } else if ((h > 20 || h < 8) && ActuatorHandler::isChannel1Active) {

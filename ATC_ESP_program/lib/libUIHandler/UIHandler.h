@@ -25,7 +25,7 @@ public:
         const String& msg, const uint8_t line, const uint16_t& delayTime = 400, const uint8_t& cycles = 1);
     static void disableScrollingText();
     static void writeLine(const String& msg, const uint8_t& line, const uint8_t& col = 0);
-    static void clearLine(const uint8_t line);
+    static void clearLine(const uint8_t& line);
     static void writeBasicInfo(const time_t& now, const float& ph, const uint8_t& temp);
     static void clear();
 };

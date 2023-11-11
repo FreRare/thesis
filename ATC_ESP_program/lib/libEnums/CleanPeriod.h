@@ -4,7 +4,7 @@
 The enum to provide info about the cleaning/water changing of the aquarium (used for both)
 Each element is a period of time
 ---------------------------------------*/
-enum CleanPeriod : uint8_t {
+enum CleanPeriod {
     P_3_DAYS = 1,
     P_5_DAYS,
     P_1_WEEK,

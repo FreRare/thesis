@@ -4,7 +4,7 @@
 The enum to follow the intensity of light
 Used both by config and samples
 ------------------------------------------------*/
-enum LightIntensity : uint8_t {
+enum LightIntensity {
     DARK = 1,
     SHADY,
     MEDIUM,

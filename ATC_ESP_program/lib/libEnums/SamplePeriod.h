@@ -4,7 +4,7 @@
 /*----------------------------------------
 The enum to track how often samples should be taken
 ------------------------------------------*/
-enum SamplePeriod : uint8_t {
+enum SamplePeriod {
     S_15_MIN = 1,
     S_30_MIN,
     S_1_HOUR,

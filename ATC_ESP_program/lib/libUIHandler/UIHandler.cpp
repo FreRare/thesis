@@ -59,3 +59,18 @@ void UIHandler::makeScrollingText(
 }
 
 void UIHandler::clear() { UIHandler::display.clear(); }
+
+void UIHandler::clearLine(const uint8_t& line)
+{
+    uint8_t lineNumber = line;
+    if (lineNumber > LCD_ROWS) {
+        Serial.println("Invalid row number! Defaulted to 0.");
+        lineNumber = 0;
+    }
+    UIHandler::display.setCursor(0, line - 1);
+    String clearMsg = "";
+    for (int i = 0; i < LCD_COLUMNS; i++) {
+        clearMsg += " ";
+    }
+    UIHandler::display.print(clearMsg);
+}
