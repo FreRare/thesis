@@ -13,9 +13,7 @@ import * as Clean from "../models/CleanPeriod";
 import * as Sample from "../models/SamplePeriod";
 import commonStyles from "../utils/commonStyles";
 import { SelectList } from "react-native-dropdown-select-list";
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 type AquariumConfigEditFormProps = {
   aquariumName: string;
@@ -27,6 +25,7 @@ type AquariumConfigEditFormProps = {
 
 /**
  * This component is a dynamic form for the configuration edit.
+ * Can be used for dual numeric (float), dual TimePicker (hour + minute), dual dropdown list or in unique feeding case for dropdown and numeric input
  * It decides which data we want to modify and what kind of inputs we need for it by the label provided.
  * On submit rewrites the provided editableConfig's modified fields, and calls the submitCallback, sending the config back to the screen.
  * @param props The propeties needed see @ AquariumConfigEditFormProps
@@ -35,12 +34,16 @@ type AquariumConfigEditFormProps = {
 function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
   // We have 1 or two data, data2 can be null if we have only 1 (ex. waterLvlAlert)
   // Later still need assign data to the generated input
-  const [data1, setData1] = React.useState<number>(-1);
-  const [data2, setData2] = React.useState<number | null>(null);
-  const [labelPostFix, setLabelPostFix] = React.useState<string>("");
-  const [timePickerFlag, setTimePickerFlag] = React.useState<boolean>(false);
-  const [dropdownFlag, setDropdownFlag] = React.useState<boolean>(false);
-  const [showDateTimePicker, setShowDateTimePicker] =
+  const [data1, setData1] = React.useState<number | string>(-1);
+  const [data2, setData2] = React.useState<number | string>(-1);
+  const [labelPostFix, setLabelPostFix] = React.useState<string>(""); // Additional postfix ex. for temperature
+  const [additionalInfo, setAdditionalInfo] = React.useState<string>("");
+  const [errorMsg, setErrorMsg] = React.useState<string>("");
+  const [timePickerFlag, setTimePickerFlag] = React.useState<boolean>(false); // True if the input is timepicler (only for outlet configs)
+  const [dropdownFlag, setDropdownFlag] = React.useState<boolean>(false); // True if dropdown input, for cleaning and samplePeriods
+  const [showDateTimePicker1, setShowDateTimePicker1] =
+    React.useState<boolean>(false);
+  const [showDateTimePicker2, setShowDateTimePicker2] =
     React.useState<boolean>(false);
 
   const cleanDropdownData: Array<{ key: number; value: string }> = []; // To store data for clean dropdown
@@ -48,7 +51,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
 
   // Fill dropdowns with data if they're used
   useEffect(() => {
-    if (data1 < 0) {
+    if ((data1 as number) < 0) {
       formDataAndInputDecider();
     }
     if (props.label === strings.cleaning && cleanDropdownData.length <= 0) {
@@ -65,21 +68,6 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
       }
     }
   });
-
-  /**
-   * Convert the given number from minutes to 24h format clock
-   * @param dat the time in minutes (between 0 and 1439)
-   */
-  const convertMinutesToTimeString = (dat: number) => {
-    if (dat >= 1440) {
-      dat = 0;
-    }
-    // Calculate minutes and hours
-    const minutes = dat % 60;
-    dat -= minutes;
-    const hours = dat / 60;
-    return String(hours) + ":" + String(minutes);
-  };
 
   /**
    * Sets the data states to the edited fields of the config data
@@ -120,31 +108,75 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         setData2(props.editableConfig.waterChange);
         setDropdownFlag(true);
         break;
-      case strings.waterLevelAlert:
+      case strings.waterAndSmaples:
         setData1(props.editableConfig.waterLvlAlert);
-        setData2(null);
-        break;
-      case strings.samplePeriod:
-        setData1(props.editableConfig.samplePeriod);
-        setData2(null);
-        setDropdownFlag(true);
+        setData2(props.editableConfig.samplePeriod);
         break;
     }
   };
 
-  // This is only used with timepicker -> the outlet config times
+  /**
+   * Decides which data in the config should be rewritten, and rewrites it
+   * @param dat1 the data1 as number
+   * @param dat2 the data2 as number
+   * @returns void
+   */
+  const configDataManipulationDecider = (dat1: number, dat2: number) => {
+    switch (props.label) {
+      case strings.temperature:
+        props.editableConfig.minTemp = dat1;
+        props.editableConfig.maxTemp = dat2;
+        return;
+      case strings.ph:
+        props.editableConfig.minPh = dat1;
+        props.editableConfig.maxPh = dat2;
+        return;
+      case strings.outlet1:
+        props.editableConfig.OnOutlet1 = dat1;
+        props.editableConfig.OffOutlet1 = dat2;
+        return;
+      case strings.outlet2:
+        props.editableConfig.OnOutlet2 = dat1;
+        props.editableConfig.OffOutlet2 = dat2;
+        return;
+      case strings.outlet3:
+        props.editableConfig.OnOutlet3 = dat1;
+        props.editableConfig.OffOutlet3 = dat2;
+        return;
+      case strings.feeding:
+        props.editableConfig.feedingTime = dat1;
+        props.editableConfig.foodPortions = dat2;
+        return;
+      case strings.cleaning:
+        props.editableConfig.filterClean = dat1;
+        props.editableConfig.waterChange = dat2;
+        return;
+      case strings.waterAndSmaples:
+        props.editableConfig.waterLvlAlert = dat1;
+        props.editableConfig.samplePeriod = dat2;
+    }
+  };
+
+  /**
+   * This is only used for outlet timePicker
+   * @param selectedTime The event time from timepicker
+   * @param data1Flag The flag if data1 or data2 should be overwritten
+   */
   const outletTimePickerOnChange = (
-    event: DateTimePickerEvent,
-    selectedTime: Date | undefined
+    selectedTime: Date | undefined,
+    data1Flag: boolean
   ) => {
     const currentTime = selectedTime;
     if (currentTime) {
       // This data should be saved to config (the minute of the day)
       const selectedTimeAsMinutes =
         currentTime?.getHours() * 60 + currentTime?.getMinutes();
-      setData1(selectedTimeAsMinutes);
+      data1Flag
+        ? setData1(selectedTimeAsMinutes)
+        : setData2(selectedTimeAsMinutes);
     }
-    setShowDateTimePicker(false);
+    setShowDateTimePicker1(false);
+    setShowDateTimePicker2(false);
   };
 
   const dynamicFormBody = (
@@ -153,48 +185,85 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         <View style={styles.horizontal}>
           <TextInput
             style={commonStyles.input}
-            value={String(data1)}
+            value={data1 ? String(data1) : ""}
             onChangeText={(t: string) => {
-              setData1(t.length > 0 ? Number.parseFloat(t) : 0);
+              setData1(t);
             }}
           />
           <Text style={styles.dash}>-</Text>
           <TextInput
             style={commonStyles.input}
-            value={String(data2)}
+            value={data2 ? String(data2) : ""}
             onChangeText={(t: string) => {
-              setData2(t.length > 0 ? Number.parseFloat(t) : 0);
+              setData2(t);
             }}
           />
         </View>
       )}
       {dropdownFlag && (
-        <View style={styles.horizontal}>
-          <SelectList
-            data={
-              props.label === strings.cleaning
-                ? cleanDropdownData
-                : sampleDropdownData
-            }
-            save="key"
-            setSelected={(k: number) => {
-              setData1(k);
-            }}
-          />
-        </View>
+        // This is only on cleaning
+        <>
+          <View style={styles.horizontal}>
+            <Text style={styles.dropdownLabel}>{strings.filterClean}:</Text>
+            <SelectList
+              boxStyles={styles.dropdownBoxStyle}
+              data={cleanDropdownData}
+              save="key"
+              setSelected={(k: number) => {
+                setData1(k);
+              }}
+            />
+          </View>
+          <View style={styles.horizontal}>
+            <Text style={styles.dropdownLabel}>{strings.waterChange}:</Text>
+            <SelectList
+              boxStyles={styles.dropdownBoxStyle}
+              data={cleanDropdownData}
+              save="key"
+              setSelected={(k: number) => {
+                setData2(k);
+              }}
+            />
+          </View>
+        </>
       )}
       {timePickerFlag && (
         // This is only generated for the outlet configs
         <View style={styles.horizontal}>
-          <TouchableOpacity onPress={() => setShowDateTimePicker(true)}>
-            <Text>{convertMinutesToTimeString(data1)}</Text>
+          <TouchableOpacity
+            style={styles.clockDisplayer}
+            onPress={() => setShowDateTimePicker1(true)}
+          >
+            <Text>
+              {AquariumConfiguration.convertMinutesToTimeString(
+                Number.parseFloat(data1 as string)
+              )}
+            </Text>
           </TouchableOpacity>
-          {showDateTimePicker && (
+          {showDateTimePicker1 && (
             <DateTimePicker
               is24Hour={true}
               mode="time"
-              value={new Date(data1)}
-              onChange={outletTimePickerOnChange}
+              value={new Date(0)}
+              onChange={(event, date) => outletTimePickerOnChange(date, true)}
+            />
+          )}
+          <TouchableOpacity
+            style={styles.clockDisplayer}
+            onPress={() => setShowDateTimePicker2(true)}
+          >
+            <Text>
+              {AquariumConfiguration.convertMinutesToTimeString(
+                Number.parseFloat(data2 as string)
+              )}
+            </Text>
+          </TouchableOpacity>
+          {showDateTimePicker2 && (
+            <DateTimePicker
+              is24Hour={true}
+              mode="time"
+              value={new Date(0)}
+              onChange={(event, date) => outletTimePickerOnChange(date, false)}
             />
           )}
         </View>
@@ -203,7 +272,18 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
   );
 
   // Sets the provided config's data to the modified one (using decision by the label)
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    // If we had datas as string (float values) validate it, it should only happen on textinputs
+    const parsedData1 = Number.parseFloat(data1 as string);
+    const parsedData2 = Number.parseFloat(data2 as string);
+    if (Number.isNaN(parsedData1) || Number.isNaN(parsedData2)) {
+      setErrorMsg(strings.numberParseError);
+      return;
+    }
+    // After we have usable data need to decide which member to alter
+    configDataManipulationDecider(parsedData1, parsedData2);
+    props.submitCallback(props.editableConfig);
+  };
 
   return (
     <View style={styles.container}>
@@ -212,6 +292,12 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
       </View>
       <View style={styles.horizontal}>
         <Text>{props.label + " " + labelPostFix}:</Text>
+      </View>
+      <View style={styles.horizontal}>
+        <Text>{additionalInfo}</Text>
+      </View>
+      <View style={styles.horizontal}>
+        <Text style={{ flex: 1, color: "red" }}>{errorMsg}</Text>
       </View>
       {dynamicFormBody}
       <View style={styles.horizontal}>
@@ -231,7 +317,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
 
 const styles = StyleSheet.create({
   container: {
-    height: "40%",
+    flex: 1,
     width: "80%",
     alignItems: "center",
     justifyContent: "center",
@@ -261,6 +347,19 @@ const styles = StyleSheet.create({
   },
   dash: {
     fontSize: 30,
+  },
+  clockDisplayer: {
+    marginHorizontal: 20,
+    padding: 5,
+    borderWidth: 2,
+  },
+  dropdownBoxStyle: {
+    flex: 1,
+    margin: 5,
+    backgroundColor: colors.menuBarBackground,
+  },
+  dropdownLabel: {
+    flex: 1,
   },
 });
 

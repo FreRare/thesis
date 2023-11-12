@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import strings from "../../config/strings";
 import colors from "../../config/colors";
 import Icon from "react-native-vector-icons/AntDesign";
+import AquariumConfiguration from "../models/AquariumConfiguration";
+import { getCleanStringValue } from "../models/CleanPeriod";
 
 // Stores the labels as a concatenated string for the datasegment labels
 // So label.includes can be used to determine the labels for the data
@@ -11,16 +13,29 @@ const dataSegmentLabelDecisionMap = [
     labels: strings.temperature + strings.ph,
     data1Label: strings.min,
     data2Label: strings.max,
+    dataFormatter: (dat: number) => {
+      return String(dat);
+    },
   },
   {
     labels: strings.outlet1 + strings.outlet2 + strings.outlet3,
     data1Label: strings.on,
     data2Label: strings.off,
+    dataFormatter: AquariumConfiguration.convertMinutesToTimeString,
   },
   {
     labels: strings.feeding,
     data1Label: strings.time,
     data2Label: strings.portions,
+    dataFormatter: (dat: number) => {
+      return String(dat);
+    },
+  },
+  {
+    labels: strings.cleaning,
+    data1Label: strings.filterClean,
+    data2Label: strings.waterChange,
+    dataFormatter: getCleanStringValue,
   },
 ];
 
@@ -28,7 +43,7 @@ const dataSegmentLabelDecisionMap = [
 type ConfiguratorDataSegmentDisplayerProps = {
   label: string;
   data1: number;
-  data2: number | null;
+  data2: number;
   editCallback: (label: string) => void;
 };
 
@@ -53,9 +68,31 @@ function ConfiguratorDataSegmentDisplayer(
         }
       }
     }
-  });
 
+    for (const dsm of dataSegmentLabelDecisionMap) {
+      if (
+        dsm.labels.toLocaleLowerCase().includes(props.label.toLocaleLowerCase())
+      ) {
+        setData1ToDisplay(dsm.dataFormatter(props.data1));
+        setData2ToDisplay(dsm.dataFormatter(props.data2));
+      }
+    }
+
+    // Feeding is a special case bc we have time and number
+    if (props.label === strings.feeding) {
+      setData1ToDisplay(
+        AquariumConfiguration.convertMinutesToTimeString(props.data1)
+      );
+      setData2ToDisplay(String(props.data2));
+    }
+  });
   const [dataLabels, setDataLabels] = React.useState<Array<string>>([]);
+  const [data1ToDisplay, setData1ToDisplay] = React.useState<string>(
+    String(props.data1)
+  );
+  const [data2ToDisplay, setData2ToDisplay] = React.useState<string>(
+    String(props.data2)
+  );
 
   return (
     <View style={styles.conatiner}>
@@ -63,22 +100,22 @@ function ConfiguratorDataSegmentDisplayer(
         <Text style={styles.label}>{props.label}</Text>
         <TouchableOpacity
           style={styles.horizontalRight}
-          onPress={() => props.editCallback(props.label)}
+          onPress={() => {
+            props.editCallback(props.label);
+          }}
         >
           <Icon name="form" size={25} />
         </TouchableOpacity>
       </View>
       <View style={styles.dataContainer}>
         <View style={styles.dataSegment}>
-          <Text style={styles.dataText}>{String(props.data1)}</Text>
+          <Text style={styles.dataText}>{data1ToDisplay}</Text>
           <Text style={styles.dataText}>{dataLabels[0]}</Text>
         </View>
-        {props.data2 !== null && (
-          <View style={styles.dataSegment}>
-            <Text style={styles.dataText}>{String(props.data2)}</Text>
-            <Text style={styles.dataText}>{dataLabels[1]}</Text>
-          </View>
-        )}
+        <View style={styles.dataSegment}>
+          <Text style={styles.dataText}>{data2ToDisplay}</Text>
+          <Text style={styles.dataText}>{dataLabels[1]}</Text>
+        </View>
       </View>
     </View>
   );

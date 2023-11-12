@@ -20,21 +20,21 @@ export default class AquariumConfiguration {
 
   constructor(
     id = -1,
-    minTemp = 0, // input
-    maxTemp = 0, // input
-    minPh = 0, // input
-    maxPh = 0, // input
+    minTemp = 0.0, // input
+    maxTemp = 0.0, // input-
+    minPh = 0.0, // input
+    maxPh = 0.0, // input-
     OnO1 = 0, // timepick
-    OffO1 = 0, // timepick
+    OffO1 = 0, // timepick-
     OnO2 = 0, // timepick
-    OffO2 = 0, // timepick
+    OffO2 = 0, // timepick-
     OnO3 = 0, // timepick
-    OffO3 = 0, // timepick
+    OffO3 = 0, // timepick-
     waterLvlAlert = 0, //input
     feedingTime = 0, // timepick
-    foodportions = 0, // input
+    foodportions = 0, // input-
     filterClean = 0, // dropdown
-    waterChange = 0, // dropdown
+    waterChange = 0, // dropdown-
     samplePer = 0, // dropdown
     modDate = new Date()
   ) {
@@ -180,4 +180,19 @@ export default class AquariumConfiguration {
   public set lastModifiedDat(value: Date) {
     this._lastModifiedDate = value;
   }
+
+  /**
+   * Convert the given number from minutes to 24h format clock
+   * @param dat the time in minutes (between 0 and 1439)
+   */
+  static convertMinutesToTimeString = (dat: number) => {
+    if (dat >= 1440) {
+      dat = 0;
+    }
+    // Calculate minutes and hours
+    const minutes = dat % 60;
+    dat -= minutes;
+    const hours = dat / 60;
+    return String(hours) + ":" + String(minutes);
+  };
 }

@@ -43,6 +43,9 @@ export default {
   off: "Off",
   feeding: "Feeding",
   cleaning: "Cleaning",
+  filterClean: "Filter cleaning",
+  waterChange: "Water changing",
+  waterAndSmaples: "Water level and sample period",
   never: "Never",
   clean5days: "Every 5 days",
   cleanWeekly: "Weekly",
@@ -65,6 +68,8 @@ export default {
   time: "Time",
   portions: "Portions",
   edit: "Edit",
+  numberParseError:
+    "Invalid numbers given! Make sure it doesn't contain any letters.",
   configEditLabel: "Edit the configuration of ",
   emailInputPlaceholder: "Your email address",
   passInputPlaceHolder: "Your password",

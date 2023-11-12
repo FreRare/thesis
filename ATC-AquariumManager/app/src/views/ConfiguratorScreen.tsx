@@ -46,6 +46,7 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
 
   const handleEditSubmit = (config: AquariumConfiguration) => {
     selectedAquarium.config = config;
+    setSelectedAquarium(selectedAquarium);
     setEdit(false);
   };
 
@@ -85,7 +86,7 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
           editableConfig={selectedAquarium.config}
           label={editLabel}
           cancelCallBack={setEdit}
-          submitCallback={() => handleEditSubmit}
+          submitCallback={handleEditSubmit}
         />
       )}
     </Layout>
