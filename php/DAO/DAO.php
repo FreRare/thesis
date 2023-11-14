@@ -4,7 +4,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/DAO/Config/DBConfig.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/User.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/Aquarium.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/SensorSample.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/AQConfig.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/AquariumConfig.php');
 
 
 /**
@@ -224,11 +224,11 @@ class AQDAO implements AQDAOI
         if (empty($id) || empty($minT) || empty($maxT) || empty($minP) || empty($maxPh) || empty($liOn) || empty($liOff) || empty($filOn) || empty($filOff) || empty($airOn) || empty($airOff) || empty($wAlert) || empty($feedT) || empty($foodPort) || empty($filC) || empty($waterC) || empty($samplePeriod) || empty($lModDate)) {
             return null;
         } else {
-            return new AQConfig($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $wAlert, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDate);
+            return new AquariumConfig($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $wAlert, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDate);
         }
     }
 
-    function createAQConfig(AQConfig $aqConfig): bool
+    function createAQConfig(AquariumConfig $aqConfig): bool
     {
         $stm = $this->connection->prepare(AQDAO::CREATE_CONFIG);
         $aquariumId = $aqConfig->getAquariumId();
@@ -256,7 +256,7 @@ class AQDAO implements AQDAOI
         return $success;
     }
 
-    function deleteAQConfig(AQConfig $aqConfig): bool
+    function deleteAQConfig(AquariumConfig $aqConfig): bool
     {
         $stm = $this->connection->prepare(AQDAO::DELETE_CONFIG);
         $id = $aqConfig->getAquariumId();
@@ -266,7 +266,7 @@ class AQDAO implements AQDAOI
         return $success;
     }
 
-    function updateAQConfig(AQConfig $aqConfig): bool
+    function updateAQConfig(AquariumConfig $aqConfig): bool
     {
         $stm = $this->connection->prepare(AQDAO::UPDATE_CONFIG);
         $minTemp = $aqConfig->getMinTemp();

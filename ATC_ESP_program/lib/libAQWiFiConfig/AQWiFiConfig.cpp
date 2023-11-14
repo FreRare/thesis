@@ -34,7 +34,7 @@ AQWiFiConfig::AQWiFiConfig()
 
 String AQWiFiConfig::getSSID() { return this->WIFI_SSID; }
 String AQWiFiConfig::getPassword() { return this->WIFI_PASS; }
-uint16_t AQWiFiConfig::getSystemID() { return this->systemID; }
+uint8_t AQWiFiConfig::getSystemID() { return this->systemID; }
 void AQWiFiConfig::saveSystemID(const uint16_t& id)
 {
     this->systemID = id;
@@ -85,11 +85,14 @@ void AQWiFiConfig::loadCredentials()
 
 void AQWiFiConfig::initializeNetwork()
 {
-    String SSID = "ATC_portal";
+    const char SSID[] = "ATC_portal";
     WiFi.mode(WIFI_AP);
     WiFi.softAP(SSID, "");
     IPAddress serverIP = WiFi.softAPIP();
-    UIHandler::getInstance()->makeWiFiConfigMessage(SSID, serverIP.toString());
+    uint16_t ipLength = serverIP.toString().length();
+    char serverIpAsCharArray[ipLength];
+    strcpy(serverIpAsCharArray, serverIP.toString().c_str());
+    UIHandler::getInstance()->makeWiFiConfigMessage(SSID, serverIpAsCharArray);
 
     // Config webpage
     AQWiFiConfig::configServer->on("/", HTTP_GET, AQWiFiConfig::createSiteForWiFiLogin);

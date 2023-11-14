@@ -1,114 +1,120 @@
 #include "ConfigData.h"
 
-ConfigData::ConfigData(const uint16_t& minTemp, const uint16_t& maxTemp, const uint16_t& waterLvlAlert,
-    const uint16_t& lightOnTime, const uint16_t& lightOffTime, const uint16_t& filterOnTime,
-    const uint16_t& filterOffTime, const uint16_t& airOnTime, const uint16_t& airOffTime, const uint16_t& feedingTime,
-    const float& minPh, const float& maxPh, const uint8_t& feedingPortions, const LightIntensity& prefLight,
-    const CleanPeriod& filterChange, const CleanPeriod& waterChange, const SamplePeriod& sample)
-    : minTemp(minTemp)
-    , maxTemp(maxTemp)
-    , preferredLight(prefLight)
+ConfigData::ConfigData(const float& minT, const float& maxT, const float& minPh, const float& maxPh,
+    const uint16_t& OL1On, const uint16_t& OL1Off, const uint16_t& OL2On, const uint16_t& OL2Off, const uint16_t& OL3On,
+    const uint16_t& OL3Off, const uint8_t& waterLvlAlert, const uint16_t& feedingTime, const uint8_t& foodPort,
+    const SamplePeriod& samplePer)
+    : minTemp(minT)
+    , maxTemp(maxT)
     , minPh(minPh)
     , maxPh(maxPh)
-    , filterChangePeriod(filterChange)
-    , waterChangePeriod(waterChange)
-    , lightOnTime(lightOnTime)
-    , lightOffTime(lightOffTime)
-    , filterOnTime(filterOnTime)
-    , filterOffTime(filterOffTime)
-    , airOnTime(airOnTime)
-    , airOffTime(airOffTime)
+    , outlet1On(OL1On)
+    , outlet1Off(OL1Off)
+    , outlet2On(OL2On)
+    , outlet2Off(OL2Off)
+    , outlet3On(OL3Off)
+    , outlet3Off(OL3Off)
+    , waterLvlAlert(waterLvlAlert)
     , feedingTime(feedingTime)
-    , feedingPortions(feedingPortions)
+    , feedingPortions(foodPort)
+    , samplePeriod(samplePer)
 {
 }
-/*******************************************
- * Start of setters
- *********************************************/
 
-void ConfigData::SetMinTemp(uint16_t minTemp)
-{
-    if (minTemp < 40) {
-        minTemp = minTemp;
-    }
-}
+void ConfigData::SetMinTemp(float minTemp) { minTemp = minTemp; }
 
-void ConfigData::SetMaxTemp(uint16_t maxTemp)
-{
-    if (maxTemp < 40)
-        maxTemp = maxTemp;
-}
-
-void ConfigData::SetPreferredLight(LightIntensity preferredLight) { preferredLight = preferredLight; }
-
-void ConfigData::SetWaterLvlAlert(uint16_t waterLvlAlert)
-{
-    if (waterLvlAlert < 100)
-        waterLvlAlert = waterLvlAlert;
-}
+void ConfigData::SetMaxTemp(float maxTemp) { maxTemp = maxTemp; }
 
 void ConfigData::SetMinPh(float minPh)
 {
-    if (minPh <= MAX_PH && minPh >= MIN_PH)
+    if (minPh >= MIN_PH && minPh < MAX_PH) {
         minPh = minPh;
+    } else {
+        Serial.println("Inavlid PH!" + String(minPh));
+    }
 }
 
 void ConfigData::SetMaxPh(float maxPh)
 {
-    if (maxPh <= MAX_PH && maxPh >= MIN_PH)
+    if (maxPh >= MIN_PH && maxPh < MAX_PH) {
         maxPh = maxPh;
+    } else {
+        Serial.println("Inavlid PH!" + String(maxPh));
+    }
 }
 
-void ConfigData::SetFilterChangePeriod(CleanPeriod filterChangePeriod) { filterChangePeriod = filterChangePeriod; }
-
-void ConfigData::SetWaterChangePeriod(CleanPeriod waterChangePeriod) { waterChangePeriod = waterChangePeriod; }
-
-void ConfigData::SetLightOnTime(uint16_t lightOnTime)
+void ConfigData::SetOutlet1On(uint16_t outlet1On)
 {
-    if (lightOnTime <= MAX_TIMING_VAL)
-        lightOnTime = lightOnTime;
+    if (outlet1On <= MAX_TIMING_VAL) {
+        outlet1On = outlet1On;
+    } else {
+        Serial.println("Invalid timing! " + String(outlet1On));
+    }
 }
 
-void ConfigData::SetLightOffTime(uint16_t lightOffTime)
+void ConfigData::SetOutlet1Off(uint16_t outlet1Off)
 {
-    if (lightOffTime <= MAX_TIMING_VAL)
-        lightOffTime = lightOffTime;
+    if (outlet1Off <= MAX_TIMING_VAL) {
+        outlet1Off = outlet1Off;
+    } else {
+        Serial.println("Invalid timing! " + String(outlet1Off));
+    }
 }
 
-void ConfigData::SetFilterOnTime(uint16_t filterOnTime)
+void ConfigData::SetOutlet2On(uint16_t outlet2On)
 {
-    if (filterOnTime <= MAX_TIMING_VAL)
-        filterOnTime = filterOnTime;
+    if (outlet2On <= MAX_TIMING_VAL) {
+        outlet2On = outlet2On;
+    } else {
+        Serial.println("Invalid timing! " + String(outlet2On));
+    }
 }
 
-void ConfigData::SetFilterOffTime(uint16_t filterOffTime)
+void ConfigData::SetOutlet2Off(uint16_t outlet2Off)
 {
-    if (filterOffTime <= MAX_TIMING_VAL)
-        filterOffTime = filterOffTime;
+    if (outlet2Off <= MAX_TIMING_VAL) {
+        outlet2Off = outlet2Off;
+    } else {
+        Serial.println("Invalid timing! " + String(outlet2Off));
+    }
 }
 
-void ConfigData::SetAirOnTime(uint16_t airOnTime)
+void ConfigData::SetOutlet3On(uint16_t outlet3On)
 {
-    if (airOnTime <= MAX_TIMING_VAL)
-        airOnTime = airOnTime;
+    if (outlet3On <= MAX_TIMING_VAL) {
+        outlet3On = outlet3On;
+    } else {
+        Serial.println("Invalid timing! " + String(outlet3On));
+    }
 }
 
-void ConfigData::SetAirOffTime(uint16_t airOffTime)
+void ConfigData::SetOutlet3Off(uint16_t outlet3Off)
 {
-    if (airOffTime <= MAX_TIMING_VAL)
-        airOffTime = airOffTime;
+    if (outlet3Off <= MAX_TIMING_VAL) {
+        outlet3Off = outlet3Off;
+    } else {
+        Serial.println("Invalid timing! " + String(outlet3Off));
+    }
+}
+
+void ConfigData::SetWaterLvlAlert(uint8_t waterLvlAlert)
+{
+    if (waterLvlAlert <= MAX_WATER_LVL) {
+        waterLvlAlert = waterLvlAlert;
+    } else {
+        Serial.println("Inavlid water level! " + String(waterLvlAlert));
+    }
 }
 
 void ConfigData::SetFeedingTime(uint16_t feedingTime)
 {
-    if (feedingTime <= MAX_TIMING_VAL)
+    if (feedingTime <= MAX_TIMING_VAL) {
         feedingTime = feedingTime;
+    } else {
+        Serial.println("Invalid timing! " + String(feedingTime));
+    }
 }
-
-void ConfigData::SetSamplePeriod(SamplePeriod samplePeriod) { samplePeriod = samplePeriod; }
 
 void ConfigData::SetFeedingPortions(uint8_t feedingPortions) { feedingPortions = feedingPortions; }
 
-/*******************************************
- * End of setters
- ******************************************/
+void ConfigData::SetSamplePeriod(SamplePeriod samplePeriod) { samplePeriod = samplePeriod; }

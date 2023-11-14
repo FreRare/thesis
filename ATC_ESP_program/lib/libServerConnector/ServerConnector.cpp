@@ -1,24 +1,22 @@
 #include "ServerConnector.h"
 
-const String ServerConnector::API_URL = "http://atc.takacsnet.hu/CONTROLS";
-const String ServerConnector::connectionCheckPath = "/connectionCheck.php";
-const String ServerConnector::timePath = "/getCurrentTime.php";
-const String ServerConnector::sensorDataUploadPath = "/sensorDataUpload.php";
-const String ServerConnector::notificationPath = "/notification.php";
-const String ServerConnector::weekDays[7]
-    = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
-const String ServerConnector::months[12] = { "January", "February", "March", "April", "May", "June", "July", "August",
-    "September", "October", "November", "December" };
+const char* ServerConnector::API_URL = "http://atc.takacsnet.hu/CONTROLS";
+const char* ServerConnector::connectionCheckPath = "http://atc.takacsnet.hu/CONTROLS/connectionCheck.php";
+const char* ServerConnector::timePath = "http://atc.takacsnet.hu/CONTROLS/getCurrentTime.php";
+const char* ServerConnector::sensorDataUploadPath = "http://atc.takacsnet.hu/CONTROLS/sensorDataUpload.php";
+const char* ServerConnector::notificationPath = "http://atc.takacsnet.hu/CONTROLS/notification.php";
 
 ServerConnector::ServerConnector()
 {
-    this->timeClient = new NTPClient(this->ntpUDP, "pool.ntp.org");
+    this->timeClient = new NTPClient(this->ntpUDP, NTP_SERVER_ADDRESS);
     this->config = new AQWiFiConfig();
     if (this->connectToNetwork()) {
         UIHandler::getInstance()->clear();
         UIHandler::getInstance()->writeLine("Successful", 1);
-        UIHandler::getInstance()->writeLine("      connection!", 2);
-        UIHandler::getInstance()->writeLine("Your system ID: " + String(this->config->getSystemID()), 3);
+        UIHandler::getInstance()->writeLine("     connection!", 2);
+        char systemIdText[SYSTEMID_TEXT_LENGTH + 1];
+        sprintf(systemIdText, "Your system ID: %3d", this->config->getSystemID());
+        UIHandler::getInstance()->writeLine(systemIdText, 3);
         UIHandler::getInstance()->makeScrollingText("Use this ID for registration inside the app!", 4, 300, 1);
     } else {
         UIHandler::getInstance()->clear();
@@ -52,7 +50,7 @@ NTPClient* ServerConnector::getTimeClient() const { return this->timeClient; }
 
 bool ServerConnector::connectToNetwork()
 {
-    UIHandler::getInstance()->writeLine("   Connecting...", 4);
+    UIHandler::getInstance()->writeLine("Connecting...", 4, 3);
     // Start connection
     WiFi.begin(this->config->getSSID(), this->config->getPassword());
     int connectionTimeout = 0;
@@ -70,22 +68,21 @@ bool ServerConnector::connectToNetwork()
         Serial.println("Connecting...");
         connectionTimeout++;
     }
+
     // If connection is ok let's check the connection
     if (this->config->getSystemID() == 0) { // If we have no system ID than get one
-        this->httpClient.begin(
-            this->client, ServerConnector::API_URL + ServerConnector::connectionCheckPath); // begin http connection
+        this->httpClient.begin(this->client, ServerConnector::connectionCheckPath); // begin http connection
         int httpCode = this->httpClient.GET(); // Perform http POST
         if (httpCode > 0) {
             if (httpCode == HTTP_CODE_OK) { // response is ok
                 String payload = this->httpClient.getString();
-                Serial.println("Successful conenction check!");
-                Serial.println(payload);
                 DynamicJsonDocument doc(256);
                 DeserializationError error = deserializeJson(doc, payload);
                 if (error) {
                     Serial.println("Json serialization failure!");
+                    return false;
                 }
-                uint16_t newSystemID = doc["data"]["system_id"] | 12;
+                uint16_t newSystemID = doc["data"]["system_id"];
                 this->config->saveSystemID(newSystemID);
                 return true;
             } else {

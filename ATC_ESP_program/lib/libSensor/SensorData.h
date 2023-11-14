@@ -9,27 +9,27 @@
 
 class SensorData {
 private:
-    uint16_t temperature;
-    LightIntensity lightAmount;
-    uint16_t waterLvl;
+    float temperature;
     float ph;
+    LightIntensity lightAmount;
+    uint8_t waterLvl;
     time_t timeStamp;
 
 public:
-    SensorData(const uint16_t& temp, const LightIntensity& light, const uint16_t& waterLvl, const float& ph,
-        const time_t& time);
+    SensorData(
+        const float& temp, const float& ph, const LightIntensity& light, const uint8_t& waterLvl, const time_t& time);
 
-    uint16_t GetTemperature() const { return temperature; }
+    float GetTemperature() const { return temperature; }
 
-    void SetTemperature(uint16_t temperature) { temperature = temperature; }
+    void SetTemperature(float temperature) { temperature = temperature; }
 
     LightIntensity GetLightAmount() const { return lightAmount; }
 
     void SetLightAmount(LightIntensity lightAmount) { lightAmount = lightAmount; }
 
-    uint16_t GetWaterLvl() const { return waterLvl; }
+    uint8_t GetWaterLvl() const { return waterLvl; }
 
-    void SetWaterLvl(uint16_t waterLvl) { waterLvl = waterLvl; }
+    void SetWaterLvl(uint8_t waterLvl) { waterLvl = waterLvl; }
 
     float GetPh() const { return ph; }
 

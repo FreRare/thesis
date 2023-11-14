@@ -60,7 +60,9 @@ CREATE TABLE IF NOT EXISTS configs(
     feedingTime INT NOT NULL,
     foodPortions INT NOT NULL,
     filterClean INT NOT NULL,
+    lastFilterCleanTime DATETIME,
     waterChange INT NOT NULL,
+    lastWaterChangeTime DATETIME,
     samplePeriod INT NOT NULL,
     lastModifiedDate DATETIME NOT NULL,
 
