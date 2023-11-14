@@ -57,11 +57,12 @@ CREATE TABLE IF NOT EXISTS configs(
     OnOutlet3 INT NOT NULL,
     OffOutlet3 INT NOT NULL,
     waterLvlAlert INT NOT NULL,
-    prefLight INT NOT NULL,
     feedingTime INT NOT NULL,
     foodPortions INT NOT NULL,
     filterClean INT NOT NULL,
+    lastFilterCleanTime DATETIME,
     waterChange INT NOT NULL,
+    lastWaterChangeTime DATETIME,
     samplePeriod INT NOT NULL,
     lastModifiedDate DATETIME NOT NULL,
 

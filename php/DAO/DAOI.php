@@ -74,27 +74,27 @@ interface AQDAOI
     /**
      * Selects the configuration for the Aquarium with the given id
      * @param int $id
-     * @return AQConfig | null The found data as an object or null
+     * @return AquariumConfig | null The found data as an object or null
      */
     function selectAQConfigForAquarium(int $id);
     /**
      * Creates a configuration in the DB based on the given Object
-     * @param AQCOnfig $obj
+     * @param AquariumConfig $obj
      * @return bool True on success
      */
-    function createAQConfig(AQConfig $AQConfig): bool;
+    function createAQConfig(AquariumConfig $AquariumConfig): bool;
     /**
      * Updates the Configuration based on the given object (ID stays the same)
-     * @param AQConfig $obj
+     * @param AquariumConfig $obj
      * @return bool True on success
      */
-    function updateAQConfig(AQConfig $AQConfig): bool;
+    function updateAQConfig(AquariumConfig $AquariumConfig): bool;
     /**
      * Deletes the Configuration identified by the given object
-     * @param AQConfig $obj
+     * @param AquariumConfig $obj
      * @return bool True on success
      */
-    function deleteAQConfig(AQConfig $AQConfig): bool;
+    function deleteAQConfig(AquariumConfig $AquariumConfig): bool;
     /**
      * Gets all the samples for the aquarium identified by the given id
      * It creates SensorSample objects from the datas

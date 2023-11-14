@@ -1,6 +1,7 @@
 #ifndef ServerConnector_h
 #define ServerConnector_h
 #include "AQWiFiConfig.h"
+#include "ConfigData.h"
 #include "UIHandler.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
@@ -12,6 +13,8 @@
 
 #define CONN_TIMEOUT 60 // Connection timeout = timeout * 2 seconds
 // (2 min should be enough after power outage for the wifi to reboot)
+#define SYSTEMID_TEXT_LENGTH 20
+#define NTP_SERVER_ADDRESS "pool.ntp.org"
 
 /**
  * This class is responsible for server communication
@@ -24,13 +27,11 @@ private:
     WiFiUDP ntpUDP;
     NTPClient* timeClient;
     AQWiFiConfig* config;
-    static const String API_URL;
-    static const String connectionCheckPath;
-    static const String timePath;
-    static const String sensorDataUploadPath;
-    static const String notificationPath;
-    static const String weekDays[7];
-    static const String months[12];
+    static const char* API_URL;
+    static const char* connectionCheckPath;
+    static const char* timePath;
+    static const char* sensorDataUploadPath;
+    static const char* notificationPath;
 
 public:
     /**

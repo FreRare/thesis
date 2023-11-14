@@ -1,0 +1,21 @@
+{
+  "files.associations": {
+    "*.embeddedhtml": "html",
+    "*.tsx": "typescriptreact",
+    "cstddef": "cpp",
+    "string_view": "cpp",
+    "*.tcc": "cpp",
+    "deque": "cpp",
+    "list": "cpp",
+    "string": "cpp",
+    "unordered_map": "cpp",
+    "vector": "cpp",
+    "system_error": "cpp",
+    "array": "cpp",
+    "initializer_list": "cpp",
+    "ranges": "cpp",
+    "chrono": "cpp",
+    "random": "cpp",
+    "limits": "cpp"
+  }
+}

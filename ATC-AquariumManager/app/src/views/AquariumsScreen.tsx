@@ -4,13 +4,12 @@ import {
   StyleSheet,
   TextInput,
   View,
-  TouchableHighlight,
 } from "react-native";
 import React from "react";
 import Layout from "../components/Layout";
 import AquariumCard from "../components/AquariumCard";
 import Aquarium from "../models/Aquarium";
-import EditAquariumForm from "../components/EditAquariumForm";
+import EditAquariumForm from "../components/AquariumEditForm";
 import commonStyles from "../utils/commonStyles";
 import strings from "../../config/strings";
 import Icon from "react-native-vector-icons/AntDesign";

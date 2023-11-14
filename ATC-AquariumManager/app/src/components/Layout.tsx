@@ -1,9 +1,8 @@
 import React, { ReactNode } from "react";
-import { Platform, StyleSheet } from "react-native";
+import { Platform, StyleSheet, SafeAreaView } from "react-native";
 import MenuBar from "./MenuBar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import colors from "../../config/colors";
-import { SafeAreaView } from "react-navigation";
 
 interface LayoutComponentProps {
   children: ReactNode;

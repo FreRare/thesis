@@ -5,17 +5,17 @@ import SensorSample from "./SensorSample";
  * The class to represent an Aquarium
  */
 export default class Aquarium {
-  private _id: Number;
+  private _id: number;
   private _name: string;
-  private _length: Number;
-  private _height: Number;
-  private _width: Number;
-  private _fishCount: Number;
+  private _length: number;
+  private _height: number;
+  private _width: number;
+  private _fishCount: number;
   private _config: AquariumConfiguration;
   private _samples: Array<SensorSample>;
 
   constructor(
-    id: Number = -1,
+    id: number = -1,
     name = "My Aquarium",
     length = 60,
     height = 30,
@@ -34,7 +34,7 @@ export default class Aquarium {
     this._samples = samples;
   }
 
-  public get id(): Number {
+  public get id(): number {
     return this._id;
   }
 
@@ -45,24 +45,24 @@ export default class Aquarium {
     this._name = value;
   }
 
-  public get length(): Number {
+  public get length(): number {
     return this._length;
   }
-  public set length(value: Number) {
+  public set length(value: number) {
     this._length = value;
   }
 
-  public get height(): Number {
+  public get height(): number {
     return this._height;
   }
-  public set height(value: Number) {
+  public set height(value: number) {
     this._height = value;
   }
 
-  public get width(): Number {
+  public get width(): number {
     return this._width;
   }
-  public set width(value: Number) {
+  public set width(value: number) {
     this._width = value;
   }
 
@@ -80,10 +80,10 @@ export default class Aquarium {
     this._samples = value;
   }
 
-  public get fishCount(): Number {
+  public get fishCount(): number {
     return this._fishCount;
   }
-  public set fishCount(value: Number) {
+  public set fishCount(value: number) {
     this._fishCount = value;
   }
 }
