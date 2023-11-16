@@ -239,8 +239,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     padding: 20,
-    marginTop: "3%",
-    marginBottom: "3%",
+    marginTop: "10%",
+    marginBottom: "10%",
   },
   buttonContainer: {
     flex: 5,

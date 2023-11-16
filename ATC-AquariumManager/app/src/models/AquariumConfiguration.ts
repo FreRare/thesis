@@ -20,22 +20,22 @@ export default class AquariumConfiguration {
 
   constructor(
     id = -1,
-    minTemp = 0.0, // input
-    maxTemp = 0.0, // input-
-    minPh = 0.0, // input
-    maxPh = 0.0, // input-
-    OnO1 = 0, // timepick
-    OffO1 = 0, // timepick-
-    OnO2 = 0, // timepick
-    OffO2 = 0, // timepick-
-    OnO3 = 0, // timepick
-    OffO3 = 0, // timepick-
-    waterLvlAlert = 0, //input
-    feedingTime = 0, // timepick
-    foodportions = 0, // input-
+    minTemp = 23.5, // input
+    maxTemp = 28.0, // input-
+    minPh = 6.0, // input
+    maxPh = 8.0, // input-
+    OnO1 = 480, // 8:00
+    OffO1 = 1200, // 20:00
+    OnO2 = 480, // timepick
+    OffO2 = 1200, // timepick-
+    OnO3 = 480, // timepick
+    OffO3 = 1200, // timepick-
+    waterLvlAlert = 75, //input
+    feedingTime = 660, // timepick
+    foodportions = 1, // input-
     filterClean = 0, // dropdown
     waterChange = 0, // dropdown-
-    samplePer = 0, // dropdown
+    samplePer = 2, // dropdown
     modDate = new Date()
   ) {
     this._id = id;

@@ -78,19 +78,19 @@ function LoginForm(props: LoginScreenProps) {
         </ScrollView>
       )}
       <TextInput
-        id="email"
         placeholder={strings.emailInputPlaceholder}
         style={commonStyles.input}
         value={email}
         onChangeText={(e) => setEmail(e)}
+        autoCapitalize="none"
       ></TextInput>
       <TextInput
-        id="password"
         placeholder={strings.passInputPlaceHolder}
         style={commonStyles.input}
         value={pass}
         onChangeText={(t) => setPass(t)}
         secureTextEntry={true}
+        autoCapitalize="none"
       ></TextInput>
       <BouncyCheckbox
         size={25}

@@ -30,7 +30,7 @@ const commonStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 6,
+    marginVertical: 2,
   },
 });
 

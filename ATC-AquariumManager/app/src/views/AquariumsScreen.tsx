@@ -4,12 +4,14 @@ import {
   StyleSheet,
   TextInput,
   View,
+  Text,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import Layout from "../components/Layout";
 import AquariumCard from "../components/AquariumCard";
 import Aquarium from "../models/Aquarium";
-import EditAquariumForm from "../components/AquariumEditForm";
+import AquariumEditForm from "../components/AquariumEditForm";
 import commonStyles from "../utils/commonStyles";
 import strings from "../../config/strings";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -40,6 +42,11 @@ function AquariumsScreen(props: AquariumsScreenProps) {
     setEditing(false);
     // TODO post saves to DB
     const index = aquariums.indexOf(aq);
+    // If we added a new aquarium
+    if (index < 0) {
+      // TODO
+      console.log("Add aqaurium to DB");
+    }
     aquariums[index] = aq;
   };
 
@@ -52,6 +59,11 @@ function AquariumsScreen(props: AquariumsScreenProps) {
       return a.name.toLocaleLowerCase().includes(t.toLocaleLowerCase());
     });
     setAquariumsList(filtered);
+  };
+
+  const addNewOnPress = () => {
+    setEdited(null);
+    setEditing(true);
   };
 
   // The cards to display
@@ -82,15 +94,22 @@ function AquariumsScreen(props: AquariumsScreenProps) {
             placeholder={strings.searchByName}
             onChangeText={(t: string) => searchAquarium(t)}
           />
+          <TouchableOpacity onPress={addNewOnPress} style={styles.addContainer}>
+            <>
+              <Text>{strings.addNew}</Text>
+              <Icon name="addfolder" size={20} />
+            </>
+          </TouchableOpacity>
         </View>
         {aqauariumCards}
       </ScrollView>
-      {editing && edited && (
-        <EditAquariumForm
-          aquarium={edited}
+      {editing && (
+        <AquariumEditForm
+          addNewFlag={edited ? false : true}
+          aquarium={edited ? edited : new Aquarium()}
           setEditing={setEditing}
           editHandler={editHandler}
-        ></EditAquariumForm>
+        ></AquariumEditForm>
       )}
     </Layout>
   );
@@ -106,9 +125,15 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   searchContainer: {
-    width: "80%",
+    width: "90%",
     flex: 1,
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addContainer: {
+    flex: 0.4,
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
   },

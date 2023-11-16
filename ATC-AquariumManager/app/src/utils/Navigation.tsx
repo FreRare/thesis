@@ -45,7 +45,7 @@ function Navigation() {
             name={strings.welcome}
             initialParams={{ user: user }}
             options={{
-              tabBarStyle: { display: "none" },
+              tabBarStyle: { display: "none", marginBottom: -2000 },
             }}
           >
             {(props: any) => <WelcomeScreen {...props} setUser={setUser} />}

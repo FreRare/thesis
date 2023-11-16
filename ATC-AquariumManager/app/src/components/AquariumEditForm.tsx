@@ -6,30 +6,55 @@ import { TextInput } from "react-native";
 import strings from "../../config/strings";
 import commonStyles from "../utils/commonStyles";
 
-type EditAquariumFormProps = {
+type AquariumEditFormProps = {
   aquarium: Aquarium;
+  addNewFlag: boolean;
   setEditing: (aq: boolean) => void;
   editHandler: (aq: Aquarium) => void;
 };
 
-function EditAquariumForm(props: EditAquariumFormProps) {
-  const [name, setName] = React.useState(props.aquarium.name);
-  const [length, setLength] = React.useState(props.aquarium.length);
-  const [height, setHeight] = React.useState(props.aquarium.height);
-  const [width, setWidth] = React.useState(props.aquarium.width);
-  const [fishCount, setFishCount] = React.useState(props.aquarium.fishCount);
+function AquariumEditForm(props: AquariumEditFormProps) {
+  const [name, setName] = React.useState<string>(props.aquarium.name);
+  const [length, setLength] = React.useState<number>(props.aquarium.length);
+  const [height, setHeight] = React.useState<number>(props.aquarium.height);
+  const [width, setWidth] = React.useState<number>(props.aquarium.width);
+  const [fishCount, setFishCount] = React.useState<number>(
+    props.aquarium.fishCount
+  );
+  const [systemId, setSystemId] = React.useState<number>(props.aquarium.id);
+  const [error, setError] = React.useState<string>("");
 
   const confirmHandler = () => {
+    if (props.addNewFlag) {
+      // Validation
+      if (name.length <= 0) {
+        setError(strings.missingNameError);
+        return;
+      }
+      // Size validation is handled inside the form
+      if (systemId <= 0) {
+        setError(strings.missingAquariumIdError);
+        return;
+      }
+    }
     props.aquarium.name = name;
     props.aquarium.length = length;
     props.aquarium.height = height;
     props.aquarium.width = width;
+    props.aquarium.fishCount = fishCount;
+    props.aquarium.id = systemId; // ID should be the same, or the new given
     props.editHandler(props.aquarium);
   };
 
   return (
     <View style={styles.container}>
-      <Text>Edit {props.aquarium.name}:</Text>
+      <Text>
+        {props.addNewFlag
+          ? strings.addNewAquarium
+          : strings.edit + " " + props.aquarium.name}
+        :
+      </Text>
+      {error && <Text style={{ color: "red" }}>{error}</Text>}
       <View style={commonStyles.horizontal}>
         <Text>{strings.name}:</Text>
         <TextInput
@@ -90,6 +115,20 @@ function EditAquariumForm(props: EditAquariumFormProps) {
           }}
         />
       </View>
+      {props.addNewFlag && (
+        <View style={commonStyles.horizontal}>
+          <Text>{strings.aquariumId}:</Text>
+          <TextInput
+            placeholder={strings.aquariumId}
+            style={commonStyles.input}
+            value={String(systemId > 0 ? systemId : "")}
+            inputMode="numeric"
+            onChangeText={(t) => {
+              setSystemId(t.length > 0 ? Number.parseInt(t) : 0);
+            }}
+          />
+        </View>
+      )}
       <TouchableOpacity style={styles.button} onPress={() => confirmHandler()}>
         <Text>{strings.confirm}</Text>
       </TouchableOpacity>
@@ -105,8 +144,8 @@ function EditAquariumForm(props: EditAquariumFormProps) {
 
 const styles = StyleSheet.create({
   container: {
-    height: "75%",
-    width: "60%",
+    height: "85%",
+    width: "65%",
     alignItems: "center",
     justifyContent: "center",
     borderColor: colors.menuTopBorder,
@@ -129,4 +168,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditAquariumForm;
+export default AquariumEditForm;
