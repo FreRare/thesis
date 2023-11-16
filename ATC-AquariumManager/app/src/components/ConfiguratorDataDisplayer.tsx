@@ -55,6 +55,12 @@ function ConfiguratorDataDisplayer(props: ConfiguratorDataDisplayerProps) {
         data2={props.aquariumConfigData.foodPortions}
         editCallback={props.editCallback}
       />
+      <ConfiguratorDataSegmentDisplayer
+        label={strings.waterAndSmaples}
+        data1={props.aquariumConfigData.waterLvlAlert}
+        data2={props.aquariumConfigData.samplePeriod}
+        editCallback={props.editCallback}
+      />
     </View>
   );
 }

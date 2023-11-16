@@ -30,7 +30,7 @@ function EditAquariumForm(props: EditAquariumFormProps) {
   return (
     <View style={styles.container}>
       <Text>Edit {props.aquarium.name}:</Text>
-      <View style={styles.horizontal}>
+      <View style={commonStyles.horizontal}>
         <Text>{strings.name}:</Text>
         <TextInput
           placeholder={strings.name}
@@ -41,7 +41,7 @@ function EditAquariumForm(props: EditAquariumFormProps) {
           }}
         />
       </View>
-      <View style={styles.horizontal}>
+      <View style={commonStyles.horizontal}>
         <Text>{strings.length}:</Text>
         <TextInput
           aria-label="Length"
@@ -54,7 +54,7 @@ function EditAquariumForm(props: EditAquariumFormProps) {
           }}
         />
       </View>
-      <View style={styles.horizontal}>
+      <View style={commonStyles.horizontal}>
         <Text>{strings.height}:</Text>
         <TextInput
           placeholder={strings.height}
@@ -66,7 +66,7 @@ function EditAquariumForm(props: EditAquariumFormProps) {
           }}
         />
       </View>
-      <View style={styles.horizontal}>
+      <View style={commonStyles.horizontal}>
         <Text>{strings.width}:</Text>
         <TextInput
           placeholder={strings.width}
@@ -78,7 +78,7 @@ function EditAquariumForm(props: EditAquariumFormProps) {
           }}
         />
       </View>
-      <View style={styles.horizontal}>
+      <View style={commonStyles.horizontal}>
         <Text>{strings.currentFishCount}:</Text>
         <TextInput
           placeholder={strings.currentFishCount}
@@ -115,12 +115,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     padding: 10,
     backgroundColor: colors.background,
-  },
-  horizontal: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
   },
   button: {
     borderColor: colors.primary,

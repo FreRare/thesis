@@ -14,6 +14,7 @@ type ConfiguratorScreenProps = {
 };
 
 function ConfiguratorScreen(props: ConfiguratorScreenProps) {
+  // TODO retrieve data form db
   const aquariums = [
     new Aquarium(1, "My"),
     new Aquarium(2, "AQ"),
@@ -40,8 +41,9 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
   const [edit, setEdit] = React.useState<boolean>(false);
   const [editLabel, setEditLabel] = React.useState<string>("");
 
-  const handleSelect = (val: string) => {
-    setSelectedAquarium(aquariums.find((aq) => (aq.name = val)) as Aquarium);
+  const handleSelect = (val: number) => {
+    const foundAQ = aquariums.find((aq) => aq.id === val) as Aquarium;
+    setSelectedAquarium(foundAQ);
   };
 
   const handleEditSubmit = (config: AquariumConfiguration) => {
@@ -64,14 +66,14 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
       <ScrollView
         contentContainerStyle={[styles.container, { opacity: edit ? 0.1 : 1 }]}
       >
-        <View style={styles.horizontal}>
+        <View style={commonStyles.horizontal}>
           <SelectList
             search={false}
             inputStyles={commonStyles.dropdownListInputStyle}
             boxStyles={commonStyles.dropdownListBoxStyle}
             dropdownStyles={commonStyles.dropdownListDropdownStyles}
             placeholder={strings.aquariumSelctorPlaceholder}
-            setSelected={(val: string) => handleSelect(val)}
+            setSelected={(val: number) => handleSelect(val)}
             data={aquariumSelectList}
           />
         </View>
@@ -101,14 +103,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-  },
-  horizontal: {
-    flex: 1,
-    width: "100%",
-    flexDirection: "row",
-    paddingHorizontal: 10,
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
 

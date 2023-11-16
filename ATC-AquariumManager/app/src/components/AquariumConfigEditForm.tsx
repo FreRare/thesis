@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import AquariumConfiguration from "../models/AquariumConfiguration";
 import colors from "../../config/colors";
@@ -25,7 +26,7 @@ type AquariumConfigEditFormProps = {
 
 /**
  * This component is a dynamic form for the configuration edit.
- * Can be used for dual numeric (float), dual TimePicker (hour + minute), dual dropdown list or in unique feeding case for dropdown and numeric input
+ * Can be used for dual numeric (float), dual TimePicker (hour + minute), dual dropdown list or in unique cases can be customized
  * It decides which data we want to modify and what kind of inputs we need for it by the label provided.
  * On submit rewrites the provided editableConfig's modified fields, and calls the submitCallback, sending the config back to the screen.
  * @param props The propeties needed see @ AquariumConfigEditFormProps
@@ -49,7 +50,9 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
   const cleanDropdownData: Array<{ key: number; value: string }> = []; // To store data for clean dropdown
   const sampleDropdownData: Array<{ key: number; value: string }> = []; // To store data for sample dropdown
 
-  // Fill dropdowns with data if they're used
+  /**
+   * Fill dropdowns with data if they're used, decided by the label
+   * */
   useEffect(() => {
     if ((data1 as number) < 0) {
       formDataAndInputDecider();
@@ -60,7 +63,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
       }
     }
     if (
-      props.label === strings.samplePeriod &&
+      props.label === strings.waterAndSmaples &&
       sampleDropdownData.length <= 0
     ) {
       for (let i = 0; i < Sample.ENUM_LENGTH; i++) {
@@ -88,27 +91,30 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         setData1(props.editableConfig.OnOutlet1);
         setData2(props.editableConfig.OffOutlet1);
         setTimePickerFlag(true);
+        setAdditionalInfo(strings.outletConfigInfo);
         break;
       case strings.outlet2:
         setData1(props.editableConfig.OnOutlet2);
         setData2(props.editableConfig.OffOutlet2);
         setTimePickerFlag(true);
+        setAdditionalInfo(strings.outletConfigInfo);
         break;
       case strings.outlet3:
         setData1(props.editableConfig.OnOutlet3);
         setData2(props.editableConfig.OffOutlet3);
         setTimePickerFlag(true);
-        break;
-      case strings.feeding:
-        setData1(props.editableConfig.feedingTime);
-        setData2(props.editableConfig.foodPortions);
+        setAdditionalInfo(strings.outletConfigInfo);
         break;
       case strings.cleaning:
         setData1(props.editableConfig.filterClean);
         setData2(props.editableConfig.waterChange);
         setDropdownFlag(true);
         break;
-      case strings.waterAndSmaples:
+      case strings.feeding: // Timepicker + Numeric
+        setData1(props.editableConfig.feedingTime);
+        setData2(props.editableConfig.foodPortions);
+        break;
+      case strings.waterAndSmaples: // Numeric + Dropdown
         setData1(props.editableConfig.waterLvlAlert);
         setData2(props.editableConfig.samplePeriod);
         break;
@@ -158,11 +164,12 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
   };
 
   /**
-   * This is only used for outlet timePicker
+   * This is used for all timePickers
+   * It sets the used data for the number of minutes retrieved from the picker
    * @param selectedTime The event time from timepicker
    * @param data1Flag The flag if data1 or data2 should be overwritten
    */
-  const outletTimePickerOnChange = (
+  const timePickerOnChange = (
     selectedTime: Date | undefined,
     data1Flag: boolean
   ) => {
@@ -179,31 +186,47 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
     setShowDateTimePicker2(false);
   };
 
+  /**
+   * The string that contains all the unique form cases
+   * 2 unique ones are feeding and waterLvl+Samples so far
+   * ! Important, so the form body can decide which cases not to use the default inputs
+   */
+  const uniqueFormCases = strings.feeding + strings.waterAndSmaples;
+
+  /**
+   *  We have 5 cases so far
+   *  For easy maintenance and flexibility, later when adding a new config just add it to the InputDecider and the ManipulationDecider
+   *  Also custom flags can be added, or implemented flags can be used, the unique cases formBody is decided by label name
+   */
   const dynamicFormBody = (
     <>
-      {!timePickerFlag && !dropdownFlag && (
-        <View style={styles.horizontal}>
-          <TextInput
-            style={commonStyles.input}
-            value={data1 ? String(data1) : ""}
-            onChangeText={(t: string) => {
-              setData1(t);
-            }}
-          />
-          <Text style={styles.dash}>-</Text>
-          <TextInput
-            style={commonStyles.input}
-            value={data2 ? String(data2) : ""}
-            onChangeText={(t: string) => {
-              setData2(t);
-            }}
-          />
-        </View>
-      )}
+      {!timePickerFlag &&
+        !dropdownFlag &&
+        !uniqueFormCases
+          .toLocaleLowerCase()
+          .includes(props.label.toLocaleLowerCase()) && (
+          <View style={commonStyles.horizontal}>
+            <TextInput
+              style={commonStyles.input}
+              value={data1 ? String(data1) : ""}
+              onChangeText={(t: string) => {
+                setData1(t);
+              }}
+            />
+            <Text style={styles.dash}>-</Text>
+            <TextInput
+              style={commonStyles.input}
+              value={data2 ? String(data2) : ""}
+              onChangeText={(t: string) => {
+                setData2(t);
+              }}
+            />
+          </View>
+        )}
       {dropdownFlag && (
         // This is only on cleaning
         <>
-          <View style={styles.horizontal}>
+          <View style={commonStyles.horizontal}>
             <Text style={styles.dropdownLabel}>{strings.filterClean}:</Text>
             <SelectList
               boxStyles={styles.dropdownBoxStyle}
@@ -212,9 +235,10 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
               setSelected={(k: number) => {
                 setData1(k);
               }}
+              search={false}
             />
           </View>
-          <View style={styles.horizontal}>
+          <View style={commonStyles.horizontal}>
             <Text style={styles.dropdownLabel}>{strings.waterChange}:</Text>
             <SelectList
               boxStyles={styles.dropdownBoxStyle}
@@ -223,36 +247,38 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
               setSelected={(k: number) => {
                 setData2(k);
               }}
+              search={false}
             />
           </View>
         </>
       )}
       {timePickerFlag && (
         // This is only generated for the outlet configs
-        <View style={styles.horizontal}>
+        <View style={commonStyles.horizontal}>
           <TouchableOpacity
             style={styles.clockDisplayer}
             onPress={() => setShowDateTimePicker1(true)}
           >
-            <Text>
+            <Text style={styles.clockText}>
               {AquariumConfiguration.convertMinutesToTimeString(
                 Number.parseFloat(data1 as string)
               )}
             </Text>
           </TouchableOpacity>
+          <Text style={styles.dash}>-</Text>
           {showDateTimePicker1 && (
             <DateTimePicker
               is24Hour={true}
               mode="time"
               value={new Date(0)}
-              onChange={(event, date) => outletTimePickerOnChange(date, true)}
+              onChange={(event, date) => timePickerOnChange(date, true)}
             />
           )}
           <TouchableOpacity
             style={styles.clockDisplayer}
             onPress={() => setShowDateTimePicker2(true)}
           >
-            <Text>
+            <Text style={styles.clockText}>
               {AquariumConfiguration.convertMinutesToTimeString(
                 Number.parseFloat(data2 as string)
               )}
@@ -263,16 +289,76 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
               is24Hour={true}
               mode="time"
               value={new Date(0)}
-              onChange={(event, date) => outletTimePickerOnChange(date, false)}
+              onChange={(event, date) => timePickerOnChange(date, false)}
             />
           )}
         </View>
       )}
+      {props.label === strings.feeding && (
+        <>
+          <View style={commonStyles.horizontal}>
+            <Text style={styles.dropdownLabel}>{strings.feedingTime}:</Text>
+            <TouchableOpacity
+              style={styles.clockDisplayer}
+              onPress={() => setShowDateTimePicker1(true)}
+            >
+              <Text style={styles.clockText}>
+                {AquariumConfiguration.convertMinutesToTimeString(
+                  Number.parseFloat(data1 as string)
+                )}
+              </Text>
+            </TouchableOpacity>
+            {showDateTimePicker1 && (
+              <DateTimePicker
+                is24Hour={true}
+                mode="time"
+                value={new Date(0)}
+                onChange={(event, date) => timePickerOnChange(date, true)}
+              />
+            )}
+          </View>
+          <View style={commonStyles.horizontal}>
+            <Text style={styles.dropdownLabel}>{strings.portions}:</Text>
+            <TextInput
+              style={commonStyles.input}
+              value={data2 ? String(data2) : ""}
+              onChangeText={(t: string) => {
+                setData2(t);
+              }}
+            />
+          </View>
+        </>
+      )}
+      {props.label === strings.waterAndSmaples && (
+        <>
+          <View style={commonStyles.horizontal}>
+            <Text style={styles.dropdownLabel}>{strings.waterLevel} (%):</Text>
+            <TextInput
+              style={commonStyles.input}
+              value={data1 ? String(data1) : ""}
+              onChangeText={(t: string) => {
+                setData1(t);
+              }}
+            />
+          </View>
+          <View style={commonStyles.horizontal}>
+            <Text style={styles.dropdownLabel}>{strings.samplePeriod}:</Text>
+            <SelectList
+              boxStyles={styles.dropdownBoxStyle}
+              data={sampleDropdownData}
+              save="key"
+              setSelected={(k: number) => {
+                setData2(k);
+              }}
+              search={false}
+            />
+          </View>
+        </>
+      )}
     </>
   );
 
-  // Sets the provided config's data to the modified one (using decision by the label)
-  const handleSubmit = () => {
+  const formValidator = () => {
     // If we had datas as string (float values) validate it, it should only happen on textinputs
     const parsedData1 = Number.parseFloat(data1 as string);
     const parsedData2 = Number.parseFloat(data2 as string);
@@ -280,8 +366,42 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
       setErrorMsg(strings.numberParseError);
       return;
     }
+    // validate water level percentage
+    if (props.label === strings.waterAndSmaples) {
+      if (parsedData1 > 100 || parsedData1 < 0) {
+        setErrorMsg(strings.invalidWaterLevel);
+        return;
+      }
+    }
+    // Make sure of valid portions input
+    if (props.label === strings.feeding) {
+      if (parsedData2 > 10) {
+        Alert.alert(
+          strings.confirmFoodPortions,
+          strings.confirmFoodPortionsMessage,
+          [
+            {
+              text: strings.no,
+            },
+            {
+              text: strings.yes,
+              onPress: () => handleSubmit(parsedData1, parsedData2),
+            },
+          ]
+        );
+      }
+    }
+
+    handleSubmit(parsedData1, parsedData2);
+  };
+
+  /**
+   * Handles the submit of the form
+   * Can add extra checks if needed
+   */
+  const handleSubmit = (d1: number, d2: number) => {
     // After we have usable data need to decide which member to alter
-    configDataManipulationDecider(parsedData1, parsedData2);
+    configDataManipulationDecider(d1, d2);
     props.submitCallback(props.editableConfig);
   };
 
@@ -290,18 +410,20 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
       <View>
         <Text>{strings.configEditLabel + props.aquariumName}</Text>
       </View>
-      <View style={styles.horizontal}>
+      <View style={commonStyles.horizontal}>
         <Text>{props.label + " " + labelPostFix}:</Text>
       </View>
-      <View style={styles.horizontal}>
-        <Text>{additionalInfo}</Text>
-      </View>
-      <View style={styles.horizontal}>
+      {additionalInfo.length > 0 && (
+        <View style={commonStyles.horizontal}>
+          <Text>{additionalInfo}</Text>
+        </View>
+      )}
+      <View style={commonStyles.horizontal}>
         <Text style={{ flex: 1, color: "red" }}>{errorMsg}</Text>
       </View>
       {dynamicFormBody}
-      <View style={styles.horizontal}>
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+      <View style={commonStyles.horizontal}>
+        <TouchableOpacity style={styles.button} onPress={formValidator}>
           <Text>{strings.confirm}</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -328,12 +450,6 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: colors.background,
   },
-  horizontal: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   button: {
     flex: 1,
     borderColor: colors.primary,
@@ -350,8 +466,13 @@ const styles = StyleSheet.create({
   },
   clockDisplayer: {
     marginHorizontal: 20,
-    padding: 5,
+    padding: 8,
     borderWidth: 2,
+    borderColor: colors.secondary,
+    borderRadius: 40,
+  },
+  clockText: {
+    fontSize: 25,
   },
   dropdownBoxStyle: {
     flex: 1,

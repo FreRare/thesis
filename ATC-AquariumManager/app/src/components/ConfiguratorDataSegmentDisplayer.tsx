@@ -5,6 +5,8 @@ import colors from "../../config/colors";
 import Icon from "react-native-vector-icons/AntDesign";
 import AquariumConfiguration from "../models/AquariumConfiguration";
 import { getCleanStringValue } from "../models/CleanPeriod";
+import { getStringValue } from "../models/SamplePeriod";
+import commonStyles from "../utils/commonStyles";
 
 // Stores the labels as a concatenated string for the datasegment labels
 // So label.includes can be used to determine the labels for the data
@@ -36,6 +38,14 @@ const dataSegmentLabelDecisionMap = [
     data1Label: strings.filterClean,
     data2Label: strings.waterChange,
     dataFormatter: getCleanStringValue,
+  },
+  {
+    labels: strings.waterAndSmaples,
+    data1Label: strings.waterLevelAlert,
+    data2Label: strings.samplePeriod,
+    dataFormatter: (dat: number) => {
+      return String(dat);
+    },
   },
 ];
 
@@ -83,7 +93,10 @@ function ConfiguratorDataSegmentDisplayer(
       setData1ToDisplay(
         AquariumConfiguration.convertMinutesToTimeString(props.data1)
       );
-      setData2ToDisplay(String(props.data2));
+    }
+    // Water & samples is a different case too
+    if (props.label === strings.waterAndSmaples) {
+      setData2ToDisplay(getStringValue(props.data2));
     }
   });
   const [dataLabels, setDataLabels] = React.useState<Array<string>>([]);
@@ -96,7 +109,7 @@ function ConfiguratorDataSegmentDisplayer(
 
   return (
     <View style={styles.conatiner}>
-      <View style={styles.horizontal}>
+      <View style={commonStyles.horizontal}>
         <Text style={styles.label}>{props.label}</Text>
         <TouchableOpacity
           style={styles.horizontalRight}

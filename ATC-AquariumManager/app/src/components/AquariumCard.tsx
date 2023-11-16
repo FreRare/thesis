@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 import colors from "../../config/colors";
 import Icon from "react-native-vector-icons/AntDesign";
 import strings from "../../config/strings";
+import commonStyles from "../utils/commonStyles";
 
 type AquariumCardProps = {
   navigation: any;
@@ -15,7 +16,7 @@ type AquariumCardProps = {
 function AquariumCard(props: AquariumCardProps) {
   return (
     <View style={styles.card}>
-      <View style={styles.horizontal}>
+      <View style={commonStyles.horizontal}>
         <View style={styles.vertical}>
           <Text style={{ marginRight: "20%" }}>{props.item.name}</Text>
         </View>
@@ -30,7 +31,7 @@ function AquariumCard(props: AquariumCardProps) {
           />
         </View>
       </View>
-      <View style={styles.horizontal}>
+      <View style={commonStyles.horizontal}>
         <Text>
           {"Dimensions: " +
             [props.item.length, props.item.height, props.item.width].join(
@@ -43,7 +44,7 @@ function AquariumCard(props: AquariumCardProps) {
             " L)"}
         </Text>
       </View>
-      <View style={styles.horizontal}>
+      <View style={commonStyles.horizontal}>
         <Text>
           {strings.currentFishCount + ": " + String(props.item.fishCount)}
         </Text>
@@ -62,12 +63,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     margin: 15,
     padding: 15,
-  },
-  horizontal: {
-    flex: 1,
-    width: "100%",
-    flexDirection: "row",
-    paddingHorizontal: 10,
   },
   vertical: {
     flex: 1,

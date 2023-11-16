@@ -18,9 +18,8 @@ function Navigation() {
       <Tab.Screen
         key={index}
         name={item.name}
-        initialParams={{ user: user }}
         children={(props: any) => (
-          <item.component {...props} setUser={setUser} />
+          <item.component {...props} user={user} setUser={setUser} />
         )}
         options={{
           tabBarStyle: styles.tabBarStyle,

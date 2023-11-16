@@ -193,6 +193,10 @@ export default class AquariumConfiguration {
     const minutes = dat % 60;
     dat -= minutes;
     const hours = dat / 60;
-    return String(hours) + ":" + String(minutes);
+    return (
+      String(hours > 9 ? hours : "0" + hours) +
+      ":" +
+      String(minutes > 9 ? minutes : "0" + minutes)
+    );
   };
 }

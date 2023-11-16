@@ -25,6 +25,13 @@ const commonStyles = StyleSheet.create({
     opacity: 1,
     zIndex: 99,
   },
+  horizontal: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 6,
+  },
 });
 
 export default commonStyles;
