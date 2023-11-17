@@ -23,7 +23,6 @@ const commonStyles = StyleSheet.create({
   dropdownListDropdownStyles: {
     backgroundColor: colors.menuBarBackground,
     opacity: 1,
-    zIndex: 99,
   },
   horizontal: {
     flex: 1,

@@ -105,4 +105,5 @@ export default {
   pushNotificationsDeniedAlertMessage:
     "Push notifications are disabled! You won't get notifications about your aquarium's status!",
   noDeviceTokenString: "NO_DEVICE_TOKEN",
+  infoContent: "This is the information about the app and it's usage",
 };

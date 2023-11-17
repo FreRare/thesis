@@ -5,15 +5,16 @@ def main():
 	rows = 0
 	filesNumber = 0
 	for folder, subs, files in os.walk(rootdir):
-		if("node_modules" in str(folder) or "." in str(folder)[1:]):
+		if("node_modules" in str(folder)):
+			print("Skipping folder: " + str(folder))
 			continue
 		for filename in files:
 			if('package' in str(filename)):
 				continue
-			if filename.endswith(".h") or filename.endswith(".cpp") or filename.endswith(".ts") or filename.endswith(".tsx")	:
+			if ".h" in filename or ".cpp" in filename or ".ts" in filename or ".tsx" in filename:
 				filesNumber += 1
 				fileRows = 0
-				with open("./" + str(folder) + "/" + str(filename), 'r+') as file:
+				with open("./" + str(folder) + "/" + str(filename), 'r') as file:
 					row = file.readline()
 					while row:
 						rows += 1

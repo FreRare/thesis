@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, ImageBackground, StyleSheet } from "react-native";
+import { Dimensions, ImageBackground, StyleSheet, View } from "react-native";
 import Layout from "../components/Layout";
 import LoginForm from "../components/LoginForm";
 import Logo from "../components/Logo";
@@ -17,7 +17,7 @@ function WelcomeScreen(props: WelcomeScreenProps) {
   const welcomeImageUri = require("../../assets/ATC_app_welcome_screen_picture.jpg");
   return (
     <Layout navigation={props.navigation} shouldDisplayMenuBar={false}>
-      <ImageBackground style={styles.backgroundImage} source={welcomeImageUri}>
+      <View style={styles.backgroundImage}>
         {isLogin && <Logo />}
         {isLogin && (
           <LoginForm
@@ -33,7 +33,7 @@ function WelcomeScreen(props: WelcomeScreenProps) {
             setIsLogin={setIsLogin}
           />
         )}
-      </ImageBackground>
+      </View>
     </Layout>
   );
 }

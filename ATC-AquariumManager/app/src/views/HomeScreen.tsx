@@ -6,6 +6,7 @@ import { View, StyleSheet, Text } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import colors from "../../config/colors";
 import commonStyles from "../utils/commonStyles";
+import { ScrollView } from "react-native";
 
 interface HomeScreenProps {
   navigation: any;
@@ -57,7 +58,7 @@ function HomeScreen(props: HomeScreenProps) {
 const styles = StyleSheet.create({
   horizontalInfoContainer: {
     flex: 0.5,
-    alignContent: "center",
+    alignItems: "center",
     justifyContent: "center",
     marginTop: -20,
   },

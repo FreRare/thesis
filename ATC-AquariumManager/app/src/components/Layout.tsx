@@ -1,7 +1,11 @@
 import React, { ReactNode } from "react";
-import { Platform, StyleSheet, SafeAreaView } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  SafeAreaView,
+  KeyboardAvoidingView,
+} from "react-native";
 import MenuBar from "./MenuBar";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import colors from "../../config/colors";
 
 interface LayoutComponentProps {
@@ -13,16 +17,12 @@ interface LayoutComponentProps {
 function Layout(props: LayoutComponentProps) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <KeyboardAwareScrollView
-        resetScrollToCoords={{ x: 0, y: 0 }}
-        contentContainerStyle={styles.layout}
-        scrollEnabled={false}
-      >
+      <KeyboardAvoidingView style={styles.layout}>
         {props.shouldDisplayMenuBar && (
           <MenuBar navigation={props.navigation} />
         )}
         {props.children}
-      </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
+    zIndex: 0,
   },
 });
 export default Layout;

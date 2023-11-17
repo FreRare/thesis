@@ -24,12 +24,13 @@ const styles = StyleSheet.create({
   conatiner: {
     flex: 1,
     borderColor: colors.dataCircleBorder,
-    borderWidth: 15,
-    borderRightWidth: 11,
-    borderLeftWidth: 11,
+    backgroundColor: colors.cardBackGround,
+    borderWidth: 10,
+    borderRightWidth: 8,
+    borderLeftWidth: 8,
     borderTopWidth: 0,
     borderRadius: 50,
-    margin: 20,
+    margin: 18,
     alignItems: "center",
     justifyContent: "flex-start",
   },
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "center",
     marginBottom: 20,
-    marginTop: -25,
+    marginTop: -30,
   },
   dataContainer: {
     marginTop: 30,
@@ -48,7 +49,6 @@ const styles = StyleSheet.create({
   },
   dataText: {
     fontSize: 30,
-    fontFamily: "Roboto",
   },
 });
 
