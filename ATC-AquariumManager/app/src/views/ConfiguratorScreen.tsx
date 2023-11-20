@@ -78,6 +78,7 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
           />
         </View>
         <ConfiguratorDataDisplayer
+          editDisabled={edit}
           aquariumConfigData={selectedAquarium.config}
           editCallback={editCallback}
         />

@@ -4,7 +4,7 @@ import colors from "../../config/colors";
 const commonStyles = StyleSheet.create({
   input: {
     flex: 1,
-    width: "90%",
+    minWidth: "40%",
     padding: 10,
     margin: "5%",
     backgroundColor: colors.menuBarBackground,
@@ -29,6 +29,13 @@ const commonStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    marginVertical: 2,
+  },
+  vertical: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
     marginVertical: 2,
   },
 });

@@ -9,6 +9,7 @@ import commonStyles from "../utils/commonStyles";
 type AquariumCardProps = {
   navigation: any;
   item: Aquarium;
+  disabled: boolean;
   setEditing: (edit: boolean) => void;
   setEdited: (aq: Aquarium) => void;
 };
@@ -22,6 +23,7 @@ function AquariumCard(props: AquariumCardProps) {
         </View>
         <View style={styles.verticalRight}>
           <Icon
+            disabled={props.disabled}
             name="form"
             size={25}
             onPress={() => {

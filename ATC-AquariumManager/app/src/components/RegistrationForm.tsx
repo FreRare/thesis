@@ -52,6 +52,7 @@ function RegistrationForm(props: RegistrationFormProps) {
     ).data;
     return token;
     // Token stores the device registration token it can be sent to server
+    // TODO! should be updated per installation IDK how yet
   };
 
   /**

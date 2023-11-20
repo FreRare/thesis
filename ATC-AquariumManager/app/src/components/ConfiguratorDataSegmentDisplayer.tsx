@@ -55,6 +55,7 @@ type ConfiguratorDataSegmentDisplayerProps = {
   data1: number;
   data2: number;
   editCallback: (label: string) => void;
+  editDisabled: boolean;
 };
 
 /** This component displays the segments of the configuration data, usually in pairs for temp or ph
@@ -112,6 +113,7 @@ function ConfiguratorDataSegmentDisplayer(
       <View style={commonStyles.horizontal}>
         <Text style={styles.label}>{props.label}</Text>
         <TouchableOpacity
+          disabled={props.editDisabled}
           style={styles.horizontalRight}
           onPress={() => {
             props.editCallback(props.label);

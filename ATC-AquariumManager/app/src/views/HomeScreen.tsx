@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
   horizontalSelectContainer: {
     flex: 0.4,
     margin: 30,
+    zIndex: 999,
   },
   horizontalDataContainer: {
     flex: 1,

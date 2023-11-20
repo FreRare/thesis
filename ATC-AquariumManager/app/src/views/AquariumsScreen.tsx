@@ -75,6 +75,7 @@ function AquariumsScreen(props: AquariumsScreenProps) {
         navigation={props.navigation}
         setEditing={setEditing}
         setEdited={setEdited}
+        disabled={editing}
       />
     );
   });
@@ -94,7 +95,11 @@ function AquariumsScreen(props: AquariumsScreenProps) {
             placeholder={strings.searchByName}
             onChangeText={(t: string) => searchAquarium(t)}
           />
-          <TouchableOpacity onPress={addNewOnPress} style={styles.addContainer}>
+          <TouchableOpacity
+            disabled={editing}
+            onPress={addNewOnPress}
+            style={styles.addContainer}
+          >
             <>
               <Text>{strings.addNew}</Text>
               <Icon name="addfolder" size={20} />
