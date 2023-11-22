@@ -49,6 +49,8 @@ export default {
   off: "Off",
   yes: "Yes",
   no: "No",
+  delete: "Delete",
+  confirmation: "Confirmation",
   feeding: "Feeding",
   cleaning: "Cleaning",
   filterClean: "Filter cleaning",
@@ -79,6 +81,7 @@ export default {
   confirmFoodPortions: "Confirm protions",
   confirmFoodPortionsMessage:
     "Big amount of food in the aquarium can damage it's environment. Are you sure you want to set the portions that high?",
+  confirmDeleteMessage: "Are you sure you want to delete?",
   edit: "Edit",
   numberParseError:
     "Invalid numbers given! Make sure it doesn't contain any letters.",
@@ -110,4 +113,7 @@ export default {
   editFirstNameLabel: "New first name:",
   editLastNameLabel: "New last name:",
   editEmailLabel: "New email address:",
+  oldPassword: "Old password:",
+  oldPasswordAgain: "Confirm old password:",
+  newPassword: "New password:",
 };

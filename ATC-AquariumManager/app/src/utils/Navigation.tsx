@@ -59,7 +59,7 @@ function Navigation() {
 const styles = StyleSheet.create({
   tabBarStyle: {
     paddingHorizontal: 10,
-    height: 80,
+    height: 69,
     position: "absolute",
     borderTopStartRadius: 30,
     borderTopEndRadius: 30,

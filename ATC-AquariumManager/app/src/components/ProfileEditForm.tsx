@@ -36,7 +36,7 @@ function ProfileEditForm(props: ProfileEditFormProps) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={commonStyles.formContainer}>
       <Text>Edit profile</Text>
       <View style={commonStyles.vertical}>
         <Text>{strings.editFirstNameLabel}</Text>
@@ -72,40 +72,21 @@ function ProfileEditForm(props: ProfileEditFormProps) {
         />
       </View>
       <View style={commonStyles.horizontal}>
-        <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
+        <TouchableOpacity
+          style={commonStyles.button}
+          onPress={() => handleSubmit()}
+        >
           <Text>{strings.confirm}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleCancel()}>
+        <TouchableOpacity
+          style={commonStyles.button}
+          onPress={() => handleCancel()}
+        >
           <Text>{strings.cancel}</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    width: "65%",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 2,
-    padding: 15,
-    borderRadius: 20,
-    borderColor: colors.primary,
-    backgroundColor: colors.formBackround,
-  },
-  button: {
-    flex: 1,
-    borderColor: colors.primary,
-    borderWidth: 4,
-    borderRadius: 50,
-    backgroundColor: colors.menuBarBackground,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 10,
-    margin: 10,
-  },
-});
 
 export default ProfileEditForm;

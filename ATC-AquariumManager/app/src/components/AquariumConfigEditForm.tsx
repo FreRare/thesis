@@ -406,7 +406,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={commonStyles.formContainer}>
       <View>
         <Text>{strings.configEditLabel + props.aquariumName}</Text>
       </View>
@@ -423,11 +423,11 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
       </View>
       {dynamicFormBody}
       <View style={commonStyles.horizontal}>
-        <TouchableOpacity style={styles.button} onPress={formValidator}>
+        <TouchableOpacity style={commonStyles.button} onPress={formValidator}>
           <Text>{strings.confirm}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.button}
+          style={commonStyles.button}
           onPress={() => props.cancelCallBack(false)}
         >
           <Text>{strings.cancel}</Text>
@@ -438,29 +438,6 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "80%",
-    alignItems: "center",
-    justifyContent: "center",
-    borderColor: colors.menuTopBorder,
-    borderWidth: 3,
-    borderRadius: 20,
-    position: "absolute",
-    padding: 10,
-    backgroundColor: colors.background,
-  },
-  button: {
-    flex: 1,
-    borderColor: colors.primary,
-    borderWidth: 4,
-    borderRadius: 50,
-    backgroundColor: colors.menuBarBackground,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 10,
-    margin: 10,
-  },
   dash: {
     fontSize: 30,
   },

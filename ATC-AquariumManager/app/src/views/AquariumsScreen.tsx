@@ -15,6 +15,7 @@ import AquariumEditForm from "../components/AquariumEditForm";
 import commonStyles from "../utils/commonStyles";
 import strings from "../../config/strings";
 import Icon from "react-native-vector-icons/AntDesign";
+import colors from "../../config/colors";
 
 type AquariumsScreenProps = {
   navigation: any;
@@ -22,30 +23,32 @@ type AquariumsScreenProps = {
 
 function AquariumsScreen(props: AquariumsScreenProps) {
   // TODO load aquariums form db
-  const loadedAquariums = [
-    new Aquarium(1),
-    new Aquarium(2),
-    new Aquarium(3),
-    new Aquarium(4),
-  ];
+  const loadedAquariums = [new Aquarium(1), new Aquarium(2)];
 
   const [editing, setEditing] = React.useState<boolean>(false); // Edit flag
   const [edited, setEdited] = React.useState<Aquarium | null>(null); // The edited aquarium
   const [aquariums, setAquariums] =
-    React.useState<Array<Aquarium>>(loadedAquariums); // To store all data on locale until screen is on
-  const [aquariumsList, setAquariumsList] =
-    React.useState<Array<Aquarium>>(loadedAquariums); // To display the data locale
+    React.useState<Array<Aquarium>>(loadedAquariums); // To store aquariums
 
   // Callback for the editor form
-  const editHandler = (aq: Aquarium) => {
+  const editHandler = (aq: Aquarium, deleteFlag: boolean) => {
     setEdited(null);
     setEditing(false);
+    if (deleteFlag) {
+      // TODO delete from db
+      const newAquariums = aquariums.filter((a: Aquarium) => {
+        return a.id !== aq.id;
+      });
+      setAquariums(newAquariums);
+      return;
+    }
     // TODO post saves to DB
     const index = aquariums.indexOf(aq);
     // If we added a new aquarium
     if (index < 0) {
       // TODO
       console.log("Add aqaurium to DB");
+      aquariums.push(aq);
     }
     aquariums[index] = aq;
   };
@@ -58,7 +61,7 @@ function AquariumsScreen(props: AquariumsScreenProps) {
     const filtered = aquariums.filter((a: Aquarium) => {
       return a.name.toLocaleLowerCase().includes(t.toLocaleLowerCase());
     });
-    setAquariumsList(filtered);
+    setAquariums(filtered);
   };
 
   const addNewOnPress = () => {
@@ -67,7 +70,7 @@ function AquariumsScreen(props: AquariumsScreenProps) {
   };
 
   // The cards to display
-  const aqauariumCards = aquariumsList.map((item, index) => {
+  const aqauariumCards = aquariums.map((item, index) => {
     return (
       <AquariumCard
         key={index}
@@ -91,7 +94,7 @@ function AquariumsScreen(props: AquariumsScreenProps) {
         <View style={styles.searchContainer}>
           <Icon name="search1" size={25} />
           <TextInput
-            style={commonStyles.input}
+            style={styles.searchInput}
             placeholder={strings.searchByName}
             onChangeText={(t: string) => searchAquarium(t)}
           />
@@ -135,6 +138,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+  },
+  searchInput: {
+    flex: 1,
+    maxWidth: "70%",
+    marginHorizontal: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    borderWidth: 2,
+    borderColor: colors.textSecondary,
+    borderRadius: 20,
+    backgroundColor: colors.menuBarBackground,
   },
   addContainer: {
     flex: 0.4,

@@ -104,12 +104,12 @@ function LoginForm(props: LoginScreenProps) {
           setIsRememberMe(!isRememberMe);
         }}
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+      <TouchableOpacity style={commonStyles.button} onPress={handleLogin}>
         <Text>{strings.login}</Text>
       </TouchableOpacity>
       <Text>{strings.or}</Text>
       <TouchableOpacity
-        style={styles.button}
+        style={commonStyles.button}
         onPress={() => props.setIsLogin(false)}
       >
         <Text>{strings.signup}</Text>
@@ -143,17 +143,6 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 50,
     padding: 10,
-  },
-  button: {
-    borderColor: colors.primary,
-    borderWidth: 4,
-    borderRadius: 50,
-    backgroundColor: colors.secondary,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "60%",
-    padding: "5%",
-    margin: "5%",
   },
   errorMsg: {
     color: colors.errorColor,

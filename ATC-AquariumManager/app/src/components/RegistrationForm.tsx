@@ -213,11 +213,11 @@ function RegistrationForm(props: RegistrationFormProps) {
         }}
       />
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleSignup}>
+        <TouchableOpacity style={commonStyles.button} onPress={handleSignup}>
           <Text>{strings.confirm}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.button}
+          style={commonStyles.button}
           onPress={() => props.setIsLogin(true)}
         >
           <Text>{strings.cancel}</Text>
@@ -258,17 +258,6 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 50,
     padding: 15,
-  },
-  button: {
-    borderColor: colors.primary,
-    borderWidth: 4,
-    borderRadius: 50,
-    backgroundColor: colors.secondary,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "60%",
-    padding: "5%",
-    margin: "5%",
   },
   errorContainer: {
     alignItems: "center",

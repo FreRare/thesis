@@ -1,6 +1,6 @@
 import React from "react";
 import Aquarium from "../models/Aquarium";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import colors from "../../config/colors";
 import { TextInput } from "react-native";
 import strings from "../../config/strings";
@@ -10,7 +10,7 @@ type AquariumEditFormProps = {
   aquarium: Aquarium;
   addNewFlag: boolean;
   setEditing: (aq: boolean) => void;
-  editHandler: (aq: Aquarium) => void;
+  editHandler: (aq: Aquarium, deleteFlag: boolean) => void;
 };
 
 function AquariumEditForm(props: AquariumEditFormProps) {
@@ -24,7 +24,11 @@ function AquariumEditForm(props: AquariumEditFormProps) {
   const [systemId, setSystemId] = React.useState<number>(props.aquarium.id);
   const [error, setError] = React.useState<string>("");
 
-  const confirmHandler = () => {
+  const confirmHandler = (del?: boolean) => {
+    if (del) {
+      props.editHandler(props.aquarium, true);
+      return;
+    }
     if (props.addNewFlag) {
       // Validation
       if (name.length <= 0) {
@@ -43,11 +47,11 @@ function AquariumEditForm(props: AquariumEditFormProps) {
     props.aquarium.width = width;
     props.aquarium.fishCount = fishCount;
     props.aquarium.id = systemId; // ID should be the same, or the new given
-    props.editHandler(props.aquarium);
+    props.editHandler(props.aquarium, false);
   };
 
   return (
-    <View style={styles.container}>
+    <View style={commonStyles.formContainer}>
       <Text>
         {props.addNewFlag
           ? strings.addNewAquarium
@@ -129,11 +133,32 @@ function AquariumEditForm(props: AquariumEditFormProps) {
           />
         </View>
       )}
-      <TouchableOpacity style={styles.button} onPress={() => confirmHandler()}>
+      {!props.addNewFlag && (
+        <TouchableOpacity
+          style={[commonStyles.button, { borderColor: "red" }]}
+          onPressOut={() => {
+            Alert.alert(strings.confirmation, strings.confirmDeleteMessage, [
+              { text: strings.no },
+              {
+                text: strings.yes,
+                onPress: () => {
+                  confirmHandler(true);
+                },
+              },
+            ]);
+          }}
+        >
+          <Text>{strings.delete}</Text>
+        </TouchableOpacity>
+      )}
+      <TouchableOpacity
+        style={commonStyles.button}
+        onPress={() => confirmHandler()}
+      >
         <Text>{strings.confirm}</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.button}
+        style={commonStyles.button}
         onPress={() => props.setEditing(false)}
       >
         <Text>{strings.cancel}</Text>
@@ -141,31 +166,5 @@ function AquariumEditForm(props: AquariumEditFormProps) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    height: "85%",
-    width: "65%",
-    alignItems: "center",
-    justifyContent: "center",
-    borderColor: colors.menuTopBorder,
-    borderWidth: 3,
-    borderRadius: 20,
-    position: "absolute",
-    padding: 10,
-    backgroundColor: colors.background,
-  },
-  button: {
-    borderColor: colors.primary,
-    borderWidth: 4,
-    borderRadius: 50,
-    backgroundColor: colors.menuBarBackground,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "60%",
-    padding: "5%",
-    margin: "5%",
-  },
-});
 
 export default AquariumEditForm;

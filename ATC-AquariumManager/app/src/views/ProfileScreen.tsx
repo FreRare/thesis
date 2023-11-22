@@ -43,7 +43,8 @@ function ProfileScreen(props: ProfileScreenProps) {
     if (newPass === undefined) {
       return;
     }
-    // Change password
+    // TODO Change password
+    console.log("Password changed");
   };
 
   return (
@@ -107,7 +108,7 @@ function ProfileScreen(props: ProfileScreenProps) {
       {editProfile && (
         <ProfileEditForm user={props.user} callback={handleEditProfile} />
       )}
-      {changePassword && <PasswordChangeForm />}
+      {changePassword && <PasswordChangeForm callback={handleChangePassword} />}
     </Layout>
   );
 }
