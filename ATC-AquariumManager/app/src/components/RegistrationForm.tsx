@@ -130,8 +130,6 @@ function RegistrationForm(props: RegistrationFormProps) {
     // If we have a registarted user
     if (authResult instanceof User) {
       props.setUser(authResult, isRememberMe);
-      // alert("User logged in!");
-      props.navigation.navigate(strings.home);
     } else {
       setError(authResult);
     }

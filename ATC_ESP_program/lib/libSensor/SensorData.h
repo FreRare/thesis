@@ -10,11 +10,6 @@
 class SensorData {
 private:
     float temperature;
-<<<<<<< HEAD
-    LightIntensity lightAmount;
-    uint16_t waterLvl;
-=======
->>>>>>> main
     float ph;
     LightIntensity lightAmount;
     uint8_t waterLvl;

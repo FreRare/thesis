@@ -50,8 +50,6 @@ void UIHandler::writeLine(const char* msg, const uint8_t& line, const uint8_t& c
         UIHandler::display.print("Invalid line number!");
     }
     UIHandler::display.setCursor(col, line - 1);
-    Serial.print("Message on LCD: ");
-    Serial.println(msg);
     UIHandler::display.print(msg);
 }
 

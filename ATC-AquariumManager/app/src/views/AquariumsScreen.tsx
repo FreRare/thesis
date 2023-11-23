@@ -8,47 +8,70 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
+import User from "../models/User";
 import Layout from "../components/Layout";
 import AquariumCard from "../components/AquariumCard";
 import Aquarium from "../models/Aquarium";
 import AquariumEditForm from "../components/AquariumEditForm";
-import commonStyles from "../utils/commonStyles";
 import strings from "../../config/strings";
 import Icon from "react-native-vector-icons/AntDesign";
 import colors from "../../config/colors";
+import AquariumService from "../services/AquariumService";
+import LoadingAnimation from "../components/LoadingAnimation";
 
 type AquariumsScreenProps = {
   navigation: any;
+  user: User;
 };
 
 function AquariumsScreen(props: AquariumsScreenProps) {
-  // TODO load aquariums form db
-  const loadedAquariums = [new Aquarium(1), new Aquarium(2)];
-
   const [editing, setEditing] = React.useState<boolean>(false); // Edit flag
   const [edited, setEdited] = React.useState<Aquarium | null>(null); // The edited aquarium
-  const [aquariums, setAquariums] =
-    React.useState<Array<Aquarium>>(loadedAquariums); // To store aquariums
+  const [aquariums, setAquariums] = React.useState<Array<Aquarium>>([]); // To store aquariums
+  const [error, setError] = React.useState<string>("");
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  const loadAquariums = async () => {
+    setLoading(true);
+    const loadedAquariums = await AquariumService.getAquariums(
+      props.user.email
+    );
+    if (typeof loadedAquariums === "string") {
+      setError(loadedAquariums as string);
+    } else {
+      setAquariums(loadedAquariums);
+    }
+    setLoading(false);
+  };
+
+  React.useEffect(() => {
+    if (aquariums.length <= 0 && error.length <= 0) {
+      loadAquariums();
+    }
+  });
 
   // Callback for the editor form
-  const editHandler = (aq: Aquarium, deleteFlag: boolean) => {
+  const editHandler = async (aq: Aquarium) => {
     setEdited(null);
     setEditing(false);
-    if (deleteFlag) {
-      // TODO delete from db
-      const newAquariums = aquariums.filter((a: Aquarium) => {
-        return a.id !== aq.id;
-      });
-      setAquariums(newAquariums);
-      return;
-    }
-    // TODO post saves to DB
     const index = aquariums.indexOf(aq);
-    // If we added a new aquarium
     if (index < 0) {
-      // TODO
-      console.log("Add aqaurium to DB");
+      // If we added a new aquarium
+      const result = await AquariumService.createAquarium(aq, props.user.email);
+      if (result.length > 0) {
+        setError(result);
+      } else {
+        alert("Successfully added " + aq.name + "!");
+      }
       aquariums.push(aq);
+    } else {
+      // Update aquarium
+      const result = await AquariumService.updateAquarium(aq);
+      if (result.length > 0) {
+        setError(result);
+      } else {
+        alert("Successfully updated " + aq.name + "!");
+      }
     }
     aquariums[index] = aq;
   };
@@ -85,6 +108,7 @@ function AquariumsScreen(props: AquariumsScreenProps) {
 
   return (
     <Layout navigation={props.navigation} shouldDisplayMenuBar={true}>
+      {loading && <LoadingAnimation />}
       <ScrollView
         contentContainerStyle={[
           styles.container,

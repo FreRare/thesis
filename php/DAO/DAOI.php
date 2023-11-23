@@ -7,14 +7,14 @@ interface AQDAOI
      * Usage is only possible trought the instance returned by this function
      * @return AQDAO
      */
-    static function getInstance() : AQDAO;
-       /**
+    static function getInstance(): AQDAO;
+    /**
      * Executes the given string to the DB
      * @param string $queryString
      * @return mixed the result of the query
      */
     function __query(string $sql);
-        /**
+    /**
      * Selects all users with the given email from the DB (should be only one)
      * @param string $email
      * @return User|null
@@ -39,7 +39,7 @@ interface AQDAOI
      * @param User $userToDelete
      * @return bool True on success
      */
-    function deleteUser(User $user): bool;
+    function deleteUser(string $email): bool;
     /**
      * Updates the user with the given email address to the Object given
      * @param User $user
@@ -64,7 +64,7 @@ interface AQDAOI
      * @param Aquarium $obj
      * @return bool True on success
      */
-    function deleteAquarium(Aquarium $quarium): bool;
+    function deleteAquarium(int $id): bool;
     /**
      * Updates the Aquarium identified by the given object to the given object (ID stays the same)
      * @param Aquarium $obj

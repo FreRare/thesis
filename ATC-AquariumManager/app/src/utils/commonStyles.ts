@@ -15,7 +15,6 @@ const commonStyles = StyleSheet.create({
     borderColor: colors.primary,
   },
   button: {
-    flex: 1,
     borderColor: colors.primary,
     borderWidth: 4,
     borderRadius: 50,

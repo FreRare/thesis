@@ -10,12 +10,12 @@ $newAquarium = new Aquarium(0, "My Aquarium", 60, 30, 30, 10);
 $newAquarium = $DAO->createAquarium($newAquarium);
 $newAquariumConfig = new AquariumConfig($newAquarium->getId());
 $newConfig = $DAO->createAQConfig($newAquariumConfig);
-if(!$newConfig){
-    error_log("UNsuccessful config creation!");
+if (!$newConfig) {
+    error_log("Unsuccessful config creation!");
 }
 // Create a response, we only need the ID
 $response = ["system_id" => $newAquarium->getId()];
 $jsonResponse = json_encode(["data" => $response]);
 header("Content-Type: application/json");
-echo($jsonResponse);
+echo ($jsonResponse);
 die();

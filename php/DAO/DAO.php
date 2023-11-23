@@ -26,7 +26,7 @@ class AQDAO implements AQDAOI
     private const DELETE_AQUARIUM = "DELETE FROM aquariums WHERE id = ?";
     private const UPDATE_AQUARIUM = "UPDATE aquariums SET name = ?, length = ?, height = ?, depth = ?, fishCount = ? WHERE id = ?";
     private const SELECT_CONFIG_FOR_AQUARIUM = "SELECT * FROM configs WHERE id = ?";
-    private const CREATE_CONFIG = "INSERT INTO configs (id, minTemp, maxTemp, minPh, maxPh, OnOutlet1, OffOutlet1, OnOutlet2, OffOutlet2, OnOutlet3, OffOutlet3, waterLvlAlert, feedingTime, foodPortions, filterClean, waterChange, samplePeriod, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private const CREATE_CONFIG = "INSERT INTO configs (id, minTemp, maxTemp, minPh, maxPh, OnOutlet1, OffOutlet1, OnOutlet2, OffOutlet2, OnOutlet3, OffOutlet3, waterLvlAlert, feedingTime, foodPortions, filterClean, waterChange, samplePeriod, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private const DELETE_CONFIG = "DELETE FROM configs WHERE id = ?";
     private const UPDATE_CONFIG = "UPDATE configs SET minTemp = ?, maxTemp = ?, minPh = ?, maxPh = ?, OnOutlet1 = ?, OffOutlet1 = ?, OnOutlet2 = ?, OffOutlet2 = ?, OnOutlet3 = ?, OffOutlet3 = ?, waterLvlAlert = ?, feedingTime = ?, foodPortions = ?, filterClean = ?, waterChange = ?, samplePeriod = ?, lastModifiedDate = ? WHERE id = ?";
     private const SELECT_SENSOR_SAMPLES_FOR_AQUARIUM = "SELECT * FROM sensorSamples WHERE id = ?";
@@ -35,7 +35,7 @@ class AQDAO implements AQDAOI
     private const DELETE_SENSOR_SAMPLE = "DELETE FROM sensorSamples WHERE id = ?";
     private const UPDATE_SENSOR_SAMPLE = "UPDATE sensorSamples SET sampleTime = ?, temp = ?, ph = ?, waterLvl = ?, lightAmount = ? WHERE id = ?";
     private const CREATE_HAVE_AQUARIUM = "INSERT INTO haveAquarium (email, id) VALUES (?, ?)";
-    private const SELECT_USER_AQUARIUM_IDS = "SELECT id FROM haveAquarium WHERE email = ?";
+    private const SELECT_USER_AQUARIUMS = "SELECT A.id, A.name, A.length, A.height, A.depth, A.fishCount FROM haveAquarium as HA INNER JOIN aquariums as A ON A.id = HA.id WHERE HA.email = ?";
     private const SELECT_USER_BY_AQUARIUM_ID = "SELECT users.email, users.firstName, users.lastName, users.password, users.deviceToken, users.authToken FROM haveAquarium INNER JOIN users ON users.email = haveAquarium.email WHERE haveAquarium.id = ?";
     private const DELETE_HAVE_AQUARIUM_BY_ID = "DELETE FROM haveAquarium WHERE id = ?";
     private const DELETE_HAVE_AQUARIUM_BY_USER = "DELETE FROM haveAquarium WHERE email = ?";
@@ -178,7 +178,7 @@ class AQDAO implements AQDAOI
         $height = $aquarium->getHeight();
         $width = $aquarium->getWidth();
         $fishCount = $aquarium->getfishCount();
-        $stm->bind_param("siii", $name, $length, $height, $width, $fishCount);
+        $stm->bind_param("siiii", $name, $length, $height, $width, $fishCount);
         $success = $stm->execute();
         $newId = $stm->insert_id;
         $stm->close();
@@ -189,10 +189,9 @@ class AQDAO implements AQDAOI
         }
     }
 
-    function deleteAquarium(Aquarium $aquarium): bool
+    function deleteAquarium(int $id): bool
     {
         $stm = $this->connection->prepare(AQDAO::DELETE_AQUARIUM);
-        $id = $aquarium->getId();
         $stm->bind_param("i", $id);
         $success = $stm->execute();
         $stm->close();
@@ -208,7 +207,7 @@ class AQDAO implements AQDAOI
         $width = $aquarium->getWidth();
         $id = $aquarium->getId();
         $fishC = $aquarium->getfishCount();
-        $stm->bind_param("siiii", $name, $length, $height, $width, $id, $fishC);
+        $stm->bind_param("siiiii", $name, $length, $height, $width, $fishC, $id);
         $success = $stm->execute();
         $stm->close();
         return $success;
@@ -250,7 +249,7 @@ class AQDAO implements AQDAOI
         $samplePeriod = $aqConfig->getSamplePeriod();
         $lastModifiedDate = $aqConfig->getLastModifiedDate()->format('Y-m-d H:i:s');
 
-        $stm->bind_param("issssiiiiiiiiiiis", $aquariumId, $minTemp, $maxTemp, $minPh, $maxPh, $lightOn, $lightOff, $filterOn, $filterOff, $airOn, $airOff, $waterLvlAlert, $feedingTime, $foodPortions, $filterClean, $waterChange, $samplePeriod, $lastModifiedDate);
+        $stm->bind_param("issssiiiiiiiiiiiis", $aquariumId, $minTemp, $maxTemp, $minPh, $maxPh, $lightOn, $lightOff, $filterOn, $filterOff, $airOn, $airOff, $waterLvlAlert, $feedingTime, $foodPortions, $filterClean, $waterChange, $samplePeriod, $lastModifiedDate);
         $success = $stm->execute();
         $stm->close();
         return $success;
@@ -387,18 +386,17 @@ class AQDAO implements AQDAOI
     {
         if (!$user instanceof User || empty($user))
             return [];
-        $stm = $this->connection->prepare(AQDAO::SELECT_USER_AQUARIUM_IDS);
+        $stm = $this->connection->prepare(AQDAO::SELECT_USER_AQUARIUMS);
         $mail = $user->getEmail();
         $stm->bind_param("s", $mail);
         $stm->execute();
-        $resultIds = $stm->get_result();
-        $stm->close();
+        $stm->bind_result($id, $name, $length, $height, $width, $fishCount);
+
         $resultAquariums = [];
-        if ($resultIds->num_rows > 0) {
-            while ($row = $resultIds->fetch_assoc()) {
-                $resultAquariums[] = $this->selectAquariumById($row["id"]);
-            }
+        while ($stm->fetch()) {
+            $resultAquariums[] = new Aquarium($id, $name, $length, $height, $width, $fishCount);
         }
+        $stm->close();
         return $resultAquariums;
     }
     function selectUserForAquarium(int $id)

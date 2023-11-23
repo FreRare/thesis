@@ -10,7 +10,7 @@ type AquariumEditFormProps = {
   aquarium: Aquarium;
   addNewFlag: boolean;
   setEditing: (aq: boolean) => void;
-  editHandler: (aq: Aquarium, deleteFlag: boolean) => void;
+  editHandler: (aq: Aquarium) => void;
 };
 
 function AquariumEditForm(props: AquariumEditFormProps) {
@@ -24,11 +24,7 @@ function AquariumEditForm(props: AquariumEditFormProps) {
   const [systemId, setSystemId] = React.useState<number>(props.aquarium.id);
   const [error, setError] = React.useState<string>("");
 
-  const confirmHandler = (del?: boolean) => {
-    if (del) {
-      props.editHandler(props.aquarium, true);
-      return;
-    }
+  const confirmHandler = () => {
     if (props.addNewFlag) {
       // Validation
       if (name.length <= 0) {
@@ -47,7 +43,7 @@ function AquariumEditForm(props: AquariumEditFormProps) {
     props.aquarium.width = width;
     props.aquarium.fishCount = fishCount;
     props.aquarium.id = systemId; // ID should be the same, or the new given
-    props.editHandler(props.aquarium, false);
+    props.editHandler(props.aquarium);
   };
 
   return (
@@ -132,24 +128,6 @@ function AquariumEditForm(props: AquariumEditFormProps) {
             }}
           />
         </View>
-      )}
-      {!props.addNewFlag && (
-        <TouchableOpacity
-          style={[commonStyles.button, { borderColor: "red" }]}
-          onPressOut={() => {
-            Alert.alert(strings.confirmation, strings.confirmDeleteMessage, [
-              { text: strings.no },
-              {
-                text: strings.yes,
-                onPress: () => {
-                  confirmHandler(true);
-                },
-              },
-            ]);
-          }}
-        >
-          <Text>{strings.delete}</Text>
-        </TouchableOpacity>
       )}
       <TouchableOpacity
         style={commonStyles.button}
