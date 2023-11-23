@@ -26,7 +26,7 @@ class AQDAO implements AQDAOI
     private const DELETE_AQUARIUM = "DELETE FROM aquariums WHERE id = ?";
     private const UPDATE_AQUARIUM = "UPDATE aquariums SET name = ?, length = ?, height = ?, depth = ?, fishCount = ? WHERE id = ?";
     private const SELECT_CONFIG_FOR_AQUARIUM = "SELECT * FROM configs WHERE id = ?";
-    private const CREATE_CONFIG = "INSERT INTO configs (id, minTemp, maxTemp, minPh, maxPh, OnOUtuet1, OffOutlet1, OnOutlet2, OffOutlet2, OnOutlet3, OffOutlet3, waterLvlAlert, feedingTime, foodPortions, filterClean, waterChange, samplePeriod, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private const CREATE_CONFIG = "INSERT INTO configs (id, minTemp, maxTemp, minPh, maxPh, OnOutlet1, OffOutlet1, OnOutlet2, OffOutlet2, OnOutlet3, OffOutlet3, waterLvlAlert, feedingTime, foodPortions, filterClean, waterChange, samplePeriod, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private const DELETE_CONFIG = "DELETE FROM configs WHERE id = ?";
     private const UPDATE_CONFIG = "UPDATE configs SET minTemp = ?, maxTemp = ?, minPh = ?, maxPh = ?, OnOutlet1 = ?, OffOutlet1 = ?, OnOutlet2 = ?, OffOutlet2 = ?, OnOutlet3 = ?, OffOutlet3 = ?, waterLvlAlert = ?, feedingTime = ?, foodPortions = ?, filterClean = ?, waterChange = ?, samplePeriod = ?, lastModifiedDate = ? WHERE id = ?";
     private const SELECT_SENSOR_SAMPLES_FOR_AQUARIUM = "SELECT * FROM sensorSamples WHERE id = ?";
