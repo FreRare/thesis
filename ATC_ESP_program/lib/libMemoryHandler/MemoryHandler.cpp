@@ -1,7 +1,4 @@
-#include <Arduino.h>
-#include <DebugUtils.h>
-#include <EEPROM.h>
-#include <MemoryHandler.h>
+#include "MemoryHandler.h"
 
 // The instance pointer to return when want to use class
 MemoryHandler* MemoryHandler::instancePtr = new MemoryHandler();
@@ -62,6 +59,14 @@ void MemoryHandler::writeConfigData(const ConfigData& configData)
 {
     this->actualAddress = this->configDataStartAddress;
     EEPROM.put(this->actualAddress, configData);
+}
+
+ConfigData MemoryHandler::readConfigData()
+{
+    this->actualAddress = this->configDataStartAddress;
+    ConfigData config;
+    EEPROM.get(this->actualAddress, config);
+    return config;
 }
 
 // Clears the memory from 0 until length address

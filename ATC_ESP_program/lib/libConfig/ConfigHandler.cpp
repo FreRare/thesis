@@ -7,6 +7,14 @@ ConfigHandler::ConfigHandler()
 {
 }
 
+ConfigHandler::~ConfigHandler()
+{
+    delete this->memHandler;
+    delete this->configuration;
+}
+
+void ConfigHandler::saveConfigData(const ConfigData& data) { ConfigHandler::memHandler->writeConfigData(data); }
+
 ConfigData ConfigHandler::loadConfigDataFromMemory()
 {
     ConfigData loadedData = ConfigHandler::memHandler->readConfigData();

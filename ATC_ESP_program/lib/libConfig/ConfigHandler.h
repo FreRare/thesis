@@ -11,20 +11,23 @@
  */
 class ConfigHandler {
 private:
-    ConfigData configuration;
+    ConfigData* configuration;
     static MemoryHandler* memHandler;
-    /*
-        * This is how to retrieve data from incoming json data
-        ConfigData* freshConfig = new ConfigData(configDoc["minTemp"], configDoc["maxTemp"], configDoc["minPh"],
-                    configDoc["maxPh"], configDoc["ol1On"], configDoc["ol1Off"], configDoc["ol2On"],
-                    configDoc["ol2Off"], configDoc["ol3On"], configDoc["ol3Off"], configDoc["waterLvlAlert"],
-                    configDoc["feedingTime"], configDoc["foodPortions"], configDoc["samplePeriod"]);
-    */
 
 public:
     ConfigHandler();
+    ~ConfigHandler();
+    /**
+     * Loads the configuration data from the EEPROM
+     */
     ConfigData loadConfigDataFromMemory();
+    /**
+     * Writes the given config data to the EEPROM
+     */
     void saveConfigData(const ConfigData& data);
+    /**
+     * Check which of the ConfigStatus enum's value is assignable to the current state of the system (sensors)
+     */
     ConfigStatus checkFullfillmentStatus(const SensorData& data, const time_t& timeNow);
 };
 

@@ -1,7 +1,7 @@
 #ifndef MemoryHandler_h
 #define MemoryHandler_h
-#include "Arduino.h"
 #include "ConfigData.h"
+#include <Arduino.h>
 #include <EEPROM.h>
 
 ////////////////////////////////////////////////////////////////////////////////////

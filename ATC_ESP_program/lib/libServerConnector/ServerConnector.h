@@ -10,10 +10,12 @@
 #include <NTPClient.h>
 #include <TimeLib.h>
 #include <WiFiUdp.h>
+#include <stdio.h>
 
 #define CONN_TIMEOUT 60 // Connection timeout = timeout * 2 seconds
 // (2 min should be enough after power outage for the wifi to reboot)
 #define SYSTEMID_TEXT_LENGTH 20
+#define CONFIG_UPDATE_POST_DATA_LENGTH 7
 #define NTP_SERVER_ADDRESS "pool.ntp.org"
 
 /**
@@ -32,6 +34,7 @@ private:
     static const char* timePath;
     static const char* sensorDataUploadPath;
     static const char* notificationPath;
+    static const char* configUpdatePath;
 
 public:
     /**
@@ -47,7 +50,6 @@ public:
      * If have a saved ID
      * (in case the system already is in the database, or it has a saved id in the memory)
      *  in that case the check is dismissed
-     * @return The provided ID or the freshly generated one
      */
     bool connectToNetwork();
     /**
@@ -56,6 +58,12 @@ public:
     void syncNTPTime();
     void disconnect();
     NTPClient* getTimeClient() const;
+    /**
+     * Fetches the config data form the database
+     * Checks if we had update or no
+     * @return the new config or null
+     */
+    ConfigData* updateConfigData(ConfigData& currentConfig);
 };
 
 #endif // ! ServerConnector_h

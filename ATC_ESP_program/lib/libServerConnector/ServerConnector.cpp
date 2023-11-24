@@ -5,6 +5,7 @@ const char* ServerConnector::connectionCheckPath = "http://atc.takacsnet.hu/CONT
 const char* ServerConnector::timePath = "http://atc.takacsnet.hu/CONTROLS/getCurrentTime.php";
 const char* ServerConnector::sensorDataUploadPath = "http://atc.takacsnet.hu/CONTROLS/sensorDataUpload.php";
 const char* ServerConnector::notificationPath = "http://atc.takacsnet.hu/CONTROLS/notification.php";
+const char* ServerConnector::configUpdatePath = "http://atc.takacsnet.hu/CONTROLS/getAquariumConfig.php";
 
 ServerConnector::ServerConnector()
 {
@@ -15,14 +16,15 @@ ServerConnector::ServerConnector()
         UIHandler::getInstance()->writeLine("Successful", 1);
         UIHandler::getInstance()->writeLine("     connection!", 2);
         char systemIdText[SYSTEMID_TEXT_LENGTH + 1];
-        sprintf(systemIdText, "Your system ID: %3d", this->config->getSystemID());
+        sprintf(systemIdText, "Your system ID: %d", this->config->getSystemID());
         UIHandler::getInstance()->writeLine(systemIdText, 3);
-        UIHandler::getInstance()->makeScrollingText("Use this ID for registration inside the app!", 4, 300, 1);
+        UIHandler::getInstance()->makeScrollingText("Use this ID for registration inside the app!", 4, 400, 1);
     } else {
         UIHandler::getInstance()->clear();
         UIHandler::getInstance()->writeLine("Connection failed!", 1);
         UIHandler::getInstance()->writeLine("Forgetting network", 2);
         UIHandler::getInstance()->writeLine("and restarting...", 3);
+        delay(1000);
         this->config->forgetNetwork();
         ESP.restart();
     }
@@ -40,8 +42,10 @@ void ServerConnector::syncNTPTime()
 
 ServerConnector::~ServerConnector()
 {
-    delete this->config;
     WiFi.disconnect();
+    delete this->config;
+    delete this->timeClient;
+    delete this->config;
 }
 
 NTPClient* ServerConnector::getTimeClient() const { return this->timeClient; }
@@ -95,6 +99,40 @@ bool ServerConnector::connectToNetwork()
     }
     httpClient.end();
     return true; // We have an ID and we could connect
+}
+
+ConfigData* ServerConnector::updateConfigData(ConfigData& currentConfig)
+{
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("Wifi not connected!");
+        return NULL;
+    }
+    this->httpClient.begin(this->client, ServerConnector::configUpdatePath);
+    this->httpClient.addHeader("Content-Type", "application/json");
+    char postData[CONFIG_UPDATE_POST_DATA_LENGTH];
+    sprintf(postData, "id=%d", this->config->getSystemID());
+    uint16_t responseCode = this->httpClient.POST(postData);
+    if (responseCode == HTTP_CODE_OK) {
+        String payload = this->httpClient.getString();
+        DynamicJsonDocument configDoc(512);
+        DeserializationError err = deserializeJson(configDoc, payload);
+        if (err) {
+            Serial.println("JSON serialization failed!");
+            return NULL;
+        }
+        ConfigData* freshConfig = new ConfigData(configDoc["data"]["minTemp"], configDoc["data"]["maxTemp"],
+            configDoc["data"]["minPh"], configDoc["data"]["maxPh"], configDoc["data"]["ol1On"],
+            configDoc["data"]["ol1Off"], configDoc["data"]["ol2On"], configDoc["data"]["ol2Off"],
+            configDoc["data"]["ol3On"], configDoc["data"]["ol3Off"], configDoc["data"]["waterLvlAlert"],
+            configDoc["data"]["feedingTime"], configDoc["data"]["foodPortions"], configDoc["data"]["samplePeriod"]);
+        if (currentConfig.equals(freshConfig)) {
+            Serial.println("The configs are up to date!");
+            return NULL;
+        } else {
+            return freshConfig;
+        }
+    }
+    return NULL;
 }
 
 void ServerConnector::disconnect() { WiFi.disconnect(); }

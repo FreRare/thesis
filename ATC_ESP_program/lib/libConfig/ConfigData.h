@@ -36,6 +36,7 @@ private:
     SamplePeriod samplePeriod; // How often to take samples
 
 public:
+    ConfigData() = default;
     ConfigData(const float& minT, const float& maxT, const float& minPh, const float& maxPh, const uint16_t& OL1On,
         const uint16_t& OL1Off, const uint16_t& OL2On, const uint16_t& OL2Off, const uint16_t& OL3On,
         const uint16_t& OL3Off, const uint8_t& waterLvlAlert, const uint16_t& feedingTime, const uint8_t& foodPort,
@@ -96,6 +97,11 @@ public:
     void SetFeedingPortions(uint8_t feedingPortions);
 
     void SetSamplePeriod(SamplePeriod samplePeriod);
+
+    /**
+     * Checks if the gice config equals the current object
+     */
+    bool equals(const ConfigData* c);
 };
 
 #endif

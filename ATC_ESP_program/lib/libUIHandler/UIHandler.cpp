@@ -49,6 +49,8 @@ void UIHandler::writeLine(const char* msg, const uint8_t& line, const uint8_t& c
     if (line < 1 || line > 4) {
         UIHandler::display.print("Invalid line number!");
     }
+    Serial.print("LCD Text: ");
+    Serial.println(msg);
     UIHandler::display.setCursor(col, line - 1);
     UIHandler::display.print(msg);
 }
@@ -61,6 +63,7 @@ void UIHandler::makeScrollingText(const char* msg, const uint8_t line, const uin
         msgLength++;
     }
 
+    // Create a new message with enough spaces in it
     const uint16_t messageLen = msgLength + LCD_COLUMNS;
     char message[messageLen];
     for (int i = 0; i < messageLen; i++) {
@@ -70,13 +73,18 @@ void UIHandler::makeScrollingText(const char* msg, const uint8_t line, const uin
             message[i] = msg[i];
         }
     }
+    message[messageLen - 1] = '\0';
+    Serial.print("Scrolling text:");
+    Serial.println(message);
+    // Print floating text
     for (uint8_t i = 0; i < cycles; i++) {
         for (unsigned int pos = 0; pos < messageLen; pos++) {
             UIHandler::display.setCursor(0, line - 1);
-            char messageSubStr[LCD_COLUMNS];
+            char messageSubStr[LCD_COLUMNS + 1];
             for (uint16_t i = 0; i < LCD_COLUMNS; i++) {
                 messageSubStr[i] = message[pos + i];
             }
+            messageSubStr[LCD_COLUMNS] = '\0';
             UIHandler::display.print(messageSubStr);
             delay(delayTime);
         }
@@ -87,7 +95,7 @@ void UIHandler::clear() { UIHandler::display.clear(); }
 
 void UIHandler::clearLine(const uint8_t& line)
 {
-    uint8_t lineNumber = line;
+    uint8_t lineNumber = line - 1;
     if (lineNumber > LCD_ROWS) {
         Serial.println("Invalid row number! Defaulted to 0.");
         lineNumber = 0;

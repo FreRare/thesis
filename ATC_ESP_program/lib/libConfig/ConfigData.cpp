@@ -118,3 +118,13 @@ void ConfigData::SetFeedingTime(uint16_t feedingTime)
 void ConfigData::SetFeedingPortions(uint8_t feedingPortions) { feedingPortions = feedingPortions; }
 
 void ConfigData::SetSamplePeriod(SamplePeriod samplePeriod) { samplePeriod = samplePeriod; }
+
+bool ConfigData::equals(const ConfigData* c)
+{
+    return this->minTemp == c->minTemp && this->maxTemp == c->maxTemp && this->minPh == c->minPh
+        && this->maxPh == c->maxPh && this->outlet1On == c->outlet1On && this->outlet1Off == c->outlet1Off
+        && this->outlet2On == c->outlet2On && this->outlet2Off == c->outlet2Off && this->outlet3On == c->outlet3On
+        && this->outlet3Off == c->outlet3Off && this->waterLvlAlert == c->waterLvlAlert
+        && this->feedingTime == c->feedingTime && this->feedingPortions == c->feedingPortions
+        && this->samplePeriod == c->samplePeriod;
+}

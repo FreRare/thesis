@@ -27,7 +27,7 @@ void setup()
     Serial.begin(9600);
     while (!Serial)
         ;
-    //!MemoryHandler::getInstance()->clearMemory(0, 512);
+    //! MemoryHandler::getInstance()->clearMemory(0, 512);
     g_server = new ServerConnector();
     g_actuatorHandler = new ActuatorHandler();
     pinMode(LAMP_RELAY_PIN, OUTPUT);

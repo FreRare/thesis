@@ -20,7 +20,7 @@ AQWiFiConfig::AQWiFiConfig()
     if (this->WIFI_SSID.length() > 0 && this->WIFI_PASS.length() > 0) {
         isConfigDoneFlag = true;
         UIHandler::getInstance()->writeLine("Successful", 1);
-        UIHandler::getInstance()->writeLine("configuration!", 2);
+        UIHandler::getInstance()->writeLine("configuration!", 2, 5);
     } else {
         this->initializeNetwork();
     }
@@ -30,6 +30,12 @@ AQWiFiConfig::AQWiFiConfig()
         AQWiFiConfig::configServer->handleClient();
         delay(1000);
     }
+}
+
+AQWiFiConfig::~AQWiFiConfig()
+{
+    delete this->memHandler;
+    delete this->configServer;
 }
 
 String AQWiFiConfig::getSSID() { return this->WIFI_SSID; }

@@ -23,7 +23,7 @@ private:
 
 public:
     AQWiFiConfig();
-    ~AQWiFiConfig() {};
+    ~AQWiFiConfig();
     String getSSID();
     String getPassword();
     uint8_t getSystemID();
