@@ -52,10 +52,17 @@ function AquariumsScreen(props: AquariumsScreenProps) {
 
   // Callback for the editor form
   const editHandler = async (aq: Aquarium, del?: boolean) => {
+    setLoading(true);
     setEdited(null);
     setEditing(false);
     if(del){
-      AquariumService.deleteAquarium(aq);
+      const deleteResult = await AquariumService.deleteAquarium(aq);
+      if(deleteResult.length > 0){
+        setError(deleteResult);
+      }else{
+        alert("Successfully deleted " + aq.name + "!");
+      }
+      setLoading(false);
       return;
     }
     const index = aquariums.indexOf(aq);
@@ -78,6 +85,7 @@ function AquariumsScreen(props: AquariumsScreenProps) {
       }
     }
     aquariums[index] = aq;
+    setLoading(false);
   };
 
   /**

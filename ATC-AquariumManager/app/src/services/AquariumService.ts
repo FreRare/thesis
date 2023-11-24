@@ -156,7 +156,41 @@ export default class AquariumService {
       });
   }
 
+  /**
+   * Deletes the provided aquarium
+   * @param aq The aquarium to remove
+   * @returns "" on success error as string otherwise
+   */
   static async deleteAquarium(aq: Aquarium): Promise<string>{
-    // TODO fetch delete APIp
+    const headers = {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    };
+    const body = JSON.stringify({
+      id: aq.id,
+    });
+    return fetch(strings.deleteAquariumApiUrl, {
+      method: "POST",
+      headers: headers,
+      body: body
+    }).then((response)=>{
+      if (!response.ok) {
+        throw new Error(
+          strings.unexpectedStatusErrorMessage + response.status
+        );
+      } else {
+        return response.json();
+      }
+    }).then((responseData)=>{
+      const data = responseData["data"];
+      if(data["error"]){
+        return data["error"];
+      }
+      if(data["result"]){
+        return "";
+      }
+    }).catch(e=>{
+      alert("Error: " + e);
+    });
   }
 }
