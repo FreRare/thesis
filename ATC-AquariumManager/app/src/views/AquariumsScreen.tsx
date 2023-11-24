@@ -51,9 +51,13 @@ function AquariumsScreen(props: AquariumsScreenProps) {
   });
 
   // Callback for the editor form
-  const editHandler = async (aq: Aquarium) => {
+  const editHandler = async (aq: Aquarium, del?: boolean) => {
     setEdited(null);
     setEditing(false);
+    if(del){
+      AquariumService.deleteAquarium(aq);
+      return;
+    }
     const index = aquariums.indexOf(aq);
     if (index < 0) {
       // If we added a new aquarium

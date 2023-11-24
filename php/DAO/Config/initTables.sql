@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS users(
     password VARCHAR(255) NOT NULL,
     deviceToken VARCHAR(255) NOT NULL,
     authToken VARCHAR(23) NOT NULL,
+    inactive BOOLEAN,
 
     PRIMARY KEY (email)
 );
@@ -24,7 +25,8 @@ CREATE TABLE IF NOT EXISTS aquariums(
     length INT NOT NULL,
     height INT NOT NULL,
     depth INT NOT NULL,
-    fishCount INT,
+    fishCount INT NOT NULL,
+    inactive BOOLEAN,
 
     PRIMARY KEY (id)
 );

@@ -1,7 +1,6 @@
 import React from "react";
 import Aquarium from "../models/Aquarium";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
-import colors from "../../config/colors";
+import { View, Text, TouchableOpacity} from "react-native";
 import { TextInput } from "react-native";
 import strings from "../../config/strings";
 import commonStyles from "../utils/commonStyles";
@@ -10,7 +9,7 @@ type AquariumEditFormProps = {
   aquarium: Aquarium;
   addNewFlag: boolean;
   setEditing: (aq: boolean) => void;
-  editHandler: (aq: Aquarium) => void;
+  editHandler: (aq: Aquarium, del?: boolean) => void;
 };
 
 function AquariumEditForm(props: AquariumEditFormProps) {
@@ -24,7 +23,11 @@ function AquariumEditForm(props: AquariumEditFormProps) {
   const [systemId, setSystemId] = React.useState<number>(props.aquarium.id);
   const [error, setError] = React.useState<string>("");
 
-  const confirmHandler = () => {
+  const confirmHandler = (del?:boolean) => {
+    if(del){
+      props.editHandler(props.aquarium, true);
+      return;
+    }
     if (props.addNewFlag) {
       // Validation
       if (name.length <= 0) {
@@ -129,6 +132,13 @@ function AquariumEditForm(props: AquariumEditFormProps) {
           />
         </View>
       )}
+      {!props.addNewFlag && <TouchableOpacity
+        style={[commonStyles.button, {borderColor: "red"}]}
+        onPress={() => confirmHandler(true)}
+      >
+        <Text>{strings.delete}</Text>
+      </TouchableOpacity>}
+      <View style={commonStyles.horizontal}>
       <TouchableOpacity
         style={commonStyles.button}
         onPress={() => confirmHandler()}
@@ -141,6 +151,7 @@ function AquariumEditForm(props: AquariumEditFormProps) {
       >
         <Text>{strings.cancel}</Text>
       </TouchableOpacity>
+      </View>
     </View>
   );
 }

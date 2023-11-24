@@ -8,8 +8,9 @@ class User
     private $lastName;
     private $deviceToken;
     private $authToken;
+    private $inactive;
 
-    public function __construct(string $email = "", string $password = "", string $firtName = "", string $lastName = "", string $deviceToken="", string $authToken= "")
+    public function __construct(string $email = "", string $password = "", string $firtName = "", string $lastName = "", string $deviceToken = "", string $authToken = "", bool $inactive = false)
     {
         $this->email = $email;
         $this->password = $password;
@@ -17,19 +18,20 @@ class User
         $this->lastName = $lastName;
         $this->deviceToken = $deviceToken;
         $this->authToken = $authToken;
+        $this->inactive = $inactive;
     }
 
-    public function getEmail() : string
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function getPassword() : string
+    public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function getFirstName() : string
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -42,19 +44,22 @@ class User
     {
         return ($this->firstName . $this->lastName);
     }
-    public function getDeviceToken() : string{
+    public function getDeviceToken(): string
+    {
         return $this->deviceToken;
     }
-    public function getAuthToken() : string{
+    public function getAuthToken(): string
+    {
         return $this->authToken;
     }
 
-    public function toJSON() : string{
+    public function toJSON(): string
+    {
         $t = [];
         $t["email"] = $this->email;
         $t["token"] = $this->authToken;
         $t["first_name"] = $this->firstName;
         $t["last_name"] = $this->lastName;
         return json_encode(["user" => $t]);
-    }   
+    }
 }

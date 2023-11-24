@@ -4,7 +4,7 @@ import colors from "../../config/colors";
 const commonStyles = StyleSheet.create({
   input: {
     flex: 1,
-    minWidth: "60%",
+    minWidth: "40%",
     maxWidth: "80%",
     padding: 10,
     margin: "5%",
@@ -21,7 +21,8 @@ const commonStyles = StyleSheet.create({
     backgroundColor: colors.menuBarBackground,
     alignItems: "center",
     justifyContent: "center",
-    width: "60%",
+    minWidth: "40%",
+    maxWidth: "60%",
     padding: 10,
     margin: 10,
   },

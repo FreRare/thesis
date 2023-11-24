@@ -155,4 +155,8 @@ export default class AquariumService {
         alert("Error: " + e);
       });
   }
+
+  static async deleteAquarium(aq: Aquarium): Promise<string>{
+    // TODO fetch delete APIp
+  }
 }

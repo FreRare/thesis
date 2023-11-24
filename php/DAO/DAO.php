@@ -16,14 +16,14 @@ class AQDAO implements AQDAOI
     private static $instance = null;
     private $connection = null;
     private $config = null;
-    private const CREATE_USER = "INSERT INTO users (email, firstName, lastName, password, deviceToken, authToken) VALUES (?, ?, ?, ?, ?, ?)";
-    private const DELETE_USER = "DELETE FROM users WHERE email = ?";
-    private const SELECT_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
-    private const SELECT_USER_BY_TOKEN = "SELECT * FROM users WHERE authToken = ?";
+    private const CREATE_USER = "INSERT INTO users (email, firstName, lastName, password, deviceToken, authToken, inactive) VALUES (?, ?, ?, ?, ?, ?, false)";
+    private const DELETE_USER = "UPDATE users SET inactive = true WHERE email = ?";
+    private const SELECT_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ? AND inactive IS NOT true";
+    private const SELECT_USER_BY_TOKEN = "SELECT * FROM users WHERE authToken = ? AND inactive IS NOT true";
     private const UPDATE_USER = "UPDATE users SET email = ?, password = ?, firstName = ?, lastName = ?, deviceToken = ? WHERE email = ?";
-    private const SELECT_AQUARIUM = "SELECT * FROM aquariums WHERE id = ?";
-    private const CREATE_AQUARIUM = "INSERT INTO aquariums (name, length, height, depth, fishCount) VALUES (?, ?, ?, ?, ?)";
-    private const DELETE_AQUARIUM = "DELETE FROM aquariums WHERE id = ?";
+    private const SELECT_AQUARIUM = "SELECT * FROM aquariums WHERE id = ? AND inactive IS NOT true";
+    private const CREATE_AQUARIUM = "INSERT INTO aquariums (name, length, height, depth, fishCount, inactive) VALUES (?, ?, ?, ?, ?, false)";
+    private const DELETE_AQUARIUM = "UPDATE aquariums SET inactive = true WHERE id = ?";
     private const UPDATE_AQUARIUM = "UPDATE aquariums SET name = ?, length = ?, height = ?, depth = ?, fishCount = ? WHERE id = ?";
     private const SELECT_CONFIG_FOR_AQUARIUM = "SELECT * FROM configs WHERE id = ?";
     private const CREATE_CONFIG = "INSERT INTO configs (id, minTemp, maxTemp, minPh, maxPh, OnOutlet1, OffOutlet1, OnOutlet2, OffOutlet2, OnOutlet3, OffOutlet3, waterLvlAlert, feedingTime, foodPortions, filterClean, waterChange, samplePeriod, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -35,8 +35,8 @@ class AQDAO implements AQDAOI
     private const DELETE_SENSOR_SAMPLE = "DELETE FROM sensorSamples WHERE id = ?";
     private const UPDATE_SENSOR_SAMPLE = "UPDATE sensorSamples SET sampleTime = ?, temp = ?, ph = ?, waterLvl = ?, lightAmount = ? WHERE id = ?";
     private const CREATE_HAVE_AQUARIUM = "INSERT INTO haveAquarium (email, id) VALUES (?, ?)";
-    private const SELECT_USER_AQUARIUMS = "SELECT A.id, A.name, A.length, A.height, A.depth, A.fishCount FROM haveAquarium as HA INNER JOIN aquariums as A ON A.id = HA.id WHERE HA.email = ?";
-    private const SELECT_USER_BY_AQUARIUM_ID = "SELECT users.email, users.firstName, users.lastName, users.password, users.deviceToken, users.authToken FROM haveAquarium INNER JOIN users ON users.email = haveAquarium.email WHERE haveAquarium.id = ?";
+    private const SELECT_USER_AQUARIUMS = "SELECT A.id, A.name, A.length, A.height, A.depth, A.fishCount, A.inactive FROM haveAquarium as HA INNER JOIN aquariums as A ON A.id = HA.id WHERE HA.email = ? AND A.inactive IS NOT true";
+    private const SELECT_USER_BY_AQUARIUM_ID = "SELECT users.email, users.firstName, users.lastName, users.password, users.deviceToken, users.authToken FROM haveAquarium INNER JOIN users ON users.email = haveAquarium.email WHERE haveAquarium.id = ?  AND users.inactive IS NOT true";
     private const DELETE_HAVE_AQUARIUM_BY_ID = "DELETE FROM haveAquarium WHERE id = ?";
     private const DELETE_HAVE_AQUARIUM_BY_USER = "DELETE FROM haveAquarium WHERE email = ?";
     protected function __construct()
@@ -85,13 +85,13 @@ class AQDAO implements AQDAOI
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_BY_EMAIL);
         $stm->bind_param("s", $email);
         $stm->execute();
-        $stm->bind_result($mail, $pass, $fname, $lname, $token, $authToken);
+        $stm->bind_result($mail, $pass, $fname, $lname, $token, $authToken, $inactive);
         $stm->fetch();
         $stm->close();
-        if (empty($mail) || empty($pass) || empty($fname) || empty($lname) || empty($token) || empty($authToken)) {
+        if (empty($mail) || empty($pass) || empty($fname) || empty($lname) || empty($token) || empty($authToken) || empty($inactive)) {
             return null;
         } else {
-            return new User($mail, $pass, $fname, $lname, $token, $authToken);
+            return new User($mail, $pass, $fname, $lname, $token, $authToken, $inactive);
         }
     }
 
@@ -100,13 +100,13 @@ class AQDAO implements AQDAOI
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_BY_TOKEN);
         $stm->bind_param("s", $token);
         $stm->execute();
-        $stm->bind_result($user, $pass, $fname, $lname, $token, $authToken);
+        $stm->bind_result($user, $pass, $fname, $lname, $token, $authToken, $inactive);
         $stm->fetch();
         $stm->close();
-        if (empty($user) || empty($pass) || empty($fname) || empty($lname) || empty($token) || empty($authToken)) {
+        if (empty($user) || empty($pass) || empty($fname) || empty($lname) || empty($token) || empty($authToken) || empty($inactive)) {
             return null;
         } else {
-            return new User($user, $pass, $fname, $lname, $token, $authToken);
+            return new User($user, $pass, $fname, $lname, $token, $authToken, $inactive);
         }
     }
 
@@ -129,13 +129,9 @@ class AQDAO implements AQDAOI
         $statement->close();
         return $success;
     }
-    function deleteUser(User $user): bool
+    function deleteUser(string $email): bool
     {
-        if (!$user instanceof User) {
-            return false;
-        }
         $stm = $this->connection->prepare(AQDAO::DELETE_USER);
-        $email = $user->getEmail();
         $stm->bind_param("s", $email);
         $success = $stm->execute();
         return $success;
