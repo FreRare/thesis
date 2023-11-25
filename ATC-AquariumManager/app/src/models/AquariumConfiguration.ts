@@ -174,11 +174,33 @@ export default class AquariumConfiguration {
     this._samplePeriod = value;
   }
 
-  public get lastModifiedDat(): Date {
+  public get lastModifiedDate(): Date {
     return this._lastModifiedDate;
   }
-  public set lastModifiedDat(value: Date) {
+  public set lastModifiedDate(value: Date) {
     this._lastModifiedDate = value;
+  }
+
+  public get lastModifiedDateString(): string {
+    return (
+      [
+        this._lastModifiedDate.getFullYear(),
+        this._lastModifiedDate.getMonth(),
+        this._lastModifiedDate.getDay(),
+      ].join("-") +
+      " " +
+      [
+        this._lastModifiedDate.getHours() > 9
+          ? this._lastModifiedDate.getHours()
+          : "0" + this._lastModifiedDate.getHours(),
+        this._lastModifiedDate.getMinutes() > 9
+          ? this._lastModifiedDate.getMinutes()
+          : "0" + this._lastModifiedDate.getMinutes(),
+        this._lastModifiedDate.getSeconds() > 9
+          ? this._lastModifiedDate.getSeconds()
+          : "0" + this._lastModifiedDate.getSeconds(),
+      ].join(":")
+    );
   }
 
   /**

@@ -5,7 +5,13 @@ Expexts the config's data as json in $POST
 */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
-if (!empty($_POST["id"]) && !empty($_POST["minTemp"]) && !empty($_POST["maxTemp"]) && !empty($_POST["minPh"]) && !empty($_POST["maxPh"]) && !empty($_POST["OL1On"]) && !empty($_POST["OL1Off"]) && !empty($_POST["OL2On"]) && !empty($_POST["OL2Off"]) && !empty($_POST["OL3On"]) && !empty($_POST["OL3Off"]) && !empty($_POST["waterLvlAlert"]) && !empty($_POST["feedingTime"]) && !empty($_POST["foodPortions"]) && !empty($_POST["filterClean"]) && !empty($_POST["waterChange"]) && !empty($_POST["samplePeroid"])) {
+foreach ($_POST as $key => $val) {
+    if (!isset($_POST[$key])) {
+        $result["error"] = "Missing data!";
+    }
+}
+
+if (!isset($result["error"])) {
     $id = $_POST["id"];
     $minTemp = $_POST["minTemp"];
     $maxTemp = $_POST["maxTemp"];
@@ -31,8 +37,6 @@ if (!empty($_POST["id"]) && !empty($_POST["minTemp"]) && !empty($_POST["maxTemp"
     } else {
         $result["result"] = "Successfully updated!";
     }
-} else {
-    $result["error"] = "Missing data!";
 }
 $responseJson = json_encode(["data" => $result]);
 echo ($responseJson);

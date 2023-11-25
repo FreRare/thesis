@@ -47,11 +47,11 @@ CREATE TABLE IF NOT EXISTS haveAquarium(
 );
 
 CREATE TABLE IF NOT EXISTS configs(
-    id BIGINT NOT NULL,
-    minTemp FLOAT(2, 2) NOT NULL,
-    maxTemp FLOAT(2, 2) NOT NULL,
-    minPh FLOAT(2, 2) NOT NULL,
-    maxPh FLOAT(2, 2) NOT NULL,
+    id BIGINT NOT NULL UNIQUE,
+    minTemp DECIMAL(4, 2) NOT NULL,
+    maxTemp DECIMAL(4, 2) NOT NULL,
+    minPh DECIMAL(4, 2) NOT NULL,
+    maxPh DECIMAL(4, 2) NOT NULL,
     OnOutlet1 INT NOT NULL,
     OffOutlet1 INT NOT NULL,
     OnOutlet2 INT NOT NULL,
@@ -65,6 +65,8 @@ CREATE TABLE IF NOT EXISTS configs(
     waterChange INT NOT NULL,
     samplePeriod INT NOT NULL,
     lastModifiedDate DATETIME NOT NULL,
+
+    PRIMARY KEY(id),
 
     FOREIGN KEY (id)
     REFERENCES aquariums(id)

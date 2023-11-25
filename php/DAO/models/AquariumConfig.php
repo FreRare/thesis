@@ -20,7 +20,7 @@ class AquariumConfig
     private $samplePeriod;
     private $lastModifiedDate;
 
-    public function __construct(int $AquariumId, float $minTemp = 20, float $maxTemp = 28, float $minPh = 6.0, float $maxPh = 8.0, int $onOutlet1 = 480, int $offOutlet1 = 1200, int $onOutlet2 = 480, int $offOutlet2 = 1200, int $onOutet3 = 480, int $offOutlet3 = 1200, int $waterLvlAlert = 70, int $feedingTime = 600, int $foodPortions = 1, int $filterClean = 0, int $waterChange = 0, int $samplePeriod = 2, DateTime $lastModifiedDate = null)
+    public function __construct(int $AquariumId, float $minTemp = 20, float $maxTemp = 28, float $minPh = 6.5, float $maxPh = 8, int $onOutlet1 = 480, int $offOutlet1 = 1200, int $onOutlet2 = 480, int $offOutlet2 = 1200, int $onOutet3 = 480, int $offOutlet3 = 1200, int $waterLvlAlert = 70, int $feedingTime = 600, int $foodPortions = 1, int $filterClean = 0, int $waterChange = 0, int $samplePeriod = 2, DateTime $lastModifiedDate = null)
     {
         $this->AquariumId = $AquariumId;
         $this->minTemp = $minTemp;
@@ -246,7 +246,7 @@ class AquariumConfig
         $t["samplePeroid"] = $this->samplePeriod;
         $t["lastModifiedDate"] = $this->lastModifiedDate;
 
-        return json_encode(["config" => $t]);
+        return (["config" => $t]);
     }
 
     public function toEspJSON()
@@ -267,6 +267,6 @@ class AquariumConfig
         $t["foodPortions"] = $this->foodPortions;
         $t["samplePeroid"] = $this->samplePeriod;
 
-        return json_encode(["config" => $t]);
+        return (["config" => $t]);
     }
 }

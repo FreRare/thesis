@@ -3,7 +3,8 @@ import AquariumConfiguration from "../models/AquariumConfiguration";
 import { StyleSheet, Dimensions } from "react-native";
 import strings from "../../config/strings";
 import ConfiguratorDataSegmentDisplayer from "./ConfiguratorDataSegmentDisplayer";
-import { View } from "react-native-animatable";
+import { View, Text } from "react-native-animatable";
+import colors from "../../config/colors";
 
 type ConfiguratorDataDisplayerProps = {
   aquariumConfigData: AquariumConfiguration;
@@ -14,6 +15,9 @@ type ConfiguratorDataDisplayerProps = {
 function ConfiguratorDataDisplayer(props: ConfiguratorDataDisplayerProps) {
   return (
     <View style={styles.container}>
+      <Text style={styles.modifiedDateText}>
+        {strings.lastModified + props.aquariumConfigData.lastModifiedDateString}
+      </Text>
       <ConfiguratorDataSegmentDisplayer
         label={strings.temperature}
         data1={props.aquariumConfigData.minTemp}
@@ -82,6 +86,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
+  },
+  modifiedDateText: {
+    fontSize: 15,
+    color: colors.black,
   },
 });
 

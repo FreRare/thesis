@@ -208,6 +208,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
           <View style={commonStyles.horizontal}>
             <TextInput
               style={commonStyles.input}
+              keyboardType="numeric"
               value={data1 ? String(data1) : ""}
               onChangeText={(t: string) => {
                 setData1(t);
@@ -216,6 +217,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
             <Text style={styles.dash}>-</Text>
             <TextInput
               style={commonStyles.input}
+              keyboardType="numeric"
               value={data2 ? String(data2) : ""}
               onChangeText={(t: string) => {
                 setData2(t);
@@ -321,6 +323,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
             <Text style={styles.dropdownLabel}>{strings.portions}:</Text>
             <TextInput
               style={commonStyles.input}
+              keyboardType="numeric"
               value={data2 ? String(data2) : ""}
               onChangeText={(t: string) => {
                 setData2(t);
@@ -335,6 +338,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
             <Text style={styles.dropdownLabel}>{strings.waterLevel} (%):</Text>
             <TextInput
               style={commonStyles.input}
+              keyboardType="numeric"
               value={data1 ? String(data1) : ""}
               onChangeText={(t: string) => {
                 setData1(t);
@@ -391,8 +395,45 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         );
       }
     }
+    // Temperature between 0-100
+    if (props.label.includes(strings.temperature)) {
+      if (
+        parsedData1 < 0 ||
+        parsedData1 >= 100 ||
+        parsedData2 < 0 ||
+        parsedData2 >= 100
+      ) {
+        setErrorMsg(strings.invalidTemp);
+        return;
+      }
+    }
+    // Ph between 0-14
+    if (props.label.includes(strings.ph)) {
+      if (
+        parsedData1 < 0 ||
+        parsedData1 > 14 ||
+        parsedData2 < 0 ||
+        parsedData2 > 14
+      ) {
+        setErrorMsg(strings.invalidPh);
+        return;
+      }
+    }
 
-    handleSubmit(parsedData1, parsedData2);
+    let d1;
+    let d2;
+    // Temp and ph should be rounded up to 2 decimal
+    if (
+      props.label.includes(strings.temperature) ||
+      props.label.includes(strings.ph)
+    ) {
+      d1 = Math.round((parsedData1 + Number.EPSILON) * 100) / 100;
+      d2 = Math.round((parsedData2 + Number.EPSILON) * 100) / 100;
+    } else {
+      d1 = parsedData1;
+      d2 = parsedData2;
+    }
+    handleSubmit(d1, d2);
   };
 
   /**
@@ -402,6 +443,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
   const handleSubmit = (d1: number, d2: number) => {
     // After we have usable data need to decide which member to alter
     configDataManipulationDecider(d1, d2);
+    props.editableConfig.lastModifiedDate = new Date();
     props.submitCallback(props.editableConfig);
   };
 

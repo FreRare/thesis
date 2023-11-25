@@ -64,6 +64,13 @@ public:
      * @return the new config or null
      */
     ConfigData* updateConfigData(ConfigData& currentConfig);
+    /**
+     * Checks if the system's aquarium has been inactivated or no
+     * If it is inactive resets the system to factory reset ->
+     * Deletes all data from EEPROM and stands by unitl repower
+     * @return If the reset was successful
+    */
+    bool checkForReset();
 };
 
 #endif // ! ServerConnector_h

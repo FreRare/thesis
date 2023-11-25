@@ -8,10 +8,17 @@ $DAO = AQDAO::getInstance();
 $newAquarium = new Aquarium(0, "My Aquarium", 60, 30, 30, 10);
 // After this the aquarium will have the inserted id
 $newAquarium = $DAO->createAquarium($newAquarium);
+if ($newAquarium == null) {
+    error_log("Error: Unsuccessfuly aquarium creation!");
+    header("Status: 500");
+    die();
+}
 $newAquariumConfig = new AquariumConfig($newAquarium->getId());
 $newConfig = $DAO->createAQConfig($newAquariumConfig);
-if (!$newConfig) {
+if ($newConfig == null) {
     error_log("Unsuccessful config creation!");
+    header("Status: 500");
+    die();
 }
 // Create a response, we only need the ID
 $response = ["system_id" => $newAquarium->getId()];

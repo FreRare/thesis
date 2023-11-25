@@ -1,15 +1,19 @@
 <?php
 // This file is responsible to get config for an aquarium
-// Expexts an 'id' in post for the aquariums id
+// Expexts an 'id' in post for the aquariums id also a phone flag if the request is coming from phone
 require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
 if (!empty($_POST["id"])) {
     $aqId = $_POST["id"];
     $config = $DAO->selectAQConfigForAquarium($aqId);
-    if (empty($config)) {
+    if ($config == null) {
         $result["error"] = "No config existing for given aquarium! This should never happen...";
     } else {
-        $result = $config->toPhoneJSON();
+        if (!empty($_POST["phone"])) {
+            $result = $config->toPhoneJSON();
+        } else {
+            $result = $config->toEspJSON();
+        }
     }
 } else {
     $result["error"] = "Missing data!";

@@ -7,6 +7,10 @@ export default {
   updateAquariumApiUrl: "https://atc.takacsnet.hu/CONTROLS/updateAquarium.php",
   createAquariumApiUrl: "https://atc.takacsnet.hu/CONTROLS/createAquarium.php",
   deleteAquariumApiUrl: "https://atc.takacsnet.hu/CONTROLS/deleteAquarium.php",
+  updateConfigApiUrl:
+    "https://atc.takacsnet.hu/CONTROLS/updateConfiguration.php",
+  getAquariumConfigApiUrl:
+    "https://atc.takacsnet.hu/CONTROLS/getAquariumConfig.php",
   projetName: "ATC - Aquarium Manager",
   home: "Home",
   aquariumSelctorPlaceholder: "Select your aquarium",
@@ -61,6 +65,7 @@ export default {
   waterChange: "Water changing",
   waterAndSmaples: "Water and sample",
   invalidWaterLevel: "Water level should be a valid percentage!",
+  lastModified: "Last modified: ",
   never: "Never",
   clean5days: "Every 5 days",
   cleanWeekly: "Weekly",
@@ -109,6 +114,8 @@ export default {
   successfulLogin: "Successful login!",
   successfulSignup: "Successfully signed up!",
   unexpectedStatusErrorMessage: "Unexpected error occured! Response status: ",
+  invalidTemp: "Temperature values must be between 0 and 100!",
+  invalidPh: "Ph value must be between 0 and 14!",
   pushNotificationsDeniedAlertMessage:
     "Push notifications are disabled! You won't get notifications about your aquarium's status!",
   noDeviceTokenString: "NO_DEVICE_TOKEN",
@@ -120,4 +127,5 @@ export default {
   oldPassword: "Old password:",
   oldPasswordAgain: "Confirm old password:",
   newPassword: "New password:",
+  successfulUpdate: "Successfully updated!",
 };

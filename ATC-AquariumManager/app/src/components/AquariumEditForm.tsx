@@ -1,7 +1,7 @@
 import React from "react";
 import Aquarium from "../models/Aquarium";
-import { View, Text, TouchableOpacity} from "react-native";
-import { TextInput } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
+import { TextInput, Alert } from "react-native";
 import strings from "../../config/strings";
 import commonStyles from "../utils/commonStyles";
 
@@ -23,8 +23,8 @@ function AquariumEditForm(props: AquariumEditFormProps) {
   const [systemId, setSystemId] = React.useState<number>(props.aquarium.id);
   const [error, setError] = React.useState<string>("");
 
-  const confirmHandler = (del?:boolean) => {
-    if(del){
+  const confirmHandler = (del?: boolean) => {
+    if (del) {
       props.editHandler(props.aquarium, true);
       return;
     }
@@ -132,25 +132,37 @@ function AquariumEditForm(props: AquariumEditFormProps) {
           />
         </View>
       )}
-      {!props.addNewFlag && <TouchableOpacity
-        style={[commonStyles.button, {borderColor: "red"}]}
-        onPress={() => confirmHandler(true)}
-      >
-        <Text>{strings.delete}</Text>
-      </TouchableOpacity>}
+      {!props.addNewFlag && (
+        <TouchableOpacity
+          style={[commonStyles.button, { borderColor: "red" }]}
+          onPress={() => {
+            Alert.alert(strings.confirm, strings.confirmDeleteMessage, [
+              {
+                text: strings.no,
+              },
+              {
+                text: strings.yes,
+                onPress: () => confirmHandler(true),
+              },
+            ]);
+          }}
+        >
+          <Text>{strings.delete}</Text>
+        </TouchableOpacity>
+      )}
       <View style={commonStyles.horizontal}>
-      <TouchableOpacity
-        style={commonStyles.button}
-        onPress={() => confirmHandler()}
-      >
-        <Text>{strings.confirm}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={commonStyles.button}
-        onPress={() => props.setEditing(false)}
-      >
-        <Text>{strings.cancel}</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={commonStyles.button}
+          onPress={() => confirmHandler()}
+        >
+          <Text>{strings.confirm}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={commonStyles.button}
+          onPress={() => props.setEditing(false)}
+        >
+          <Text>{strings.cancel}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -156,7 +156,7 @@ class AQDAO implements AQDAOI
         $stm = $this->connection->prepare(AQDAO::SELECT_AQUARIUM);
         $stm->bind_param("i", $id);
         $stm->execute();
-        $stm->bind_result($id, $name, $length, $height, $width, $fishCount);
+        $stm->bind_result($id, $name, $length, $height, $width, $fishCount, $inactive);
         $stm->fetch();
         $stm->close();
         if (empty($id) || empty($name) || empty($length) || empty($height) || empty($width) || empty($fishCount)) {
@@ -216,11 +216,8 @@ class AQDAO implements AQDAOI
         $stm->bind_result($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $wAlert, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDate);
         $stm->fetch();
         $stm->close();
-        if (empty($id) || empty($minT) || empty($maxT) || empty($minP) || empty($maxPh) || empty($liOn) || empty($liOff) || empty($filOn) || empty($filOff) || empty($airOn) || empty($airOff) || empty($wAlert) || empty($feedT) || empty($foodPort) || empty($filC) || empty($waterC) || empty($samplePeriod) || empty($lModDate)) {
-            return null;
-        } else {
-            return new AquariumConfig($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $wAlert, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDate);
-        }
+        $lModDateAsDateTime = new DateTime($lModDate);
+        return new AquariumConfig($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $wAlert, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDateAsDateTime);
     }
 
     function createAQConfig(AquariumConfig $aqConfig): bool
@@ -380,13 +377,13 @@ class AQDAO implements AQDAOI
     }
     function selectUserAquariums(User $user): array
     {
-        if (!$user instanceof User || empty($user))
+        if (!$user instanceof User || !isset($user))
             return [];
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_AQUARIUMS);
         $mail = $user->getEmail();
         $stm->bind_param("s", $mail);
         $stm->execute();
-        $stm->bind_result($id, $name, $length, $height, $width, $fishCount);
+        $stm->bind_result($id, $name, $length, $height, $width, $fishCount, $inactive);
 
         $resultAquariums = [];
         while ($stm->fetch()) {

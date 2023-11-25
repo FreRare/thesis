@@ -1,9 +1,11 @@
 import Aquarium from "../models/Aquarium";
 import strings from "../../config/strings";
+import AquariumConfiguration from "../models/AquariumConfiguration";
 
 export default class AquariumService {
   /**
    * Gets all the aquariums from the db for the user with the provided email
+   * Also gets the configs for it
    * @param userEmail The active user's email address
    */
   static async getAquariums(
@@ -17,7 +19,7 @@ export default class AquariumService {
       email: userEmail,
     });
 
-    return fetch(strings.getAquariumsApiUrl, {
+    const aquariums = await fetch(strings.getAquariumsApiUrl, {
       method: "POST",
       headers: headers,
       body: body,
@@ -57,6 +59,70 @@ export default class AquariumService {
       .catch((e) => {
         alert("Error: " + e);
       });
+
+    if (typeof aquariums === "string") {
+      return aquariums;
+    }
+
+    // Get the config for each aquarium
+    for (const aq of aquariums) {
+      const configBody = JSON.stringify({
+        id: aq.id,
+        phone: true,
+      });
+      const configForAq = await fetch(strings.getAquariumConfigApiUrl, {
+        method: "POST",
+        headers: headers,
+        body: configBody,
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              strings.unexpectedStatusErrorMessage + response.status
+            );
+          } else {
+            return response.json();
+          }
+        })
+        .then((responseData) => {
+          const data = responseData["data"];
+          if (data["errror"]) {
+            return data["error"];
+          }
+          const configData = data["config"]; // get data and make object
+          return new AquariumConfiguration(
+            aq.id,
+            configData["minTemp"],
+            configData["maxTemp"],
+            configData["minPh"],
+            configData["maxPh"],
+            configData["ol1On"],
+            configData["ol1Off"],
+            configData["ol2On"],
+            configData["ol2Off"],
+            configData["ol3On"],
+            configData["ol3Off"],
+            configData["waterLvlAlert"],
+            configData["feedingTime"],
+            configData["foodPortions"],
+            configData["filterClean"],
+            configData["waterChange"],
+            configData["samplePeriod"],
+            new Date(configData["lastModifiedDate"]["date"] as string)
+          );
+        })
+        .catch((e) => {
+          alert("Error: " + e);
+        });
+      // If we had error
+      if (typeof configForAq === "string") {
+        return configForAq;
+      }
+      // Otherwise assign config for the aquarium
+      aq.config = configForAq;
+    }
+    console.log(aquariums);
+    return aquariums;
   }
   /**
    * Tries to update the provided aquarium in the database
@@ -161,7 +227,7 @@ export default class AquariumService {
    * @param aq The aquarium to remove
    * @returns "" on success error as string otherwise
    */
-  static async deleteAquarium(aq: Aquarium): Promise<string>{
+  static async deleteAquarium(aq: Aquarium): Promise<string> {
     const headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -172,25 +238,82 @@ export default class AquariumService {
     return fetch(strings.deleteAquariumApiUrl, {
       method: "POST",
       headers: headers,
-      body: body
-    }).then((response)=>{
-      if (!response.ok) {
-        throw new Error(
-          strings.unexpectedStatusErrorMessage + response.status
-        );
-      } else {
-        return response.json();
-      }
-    }).then((responseData)=>{
-      const data = responseData["data"];
-      if(data["error"]){
-        return data["error"];
-      }
-      if(data["result"]){
-        return "";
-      }
-    }).catch(e=>{
-      alert("Error: " + e);
+      body: body,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            strings.unexpectedStatusErrorMessage + response.status
+          );
+        } else {
+          return response.json();
+        }
+      })
+      .then((responseData) => {
+        const data = responseData["data"];
+        if (data["error"]) {
+          return data["error"];
+        }
+        if (data["result"]) {
+          return "";
+        }
+      })
+      .catch((e) => {
+        alert("Error: " + e);
+      });
+  }
+
+  static async updateConfiguration(aq: Aquarium): Promise<string> {
+    const headers = {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    };
+    const body = JSON.stringify({
+      id: aq.id,
+      minTemp: aq.config.minTemp,
+      maxTemp: aq.config.maxTemp,
+      minPh: aq.config.minPh,
+      maxPh: aq.config.maxPh,
+      OL1On: aq.config.OnOutlet1,
+      OL1Off: aq.config.OffOutlet1,
+      OL2On: aq.config.OnOutlet2,
+      OL2Off: aq.config.OffOutlet2,
+      OL3On: aq.config.OnOutlet3,
+      OL3Off: aq.config.OffOutlet3,
+      waterLvlAlert: aq.config.waterLvlAlert,
+      feedingTime: aq.config.feedingTime,
+      foodPortions: aq.config.foodPortions,
+      filterClean: aq.config.filterClean,
+      waterChange: aq.config.waterChange,
+      samplePeriod: aq.config.samplePeriod,
     });
+
+    return fetch(strings.updateConfigApiUrl, {
+      method: "POST",
+      headers: headers,
+      body: body,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            strings.unexpectedStatusErrorMessage + response.status
+          );
+        } else {
+          return response.json();
+        }
+      })
+      .then((responseData) => {
+        const data = responseData["data"];
+        if (data["error"]) {
+          return data["error"];
+        }
+        if (data["result"]) {
+          return "";
+        }
+        return "Something went really wrong!";
+      })
+      .catch((e) => {
+        alert("Error: " + e);
+      });
   }
 }

@@ -55,11 +55,11 @@ function AquariumsScreen(props: AquariumsScreenProps) {
     setLoading(true);
     setEdited(null);
     setEditing(false);
-    if(del){
+    if (del) {
       const deleteResult = await AquariumService.deleteAquarium(aq);
-      if(deleteResult.length > 0){
+      if (deleteResult.length > 0) {
         setError(deleteResult);
-      }else{
+      } else {
         alert("Successfully deleted " + aq.name + "!");
       }
       setLoading(false);
@@ -81,7 +81,7 @@ function AquariumsScreen(props: AquariumsScreenProps) {
       if (result.length > 0) {
         setError(result);
       } else {
-        alert("Successfully updated " + aq.name + "!");
+        alert(strings.successfulUpdate);
       }
     }
     aquariums[index] = aq;
