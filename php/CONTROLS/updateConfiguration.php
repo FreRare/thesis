@@ -5,7 +5,9 @@ Expexts the config's data as json in $POST
 */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
-foreach ($_POST as $key => $val) {
+$keys = ["id", "minTemp", "maxTemp", "minPh", "maxPh", "OL1On", "OL1Off", "OL2On", "OL2Off", "OL3On", "OL3Off", "waterLvlAlert", "feedingTime", "foodPortions", "filterChange", "waterChange", "samplePeriod"];
+
+foreach ($keys as $key) {
     if (!isset($_POST[$key])) {
         $result["error"] = "Missing data!";
     }
@@ -38,6 +40,7 @@ if (!isset($result["error"])) {
         $result["result"] = "Successfully updated!";
     }
 }
+
 $responseJson = json_encode(["data" => $result]);
 echo ($responseJson);
 die();

@@ -85,10 +85,11 @@ class AQDAO implements AQDAOI
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_BY_EMAIL);
         $stm->bind_param("s", $email);
         $stm->execute();
-        $stm->bind_result($mail, $pass, $fname, $lname, $token, $authToken, $inactive);
+        $stm->bind_result($mail, $fname, $lname, $pass, $token, $authToken, $inactive);
         $stm->fetch();
         $stm->close();
-        if (empty($mail) || empty($pass) || empty($fname) || empty($lname) || empty($token) || empty($authToken) || empty($inactive)) {
+        if (!isset($mail) || !isset($pass) || !isset($fname) || !isset($lname) || !isset($token) || !isset($authToken)) {
+            error_log("Missing data after query!");
             return null;
         } else {
             return new User($mail, $pass, $fname, $lname, $token, $authToken, $inactive);
@@ -122,7 +123,7 @@ class AQDAO implements AQDAOI
         $lName = $user->getLastName();
         $token = $user->getDeviceToken();
         $authToken = $user->getAuthToken();
-        $statement->bind_param("ssssss", $email, $pass, $fName, $lName, $token, $authToken);
+        $statement->bind_param("ssssss", $email, $fName, $lName, $pass, $token, $authToken);
 
         $success = $statement->execute();
         error_log($this->connection->error);

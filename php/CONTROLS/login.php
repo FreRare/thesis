@@ -17,7 +17,8 @@ if (!empty($_POST["email"]) && !empty($_POST["password"])) {
     // Try to find user with given email
     $tryUser = $DAO->selectUserByEmail($email); // Trying to get user by email provided
     // If we didn't find user or password is incorrect
-    if (empty($tryUser) || $tryUser->getPassword() !== $hashedPass) {
+    if (!isset($tryUser) || $tryUser->getPassword() !== $hashedPass) {
+        error_log("No user or invalid password!" . $tryUser->toJSON());
         $response["error"] = "Invalid email address or password!";
     } else {
         // If found user and password matches set response to the user

@@ -4,6 +4,8 @@ import {
   StyleSheet,
   SafeAreaView,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import MenuBar from "./MenuBar";
 import colors from "../../config/colors";
@@ -17,12 +19,17 @@ interface LayoutComponentProps {
 function Layout(props: LayoutComponentProps) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <KeyboardAvoidingView style={styles.layout}>
-        {props.shouldDisplayMenuBar && (
-          <MenuBar navigation={props.navigation} />
-        )}
-        {props.children}
-      </KeyboardAvoidingView>
+      <TouchableWithoutFeedback
+        onPress={() => Keyboard.dismiss()}
+        accessible={false}
+      >
+        <KeyboardAvoidingView style={styles.layout}>
+          {props.shouldDisplayMenuBar && (
+            <MenuBar navigation={props.navigation} />
+          )}
+          {props.children}
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }
