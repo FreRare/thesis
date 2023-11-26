@@ -16,6 +16,10 @@ import commonStyles from "../utils/commonStyles";
 import { SelectList } from "react-native-dropdown-select-list";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
+/**
+ *  @type {AquariumConfigEditFormProps}
+ *  These are the properties of the AquariumConfigEditForm component
+ */
 type AquariumConfigEditFormProps = {
   aquariumName: string;
   editableConfig: AquariumConfiguration;
@@ -26,22 +30,27 @@ type AquariumConfigEditFormProps = {
 
 /**
  * This component is a dynamic form for the configuration edit.
- * Can be used for dual numeric (float), dual TimePicker (hour + minute), dual dropdown list or in unique cases can be customized
+ * Can be used for dual numeric (float), dual TimePicker (hour + minute), dual dropdown list or in unique cases can be customized.
  * It decides which data we want to modify and what kind of inputs we need for it by the label provided.
- * On submit rewrites the provided editableConfig's modified fields, and calls the submitCallback, sending the config back to the screen.
- * @param props The propeties needed see @ AquariumConfigEditFormProps
- * @returns The edit form
+ * On submit rewrites the provided config property's fields, and calls the callback property.
+ * @param props The propeties needed
+ * @returns The form dynamically generated with buttons to cancel and submit
  */
 function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
-  // We have 1 or two data, data2 can be null if we have only 1 (ex. waterLvlAlert)
-  // Later still need assign data to the generated input
+  /**
+   * The string that contains all the unique form cases
+   * 2 unique ones are feeding and waterLvl+Samples so far
+   * ! Important, so the form body can decide which cases not to use the default inputs
+   */
+  const uniqueFormCases = strings.feeding + strings.waterAndSmaples;
+
   const [data1, setData1] = React.useState<number | string>(-1);
   const [data2, setData2] = React.useState<number | string>(-1);
   const [labelPostFix, setLabelPostFix] = React.useState<string>(""); // Additional postfix ex. for temperature
-  const [additionalInfo, setAdditionalInfo] = React.useState<string>("");
+  const [additionalInfo, setAdditionalInfo] = React.useState<string>(""); // Additional information to display on form under label
   const [errorMsg, setErrorMsg] = React.useState<string>("");
-  const [timePickerFlag, setTimePickerFlag] = React.useState<boolean>(false); // True if the input is timepicler (only for outlet configs)
-  const [dropdownFlag, setDropdownFlag] = React.useState<boolean>(false); // True if dropdown input, for cleaning and samplePeriods
+  const [timePickerFlag, setTimePickerFlag] = React.useState<boolean>(false); // True if both the input is timepicker (only for outlet configs)
+  const [dropdownFlag, setDropdownFlag] = React.useState<boolean>(false); // True if both dropdown input, for cleaning and samplePeriods
   const [showDateTimePicker1, setShowDateTimePicker1] =
     React.useState<boolean>(false);
   const [showDateTimePicker2, setShowDateTimePicker2] =
@@ -185,13 +194,6 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
     setShowDateTimePicker1(false);
     setShowDateTimePicker2(false);
   };
-
-  /**
-   * The string that contains all the unique form cases
-   * 2 unique ones are feeding and waterLvl+Samples so far
-   * ! Important, so the form body can decide which cases not to use the default inputs
-   */
-  const uniqueFormCases = strings.feeding + strings.waterAndSmaples;
 
   /**
    *  We have 5 cases so far
@@ -362,6 +364,17 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
     </>
   );
 
+  /**
+   * Validates the form due to what is the label
+   * Calls submit handler if all valid
+   * @callback handleSubmit
+   * Checks for:
+   * - valid water level percent (0-100)
+   * - valid food portions (alerts a confirmation over 10)
+   * - valid temp (0-100)
+   * - valid Ph (0-14)
+   * - low temp and ph is lower than high value
+   */
   const formValidator = () => {
     // If we had datas as string (float values) validate it, it should only happen on textinputs
     const parsedData1 = Number.parseFloat(data1 as string);
@@ -419,16 +432,19 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         return;
       }
     }
-
     let d1;
     let d2;
-    // Temp and ph should be rounded up to 2 decimal
+    // Temp and ph should be rounded up to 2 decimal and d1 should be lower than d2
     if (
       props.label.includes(strings.temperature) ||
       props.label.includes(strings.ph)
     ) {
       d1 = Math.round((parsedData1 + Number.EPSILON) * 100) / 100;
       d2 = Math.round((parsedData2 + Number.EPSILON) * 100) / 100;
+      if (d1 > d2) {
+        setErrorMsg(strings.invalidValueLogic);
+        return;
+      }
     } else {
       d1 = parsedData1;
       d2 = parsedData2;
@@ -438,7 +454,6 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
 
   /**
    * Handles the submit of the form
-   * Can add extra checks if needed
    */
   const handleSubmit = (d1: number, d2: number) => {
     // After we have usable data need to decide which member to alter

@@ -205,9 +205,10 @@ export default class AquariumConfiguration {
 
   /**
    * Convert the given number from minutes to 24h format clock
-   * @param dat the time in minutes (between 0 and 1439)
+   * @param {number} dat the time in minutes (between 0 and 1439)
+   * @returns {string} An h:min format string
    */
-  static convertMinutesToTimeString = (dat: number) => {
+  static convertMinutesToTimeString = (dat: number): string => {
     if (dat >= 1440) {
       dat = 0;
     }

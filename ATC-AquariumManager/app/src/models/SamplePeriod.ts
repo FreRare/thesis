@@ -2,6 +2,10 @@ import strings from "../../config/strings";
 
 const ENUM_LENGTH = 9;
 
+/**
+ * @enum {number}
+ * The values of different sample periods (ex. 15 minutes, 3 hours)
+ */
 enum SamplePeriod {
   SAMPLE_15_MIN = 0,
   SAMPLE_30_MIN = 1,
@@ -14,7 +18,13 @@ enum SamplePeriod {
   SAMPLE_DAILY = 8,
 }
 
-const getStringValue = (val: number) => {
+/**
+ * Returns the value provided as a string if the enum
+ * @see {SamplePeriod}
+ * @param val the number in the enum
+ * @returns {string} The value as string
+ */
+const getStringValue = (val: number): string => {
   switch (val) {
     case SamplePeriod.SAMPLE_15_MIN:
       return strings.sample15Min;

@@ -114,8 +114,9 @@ export default {
   successfulLogin: "Successful login!",
   successfulSignup: "Successfully signed up!",
   unexpectedStatusErrorMessage: "Unexpected error occured! Response status: ",
-  invalidTemp: "Temperature values must be between 0 and 100!",
+  invalidTemp: "Temperature value must be between 0 and 100!",
   invalidPh: "Ph value must be between 0 and 14!",
+  invalidValueLogic: "Low value can not be higher than high value!",
   pushNotificationsDeniedAlertMessage:
     "Push notifications are disabled! You won't get notifications about your aquarium's status!",
   noDeviceTokenString: "NO_DEVICE_TOKEN",

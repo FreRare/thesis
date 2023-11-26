@@ -10,12 +10,18 @@ import {
 import MenuBar from "./MenuBar";
 import colors from "../../config/colors";
 
-interface LayoutComponentProps {
+/**@type {LayoutComponentProps} - The properties of the Layout component*/
+type LayoutComponentProps = {
   children: ReactNode;
   navigation: any;
   shouldDisplayMenuBar: boolean;
-}
+};
 
+/**
+ * This component gives a basic and
+ * @param {LayoutComponentProps} props - The properties to operate this object
+ * @returns The children properties wrapped inside the layout
+ */
 function Layout(props: LayoutComponentProps) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
