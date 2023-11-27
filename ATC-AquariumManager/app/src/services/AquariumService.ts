@@ -9,9 +9,7 @@ export default class AquariumService {
    * Also gets the configs for it
    * @param userEmail The active user's email address
    */
-  static async getAquariums(
-    userEmail: string
-  ): Promise<Array<Aquarium> | string> {
+  static async getAquariums(userEmail: string): Promise<Array<Aquarium>> {
     const headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -29,7 +27,8 @@ export default class AquariumService {
       .then((responseData) => {
         const data = responseData["data"];
         if (data["error"]) {
-          return data["error"];
+          alert(data["error"]);
+          return [];
         } else {
           const aquariumsArrayData = data;
           const aquariumsArray = [];
@@ -52,7 +51,7 @@ export default class AquariumService {
       .catch(CommonServiceCallback.catchCallback);
 
     if (typeof aquariums === "string") {
-      return aquariums;
+      return [];
     }
 
     // Get the config for each aquarium
@@ -95,9 +94,8 @@ export default class AquariumService {
           );
         })
         .catch(CommonServiceCallback.catchCallback);
-      // If we had error
       if (typeof configForAq === "string") {
-        return configForAq;
+        aq.config = new AquariumConfiguration();
       }
       // Otherwise assign config for the aquarium
       aq.config = configForAq;

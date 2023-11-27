@@ -72,13 +72,18 @@ function LoginForm(props: LoginScreenProps): React.JSX.Element {
       setLoading(false);
       return;
     }
-    const loginData = await AuthService.tryLogin(email, pass);
-    if (loginData instanceof User) {
-      props.setUser(loginData, isRememberMe); // Save user
-    } else {
-      setError(loginData);
-    }
-    setLoading(false);
+    AuthService.tryLogin(email, pass)
+      .then((loginData) => {
+        if (loginData instanceof User) {
+          props.setUser(loginData, isRememberMe); // Save user
+        } else {
+          setError(loginData);
+        }
+        setLoading(false);
+      })
+      .catch((e) => {
+        alert("Error while logging in: " + e);
+      });
   };
 
   return (

@@ -57,7 +57,7 @@ function Navigation(propsog: NavigationProps) {
             }}
           >
             {(props: any) => (
-              <WelcomeScreen {...props} setUser={props.setUser} />
+              <WelcomeScreen {...props} setUser={propsog.setUser} />
             )}
           </Tab.Screen>
         </>

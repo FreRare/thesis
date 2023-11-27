@@ -5,7 +5,7 @@
 require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
 if (empty($_POST["token"])) {
-    $result["error"] = "Missing data!";
+    $result["error"] = "LOGIN WITH TOKEN: Missing data!";
 }
 
 if (!empty($_POST["token"])) {

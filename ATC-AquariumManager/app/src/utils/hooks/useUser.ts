@@ -3,6 +3,8 @@ import User from "../../models/User";
 import * as SecureStorage from "expo-secure-store";
 import AuthService from "../../services/AuthService";
 import { PermissionsAndroid, Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AquariumService from "../../services/AquariumService";
 
 /**
  * Function to request storage permissions
@@ -72,26 +74,44 @@ const requestStoragePermissionsForAndroid = async (): Promise<boolean> => {
  */
 const useUser = (): [
   user: User | undefined,
-  (user: User | undefined | null, rememberMe?: boolean) => void,
-  () => Promise<void>
+  (user: User | undefined | null, rememberMe?: boolean) => void
 ] => {
   // The original useState
-  const [user, _setUser] = React.useState<User | undefined>();
+  const [_user, _setUser] = React.useState<User | undefined>();
+  const [loaded, setLoaded] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    if (!loaded) {
+      getUser();
+      setLoaded(true);
+    }
+  });
 
   // usable setUser
   const setUser = async (
     user: User | undefined | null,
     rememberMe: boolean = false
   ): Promise<void> => {
+    // Login detection (On login we want to trigger a load of data)
+    if ((_user === undefined || _user === null) && user instanceof User) {
+      // If login with token is successful try load aquariums
+      const aquariumsResult = await AquariumService.getAquariums(user.email);
+      if (typeof aquariumsResult === "string") {
+        alert("Error while getting aquariums");
+      } else {
+        user.aquariums = aquariumsResult;
+      }
+    }
+
     const storagePermissionAllowed =
       await requestStoragePermissionsForAndroid();
-
     if (user === null) {
       // If we have null means we want to delete token
       if (storagePermissionAllowed) {
         await SecureStorage.deleteItemAsync("user_token");
       }
       _setUser(undefined);
+      return;
     }
 
     try {
@@ -115,11 +135,14 @@ const useUser = (): [
 
   // just for init
   const getUser = async () => {
+    if (_user) {
+      return;
+    }
     const storagePermissionAllowed =
       await requestStoragePermissionsForAndroid();
     if (storagePermissionAllowed) {
       try {
-        // If we have no session yet try token login
+        // Try token login
         const userToken = await SecureStorage.getItemAsync("user_token");
         if (userToken !== null) {
           // if we have saved token login
@@ -127,13 +150,20 @@ const useUser = (): [
           if (typeof authResult === "string") {
             // If we have an error
             alert(
-              ("Error while logging in with saved token [" +
-                userToken +
-                "]: " +
+              ("Error while logging in with saved token: " +
                 authResult) as string
             );
             _setUser(undefined);
           } else {
+            // If login with token is successful try load aquariums
+            const aquariumsResult = await AquariumService.getAquariums(
+              authResult.email
+            );
+            if (typeof aquariumsResult === "string") {
+              alert("Error while getting aquariums");
+            } else {
+              authResult.aquariums = aquariumsResult;
+            }
             // Otherwise set the user
             _setUser(authResult as User);
           }
@@ -148,7 +178,7 @@ const useUser = (): [
       _setUser(undefined);
     }
   };
-  return [user, setUser, getUser];
+  return [_user, setUser];
 };
 
 export default useUser;

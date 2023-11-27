@@ -19,7 +19,7 @@ class AQDAO implements AQDAOI
     private const CREATE_USER = "INSERT INTO users (email, firstName, lastName, password, deviceToken, authToken, inactive) VALUES (?, ?, ?, ?, ?, ?, false)";
     private const DELETE_USER = "UPDATE users SET inactive = true WHERE email = ?";
     private const SELECT_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ? AND inactive IS NOT true";
-    private const SELECT_USER_BY_TOKEN = "SELECT * FROM users WHERE authToken = ? AND inactive IS NOT true";
+    private const SELECT_USER_BY_TOKEN = "SELECT email, firstName, lastName, deviceToken, authToken FROM users WHERE authToken = ? AND inactive IS NOT true";
     private const UPDATE_USER = "UPDATE users SET email = ?, password = ?, firstName = ?, lastName = ?, deviceToken = ? WHERE email = ?";
     private const SELECT_AQUARIUM = "SELECT * FROM aquariums WHERE id = ? AND inactive IS NOT true";
     private const CREATE_AQUARIUM = "INSERT INTO aquariums (name, length, height, depth, fishCount, inactive) VALUES (?, ?, ?, ?, ?, false)";
@@ -101,13 +101,13 @@ class AQDAO implements AQDAOI
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_BY_TOKEN);
         $stm->bind_param("s", $token);
         $stm->execute();
-        $stm->bind_result($user, $pass, $fname, $lname, $token, $authToken, $inactive);
+        $stm->bind_result($user, $fname, $lname, $token, $authToken);
         $stm->fetch();
         $stm->close();
-        if (!isset($user) || !isset($pass) || !isset($fname) || !isset($lname) || !isset($token) || !isset($authToken) || !isset($inactive)) {
+        if (!isset($user) || !isset($fname) || !isset($lname) || !isset($token) || !isset($authToken)) {
             return null;
         } else {
-            return new User($user, $pass, $fname, $lname, $token, $authToken, $inactive);
+            return new User($user, "", $fname, $lname, $token, $authToken);
         }
     }
 

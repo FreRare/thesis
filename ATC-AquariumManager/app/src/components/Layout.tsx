@@ -26,7 +26,7 @@ function Layout(props: LayoutComponentProps) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TouchableWithoutFeedback
-        onPress={() => Keyboard.dismiss()}
+        // onPress={() => Keyboard.dismiss()}
         accessible={false}
       >
         <KeyboardAvoidingView style={styles.layout}>

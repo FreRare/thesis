@@ -6,8 +6,9 @@ import {
   View,
   Text,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import User from "../models/User";
 import Layout from "../components/Layout";
 import AquariumCard from "../components/AquariumCard";
@@ -22,6 +23,7 @@ import LoadingAnimation from "../components/LoadingAnimation";
 type AquariumsScreenProps = {
   navigation: any;
   user: User;
+  setUser: (u: User | undefined | null) => void;
 };
 
 /**
@@ -31,14 +33,24 @@ type AquariumsScreenProps = {
  * @returns The screen with a dropdown and the list of AquariumCards
  */
 function AquariumsScreen(props: AquariumsScreenProps) {
-  console.log("Aquariums at screen: ", props.user.aquariums);
   const [editing, setEditing] = React.useState<boolean>(false); // Edit flag
   const [edited, setEdited] = React.useState<Aquarium | null>(null); // The edited aquarium
-  const [aquariums, setAquariums] = React.useState<Array<Aquarium>>(
-    props.user.aquariums
-  ); // To store aquariums
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
+
+  /**
+   * Callback on refresh
+   */
+  const refreshCallback = React.useCallback(async () => {
+    setLoading(true);
+    const loadedAquariums = await AquariumService.getAquariums(
+      props.user.email
+    );
+    const newUser = props.user;
+    newUser.aquariums = loadedAquariums;
+    props.setUser(newUser);
+    setLoading(false);
+  }, []);
 
   /**
    * Edit callbacl for AquariumCard, handles create-update-delete
@@ -101,7 +113,7 @@ function AquariumsScreen(props: AquariumsScreenProps) {
   };
 
   // The cards to display
-  const aqauariumCards = aquariums.map((item, index) => {
+  const aqauariumCards = props.user.aquariums.map((item, index) => {
     return (
       <AquariumCard
         key={index}
@@ -122,6 +134,9 @@ function AquariumsScreen(props: AquariumsScreenProps) {
           styles.container,
           { opacity: editing ? 0.1 : 1 },
         ]}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={refreshCallback} />
+        }
       >
         <View style={styles.searchContainer}>
           <Icon name="search1" size={25} />

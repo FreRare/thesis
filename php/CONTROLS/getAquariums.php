@@ -14,7 +14,7 @@ if (!empty($_POST["email"])) {
         }
     }
 } else {
-    $result["error"] = "Missing data!";
+    $result["error"] = "GET AQUARIUMS: Missing data!";
 }
 
 $jsonResponse = json_encode(["data" => $result]);

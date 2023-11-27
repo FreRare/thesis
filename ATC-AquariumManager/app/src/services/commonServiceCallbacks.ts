@@ -12,7 +12,7 @@ class CommonServiceCallback {
     } else {
       alert("Error: " + e);
     }
-    return "Error";
+    return "Error: " + e;
   };
 
   /**
