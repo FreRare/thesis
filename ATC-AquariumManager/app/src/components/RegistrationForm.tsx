@@ -58,6 +58,11 @@ function RegistrationForm(props: RegistrationFormProps) {
   /**
    * Validates all the fields in the form.
    * Sets the error message if an error occured.
+   * Cheks for:
+   * - input lengths
+   * - valid email
+   * - matching passwords
+   * - valid ID (numeric)
    * @returns False if there's a problem, parsed aquarium ID otherwise (still should be checked if present in DB on server side)
    */
   const validateSignupInputs = (): false | number => {
@@ -101,7 +106,13 @@ function RegistrationForm(props: RegistrationFormProps) {
     return aqIdNumber;
   };
 
-  const handleSignup = async () => {
+  /**
+   * Handles submit of form
+   * Registeres the app for push notifications and saves the token too
+   * @see {AuthService}
+   * @returns - void
+   */
+  const handleSignup = async (): Promise<void> => {
     setLoading(true);
     const aquariumID = validateSignupInputs();
     if (aquariumID === false) {

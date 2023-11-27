@@ -104,7 +104,7 @@ class AQDAO implements AQDAOI
         $stm->bind_result($user, $pass, $fname, $lname, $token, $authToken, $inactive);
         $stm->fetch();
         $stm->close();
-        if (empty($user) || empty($pass) || empty($fname) || empty($lname) || empty($token) || empty($authToken) || empty($inactive)) {
+        if (!isset($user) || !isset($pass) || !isset($fname) || !isset($lname) || !isset($token) || !isset($authToken) || !isset($inactive)) {
             return null;
         } else {
             return new User($user, $pass, $fname, $lname, $token, $authToken, $inactive);

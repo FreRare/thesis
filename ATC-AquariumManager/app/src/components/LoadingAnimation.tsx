@@ -2,7 +2,12 @@ import React from "react";
 import { ActivityIndicator, View, StyleSheet } from "react-native";
 import colors from "../../config/colors";
 
-function LoadingAnimation() {
+/**
+ * Displays a loading animation in the middle of the view over everything
+ * @see {ActivityIndicator} - uses it for animation
+ * @returns - the animation
+ */
+function LoadingAnimation(): React.JSX.Element {
   return (
     <View style={styles.container}>
       <ActivityIndicator size={120} color={colors.loadinAnimationColor} />

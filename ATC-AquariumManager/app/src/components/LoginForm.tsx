@@ -22,13 +22,25 @@ interface LoginScreenProps {
   setUser: (u: User | undefined | null, rememberMe?: boolean) => void;
 }
 
-function LoginForm(props: LoginScreenProps) {
+/**
+ * Creates a login form, validates fields and handles login attempts
+ * @param props - the component properties
+ * @returns - the form
+ */
+function LoginForm(props: LoginScreenProps): React.JSX.Element {
   const [email, setEmail] = React.useState("");
   const [pass, setPass] = React.useState("");
   const [isRememberMe, setIsRememberMe] = React.useState<boolean>(true);
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState<boolean>(false);
 
+  /**
+   * Validates the fields of the form
+   * Checks:
+   * - Valid email
+   * - Input lengths
+   * @returns
+   */
   const validateLoginFields = () => {
     if (email.length <= 0) {
       setError(strings.missingEmailError);
@@ -49,7 +61,12 @@ function LoginForm(props: LoginScreenProps) {
     return true;
   };
 
-  const handleLogin = async () => {
+  /**
+   * Handles the submission of the form
+   * @see {AuthService}
+   * @returns - void
+   */
+  const handleLogin = async (): Promise<void> => {
     setLoading(true);
     if (!validateLoginFields()) {
       setLoading(false);

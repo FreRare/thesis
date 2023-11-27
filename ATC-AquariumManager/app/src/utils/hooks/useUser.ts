@@ -2,13 +2,16 @@ import React, { useEffect } from "react";
 import User from "../../models/User";
 import * as SecureStorage from "expo-secure-store";
 import AuthService from "../../services/AuthService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PermissionsAndroid, Platform } from "react-native";
 
 /**
  * Function to request storage permissions
  */
 const requestStoragePermissionsForAndroid = async (): Promise<boolean> => {
+  if (Platform.OS !== "android") {
+    // Permissions are only for android
+    return false;
+  }
   // Check if we have permissions
   if (
     (await PermissionsAndroid.check(
@@ -69,19 +72,11 @@ const requestStoragePermissionsForAndroid = async (): Promise<boolean> => {
  */
 const useUser = (): [
   user: User | undefined,
-  (user: User | undefined | null, rememberMe?: boolean) => void
+  (user: User | undefined | null, rememberMe?: boolean) => void,
+  () => Promise<void>
 ] => {
   // The original useState
   const [user, _setUser] = React.useState<User | undefined>();
-  const [isUserLoaded, setIsUserLoaded] = React.useState<boolean>(false);
-
-  useEffect(() => {
-    if (!isUserLoaded) {
-      // Call function for initialization
-      getUser(); // Only call once
-      setIsUserLoaded(true);
-    }
-  });
 
   // usable setUser
   const setUser = async (
@@ -89,15 +84,12 @@ const useUser = (): [
     rememberMe: boolean = false
   ): Promise<void> => {
     const storagePermissionAllowed =
-      Platform.OS === "web"
-        ? false
-        : await requestStoragePermissionsForAndroid();
+      await requestStoragePermissionsForAndroid();
 
     if (user === null) {
       // If we have null means we want to delete token
       if (storagePermissionAllowed) {
         await SecureStorage.deleteItemAsync("user_token");
-        await AsyncStorage.removeItem("user_session");
       }
       _setUser(undefined);
     }
@@ -110,18 +102,12 @@ const useUser = (): [
             // Store user token
             await SecureStorage.setItemAsync("user_token", user.authToken);
           }
-          // store session data
-          await AsyncStorage.setItem("user_session", JSON.stringify(user));
         }
         // Set the valid user
         _setUser(user);
         return;
       }
-      // If we have undefined user closed the app -> remove session
       _setUser(undefined);
-      if (storagePermissionAllowed) {
-        AsyncStorage.removeItem("user_session");
-      }
     } catch (e) {
       alert("Error while saving user data: " + e);
     }
@@ -133,43 +119,27 @@ const useUser = (): [
       await requestStoragePermissionsForAndroid();
     if (storagePermissionAllowed) {
       try {
-        const sessionData = await AsyncStorage.getItem("user_session");
-        // See if we already have a session
-        if (sessionData !== null) {
-          // If we have a session
-          const userData = JSON.parse(sessionData as string);
-          // Create user from data
-          const user = new User(
-            userData._email,
-            "",
-            userData._firstName,
-            userData._lastName,
-            userData._aquariums
-          );
-          _setUser(user);
-        } else {
-          // If we have no session yet try token login
-          const userToken = await SecureStorage.getItemAsync("user_token");
-          if (userToken !== null) {
-            // if we have saved token login
-            const authResult = await AuthService.tryLoginWithToken(userToken);
-            if (typeof authResult === "string") {
-              // If we have an error
-              alert(
-                ("Error while logging in with saved token: " +
-                  authResult) as string
-              );
-              _setUser(undefined);
-            } else {
-              // Otherwise set the user
-              _setUser(authResult as User);
-              // Store user for session
-              AsyncStorage.setItem("user_session", JSON.stringify(authResult));
-            }
-          } else {
-            // If we have no token -> user wasn't remembered -> user is undefined
+        // If we have no session yet try token login
+        const userToken = await SecureStorage.getItemAsync("user_token");
+        if (userToken !== null) {
+          // if we have saved token login
+          const authResult = await AuthService.tryLoginWithToken(userToken);
+          if (typeof authResult === "string") {
+            // If we have an error
+            alert(
+              ("Error while logging in with saved token [" +
+                userToken +
+                "]: " +
+                authResult) as string
+            );
             _setUser(undefined);
+          } else {
+            // Otherwise set the user
+            _setUser(authResult as User);
           }
+        } else {
+          // If we have no token -> user wasn't remembered -> user is undefined
+          _setUser(undefined);
         }
       } catch (e) {
         alert("Error while getting data from storage!" + e);
@@ -178,8 +148,7 @@ const useUser = (): [
       _setUser(undefined);
     }
   };
-
-  return [user, setUser];
+  return [user, setUser, getUser];
 };
 
 export default useUser;

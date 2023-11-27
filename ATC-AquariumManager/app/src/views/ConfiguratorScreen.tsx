@@ -17,8 +17,17 @@ type ConfiguratorScreenProps = {
   user: User;
 };
 
+/**
+ * This is the screen for configurations
+ * Lists all configs and have a dropdown to choose which aquarium you want to see.
+ * @see {ConfiguratorDataDisplayer} - uses it to display the data
+ * @param props The props for the component
+ * @returns The whole screen
+ */
 function ConfiguratorScreen(props: ConfiguratorScreenProps) {
-  const [aquariums, setAquariums] = React.useState<Array<Aquarium>>([]);
+  const [aquariums, setAquariums] = React.useState<Array<Aquarium>>(
+    props.user.aquariums
+  ); // All aquariums the user have
   // The actual aquarium which's data is displayed
   const [selectedAquarium, setSelectedAquarium] = React.useState<Aquarium>(
     aquariums[0]
@@ -30,25 +39,9 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
   const [error, setError] = React.useState<string>("");
 
   /**
-   * Loads the aquariums from database
+   * Makes sure that the data is loaded only once and that the dropdown list data is filled up.
    */
-  const loadAquariums = async () => {
-    setLoading(true);
-    const loadedAquariums = await AquariumService.getAquariums(
-      props.user.email
-    );
-    if (typeof loadedAquariums === "string") {
-      setError(loadedAquariums as string);
-    } else {
-      setAquariums(loadedAquariums);
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
-    if (aquariums.length <= 0 && error.length <= 0) {
-      loadAquariums();
-    }
     if (aquariumSelectList.length <= 0) {
       for (const aq of aquariums) {
         aquariumSelectList.push({ key: aq.id, value: aq.name });
@@ -56,14 +49,22 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
     }
   });
 
-  const aquariumSelectList: Array<{ key: number; value: string }> = [];
+  const aquariumSelectList: Array<{ key: number; value: string }> = []; // Data for the dropdown list
 
+  /**
+   * Sets the selected useState to the aquarium identified by val
+   * @param {number} val the ID of the selected aquarium
+   */
   const handleSelect = (val: number) => {
     const foundAQ = aquariums.find((aq) => aq.id === val) as Aquarium;
     setSelectedAquarium(foundAQ);
   };
 
-  // Handles the confirm of the edit form
+  /**
+   * The callback for AquariumConfigEditForm component
+   * Updates data in DB and handles error messaging
+   * @param config - the edited config in the form
+   */
   const handleEditSubmit = async (config: AquariumConfiguration) => {
     selectedAquarium.config = config;
     const updateResult = await AquariumService.updateConfiguration(
@@ -79,7 +80,11 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
     setEdit(false);
   };
 
-  // Callback from the segments to enable editing
+  /**
+   * The callback for AquariumConfigEditForm component
+   * Flips edit flag to display the edit form
+   * @param label - the label of the config edited so AquariumConfigEditForm can decide which form to display
+   */
   const editCallback = (label: string) => {
     setEditLabel(label);
     setEdit(true);

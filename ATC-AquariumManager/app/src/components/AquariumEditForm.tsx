@@ -12,6 +12,12 @@ type AquariumEditFormProps = {
   editHandler: (aq: Aquarium, del?: boolean) => void;
 };
 
+/**
+ * A form to add new and edit existing aquariums.
+ * props.addNewFlag indicates if we're adding a new aquarium, in that case we need to add the system's ID
+ * @param props - the props for the component
+ * @returns A form capable to handle update delete or create
+ */
 function AquariumEditForm(props: AquariumEditFormProps) {
   const [name, setName] = React.useState<string>(props.aquarium.name);
   const [length, setLength] = React.useState<number>(props.aquarium.length);
@@ -23,22 +29,47 @@ function AquariumEditForm(props: AquariumEditFormProps) {
   const [systemId, setSystemId] = React.useState<number>(props.aquarium.id);
   const [error, setError] = React.useState<string>("");
 
+  /**
+   * Validates the inputs of the form
+   * @returns true on success false otherwise
+   */
+  const formValidator = (): boolean => {
+    // Only on add new
+    if (props.addNewFlag) {
+      // Size validation is handled inside the form
+      if (systemId <= 0) {
+        setError(strings.missingAquariumIdError);
+        return false;
+      }
+    }
+    // All cases
+    if (name.length <= 0) {
+      setError(strings.missingNameError);
+      return false;
+    }
+    if (length <= 0 || height <= 0 || width <= 0) {
+      setError(strings.invalidDimensionsError);
+      return false;
+    }
+    if (fishCount < 0) {
+      setError(strings.invalidFishCountError);
+      return false;
+    }
+    return true;
+  };
+
+  /**
+   * The function which is called on submit or delete
+   * @param del - the flag if we're deleting
+   * @returns void every time, but calls the callback on delete and valid creation or update
+   */
   const confirmHandler = (del?: boolean) => {
     if (del) {
       props.editHandler(props.aquarium, true);
       return;
     }
-    if (props.addNewFlag) {
-      // Validation
-      if (name.length <= 0) {
-        setError(strings.missingNameError);
-        return;
-      }
-      // Size validation is handled inside the form
-      if (systemId <= 0) {
-        setError(strings.missingAquariumIdError);
-        return;
-      }
+    if (!formValidator()) {
+      return;
     }
     props.aquarium.name = name;
     props.aquarium.length = length;

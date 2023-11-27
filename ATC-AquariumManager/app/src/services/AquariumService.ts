@@ -1,6 +1,7 @@
 import Aquarium from "../models/Aquarium";
 import strings from "../../config/strings";
 import AquariumConfiguration from "../models/AquariumConfiguration";
+import CommonServiceCallback from "./commonServiceCallbacks";
 
 export default class AquariumService {
   /**
@@ -24,15 +25,7 @@ export default class AquariumService {
       headers: headers,
       body: body,
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            strings.unexpectedStatusErrorMessage + response.status
-          );
-        } else {
-          return response.json();
-        }
-      })
+      .then(CommonServiceCallback.fetchResponseCallback)
       .then((responseData) => {
         const data = responseData["data"];
         if (data["error"]) {
@@ -56,9 +49,7 @@ export default class AquariumService {
           return aquariumsArray;
         }
       })
-      .catch((e) => {
-        alert("Error: " + e);
-      });
+      .catch(CommonServiceCallback.catchCallback);
 
     if (typeof aquariums === "string") {
       return aquariums;
@@ -75,15 +66,7 @@ export default class AquariumService {
         headers: headers,
         body: configBody,
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(
-              strings.unexpectedStatusErrorMessage + response.status
-            );
-          } else {
-            return response.json();
-          }
-        })
+        .then(CommonServiceCallback.fetchResponseCallback)
         .then((responseData) => {
           const data = responseData["data"];
           if (data["errror"]) {
@@ -111,9 +94,7 @@ export default class AquariumService {
             new Date(configData["lastModifiedDate"]["date"] as string)
           );
         })
-        .catch((e) => {
-          alert("Error: " + e);
-        });
+        .catch(CommonServiceCallback.catchCallback);
       // If we had error
       if (typeof configForAq === "string") {
         return configForAq;
@@ -121,7 +102,6 @@ export default class AquariumService {
       // Otherwise assign config for the aquarium
       aq.config = configForAq;
     }
-    console.log(aquariums);
     return aquariums;
   }
   /**
@@ -148,15 +128,7 @@ export default class AquariumService {
       headers: headers,
       body: body,
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            strings.unexpectedStatusErrorMessage + response.status
-          );
-        } else {
-          return response.json();
-        }
-      })
+      .then(CommonServiceCallback.fetchResponseCallback)
       .then((responseData) => {
         const data = responseData["data"];
         if (data["error"]) {
@@ -166,9 +138,7 @@ export default class AquariumService {
           return "";
         }
       })
-      .catch((e) => {
-        alert("Error: " + e);
-      });
+      .catch(CommonServiceCallback.catchCallback);
   }
 
   /**
@@ -199,15 +169,7 @@ export default class AquariumService {
       headers: headers,
       body: body,
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            strings.unexpectedStatusErrorMessage + response.status
-          );
-        } else {
-          return response.json();
-        }
-      })
+      .then(CommonServiceCallback.fetchResponseCallback)
       .then((responseData) => {
         const data = responseData["data"];
         if (data["error"]) {
@@ -217,9 +179,7 @@ export default class AquariumService {
           return "";
         }
       })
-      .catch((e) => {
-        alert("Error: " + e);
-      });
+      .catch(CommonServiceCallback.catchCallback);
   }
 
   /**
@@ -240,15 +200,7 @@ export default class AquariumService {
       headers: headers,
       body: body,
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            strings.unexpectedStatusErrorMessage + response.status
-          );
-        } else {
-          return response.json();
-        }
-      })
+      .then(CommonServiceCallback.fetchResponseCallback)
       .then((responseData) => {
         const data = responseData["data"];
         if (data["error"]) {
@@ -258,11 +210,14 @@ export default class AquariumService {
           return "";
         }
       })
-      .catch((e) => {
-        alert("Error: " + e);
-      });
+      .catch(CommonServiceCallback.catchCallback);
   }
 
+  /**
+   * Updates the provided aquarium's config in the DB
+   * @param aq The aquarium which's config we're updating
+   * @returns - the result of the service
+   */
   static async updateConfiguration(aq: Aquarium): Promise<string> {
     const headers = {
       Accept: "application/json",
@@ -293,15 +248,7 @@ export default class AquariumService {
       headers: headers,
       body: body,
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            strings.unexpectedStatusErrorMessage + response.status
-          );
-        } else {
-          return response.json();
-        }
-      })
+      .then(CommonServiceCallback.fetchResponseCallback)
       .then((responseData) => {
         const data = responseData["data"];
         if (data["error"]) {
@@ -312,8 +259,6 @@ export default class AquariumService {
         }
         return "Something went really wrong!";
       })
-      .catch((e) => {
-        alert("Error: " + e);
-      });
+      .catch(CommonServiceCallback.catchCallback);
   }
 }

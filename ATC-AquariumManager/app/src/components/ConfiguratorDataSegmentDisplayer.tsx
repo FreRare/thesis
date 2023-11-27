@@ -8,8 +8,11 @@ import { getCleanStringValue } from "../models/CleanPeriod";
 import { getStringValue } from "../models/SamplePeriod";
 import commonStyles from "../utils/commonStyles";
 
-// Stores the labels as a concatenated string for the datasegment labels
-// So label.includes can be used to determine the labels for the data
+/**
+ * Stores the labels as a concatenated string for the datasegment labels
+ * So label.includes can be used to determine the labels for the data
+ * Also have a formatter function which will be used to format the data provided to be displayabel (ex. time comes as minutes)
+ */
 const dataSegmentLabelDecisionMap = [
   {
     labels: strings.temperature + strings.ph,

@@ -14,6 +14,12 @@ type AquariumCardProps = {
   setEdited: (aq: Aquarium) => void;
 };
 
+/**
+ * Displays the data of the given item as a card
+ * Can be edited by clicking the edit icon, on edit it calls both callbacks with true flag and the item provided in props
+ * @param props The properties of the component
+ * @returns The card filled up with the props.item aquarium's data
+ */
 function AquariumCard(props: AquariumCardProps) {
   return (
     <View style={styles.card}>
@@ -40,9 +46,7 @@ function AquariumCard(props: AquariumCardProps) {
               " * "
             ) +
             " ( " +
-            String(
-              (props.item.length * props.item.height * props.item.width) / 1000
-            ) +
+            String(props.item.volume) +
             " L)"}
         </Text>
       </View>

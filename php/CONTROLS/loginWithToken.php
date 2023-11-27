@@ -12,7 +12,7 @@ if (!empty($_POST["token"])) {
     $token = $_POST["token"];
     $user = $DAO->selectUserByToken($token);
     if ($user == null) {
-        $result["error"] = "No user with given token found!";
+        $result["error"] = "No user found with given token!";
     } else {
         $result = $user->toJSON();
     }

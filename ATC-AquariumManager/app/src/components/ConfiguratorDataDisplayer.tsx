@@ -12,6 +12,12 @@ type ConfiguratorDataDisplayerProps = {
   editDisabled: boolean;
 };
 
+/**
+ * Displays all the data of the provided config trough ConfiguratorDataSegmentDisplayer
+ * @see {ConfiguratorDataSegmentDisplayer} - displays segents of data dynamically
+ * @param props The props for the component
+ * @returns The whole list of segments
+ */
 function ConfiguratorDataDisplayer(props: ConfiguratorDataDisplayerProps) {
   return (
     <View style={styles.container}>

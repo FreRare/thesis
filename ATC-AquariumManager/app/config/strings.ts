@@ -114,6 +114,9 @@ export default {
   successfulLogin: "Successful login!",
   successfulSignup: "Successfully signed up!",
   unexpectedStatusErrorMessage: "Unexpected error occured! Response status: ",
+  invalidDimensionsError:
+    "Invalid value in the dimension! It should be more than 0!",
+  invalidFishCountError: "Invalid number of fish!",
   invalidTemp: "Temperature value must be between 0 and 100!",
   invalidPh: "Ph value must be between 0 and 14!",
   invalidValueLogic: "Low value can not be higher than high value!",
@@ -129,4 +132,9 @@ export default {
   oldPasswordAgain: "Confirm old password:",
   newPassword: "New password:",
   successfulUpdate: "Successfully updated!",
+  SERVICES: {
+    networkErrorDetect: "Network request failed",
+    networkErrorMessage:
+      "Network request failed! Make sure you have proper internet connection!",
+  },
 };

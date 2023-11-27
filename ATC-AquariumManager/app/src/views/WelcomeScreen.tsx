@@ -6,13 +6,19 @@ import Logo from "../components/Logo";
 import RegistrationForm from "../components/RegistrationForm";
 import User from "../models/User";
 
-interface WelcomeScreenProps {
+type WelcomeScreenProps = {
   navigation: any;
   setUser: (u: User | undefined | null) => void;
-}
+};
 
+/**
+ * This component is th efirst screen the user sees when opening the app and isn't logged in.
+ * Have both login and registration form handled inside.
+ * @param props The properties so the component can work
+ * @returns A form for logina dn two buttons where you can log in or change to registration form
+ */
 function WelcomeScreen(props: WelcomeScreenProps) {
-  const [isLogin, setIsLogin] = React.useState<boolean>(true);
+  const [isLogin, setIsLogin] = React.useState<boolean>(true); // Flag to show login form
   return (
     <Layout navigation={props.navigation} shouldDisplayMenuBar={false}>
       <View style={styles.backgroundImage}>

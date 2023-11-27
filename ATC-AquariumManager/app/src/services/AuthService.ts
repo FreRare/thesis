@@ -1,5 +1,6 @@
 import strings from "../../config/strings";
 import User from "../models/User";
+import CommonServiceCallback from "./commonServiceCallbacks";
 
 export default class AuthService {
   /**
@@ -25,15 +26,7 @@ export default class AuthService {
       headers: headers,
       body: loginData,
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            strings.unexpectedStatusErrorMessage + response.status
-          );
-        } else {
-          return response.json();
-        }
-      })
+      .then(CommonServiceCallback.fetchResponseCallback)
       .then((responseData) => {
         const data = responseData["data"];
         // alert(JSON.stringify(data))
@@ -52,9 +45,7 @@ export default class AuthService {
           return user;
         }
       })
-      .catch((e) => {
-        alert("Error: " + e);
-      });
+      .catch(CommonServiceCallback.catchCallback);
   }
   /**
    * Tries to login with the stored token (only saved token)
@@ -74,15 +65,7 @@ export default class AuthService {
       method: "POST",
       body: JSON.stringify(data),
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            strings.unexpectedStatusErrorMessage + response.status
-          );
-        } else {
-          return response.json();
-        }
-      })
+      .then(CommonServiceCallback.fetchResponseCallback)
       .then((responseData) => {
         const data = responseData["data"];
         if (data["error"]) {
@@ -99,7 +82,8 @@ export default class AuthService {
           // alert(user.toString());
           return user;
         }
-      });
+      })
+      .catch(CommonServiceCallback.catchCallback);
   }
   /**
    * Tries to sign up the user with the given data
@@ -136,16 +120,7 @@ export default class AuthService {
       headers: headers,
       body: content,
     })
-      .then((response) => {
-        alert("HTTP reponse: " + response.status);
-        if (!response.ok) {
-          throw new Error(
-            strings.unexpectedStatusErrorMessage + response.status
-          );
-        } else {
-          return response.json();
-        }
-      })
+      .then(CommonServiceCallback.fetchResponseCallback)
       .then((responseData) => {
         const data = responseData["data"];
         if (data["error"]) {
@@ -162,9 +137,6 @@ export default class AuthService {
           return newUser;
         }
       })
-      .catch((e) => {
-        alert("ERROR while signing up: " + e);
-        return "ERROR while signing up: " + e;
-      });
+      .catch(CommonServiceCallback.catchCallback);
   }
 }

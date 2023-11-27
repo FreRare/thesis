@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import colors from "../../config/colors";
 
@@ -7,7 +7,12 @@ interface DataDisplayCircleProps {
   data: string;
 }
 
-function DataDisplayCircle(props: DataDisplayCircleProps) {
+/**
+ * Displays a circle with the provided data
+ * @param props
+ * @returns - the circle
+ */
+function DataDisplayCircle(props: DataDisplayCircleProps): React.JSX.Element {
   return (
     <View style={styles.conatiner}>
       <View style={styles.titleContainer}>

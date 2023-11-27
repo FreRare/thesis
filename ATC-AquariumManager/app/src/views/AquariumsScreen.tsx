@@ -24,33 +24,29 @@ type AquariumsScreenProps = {
   user: User;
 };
 
+/**
+ * The screen for viewing and maintaining aquariums
+ * @see {AquariumCard} - to display the aquariums' data
+ * @param props The props for the component
+ * @returns The screen with a dropdown and the list of AquariumCards
+ */
 function AquariumsScreen(props: AquariumsScreenProps) {
+  console.log("Aquariums at screen: ", props.user.aquariums);
   const [editing, setEditing] = React.useState<boolean>(false); // Edit flag
   const [edited, setEdited] = React.useState<Aquarium | null>(null); // The edited aquarium
-  const [aquariums, setAquariums] = React.useState<Array<Aquarium>>([]); // To store aquariums
+  const [aquariums, setAquariums] = React.useState<Array<Aquarium>>(
+    props.user.aquariums
+  ); // To store aquariums
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const loadAquariums = async () => {
-    setLoading(true);
-    const loadedAquariums = await AquariumService.getAquariums(
-      props.user.email
-    );
-    if (typeof loadedAquariums === "string") {
-      setError(loadedAquariums as string);
-    } else {
-      setAquariums(loadedAquariums);
-    }
-    setLoading(false);
-  };
-
-  React.useEffect(() => {
-    if (aquariums.length <= 0 && error.length <= 0) {
-      loadAquariums();
-    }
-  });
-
-  // Callback for the editor form
+  /**
+   * Edit callbacl for AquariumCard, handles create-update-delete
+   * @see {AquariumService} - to handle DB interactions
+   * @param aq - the aquarium to be handled
+   * @param del - flag if we want to delete
+   * @returns - void
+   */
   const editHandler = async (aq: Aquarium, del?: boolean) => {
     setLoading(true);
     setEdited(null);
@@ -145,6 +141,7 @@ function AquariumsScreen(props: AquariumsScreenProps) {
             </>
           </TouchableOpacity>
         </View>
+        {error && <Text>{error}</Text>}
         {aqauariumCards}
       </ScrollView>
       {editing && (

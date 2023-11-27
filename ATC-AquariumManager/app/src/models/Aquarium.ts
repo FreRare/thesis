@@ -90,4 +90,8 @@ export default class Aquarium {
   public set fishCount(value: number) {
     this._fishCount = value;
   }
+
+  public get volume(): number {
+    return (this.length * this.height * this.width) / 1000;
+  }
 }

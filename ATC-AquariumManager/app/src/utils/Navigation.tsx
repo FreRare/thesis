@@ -3,23 +3,31 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import WelcomeScreen from "../views/WelcomeScreen";
 import strings from "../../config/strings";
 import colors from "../../config/colors";
-import useUser from "./hooks/useUser";
 import MenuBarButton from "../components/MenuBarButton";
 import { StyleSheet } from "react-native";
 import NavigationScreens from "./NavigationScreens";
+import User from "../models/User";
+import Aquarium from "../models/Aquarium";
+
+type NavigationProps = {
+  user: User | undefined;
+  setUser: (u: User | undefined | null) => void;
+};
 
 const Tab = createBottomTabNavigator();
 
-function Navigation() {
-  const [user, setUser] = useUser();
-
+function Navigation(propsog: NavigationProps) {
   const bottomNav = NavigationScreens.map((item, index) => {
     return (
       <Tab.Screen
         key={index}
         name={item.name}
         children={(props: any) => (
-          <item.component {...props} user={user} setUser={setUser} />
+          <item.component
+            {...props}
+            user={propsog.user}
+            setUser={propsog.setUser}
+          />
         )}
         options={{
           tabBarStyle: styles.tabBarStyle,
@@ -37,18 +45,20 @@ function Navigation() {
         headerShown: false,
       }}
     >
-      {user ? (
+      {propsog.user ? (
         bottomNav
       ) : (
         <>
           <Tab.Screen
             name={strings.welcome}
-            initialParams={{ user: user }}
+            initialParams={{ user: propsog.user }}
             options={{
               tabBarStyle: { display: "none", marginBottom: -2000 },
             }}
           >
-            {(props: any) => <WelcomeScreen {...props} setUser={setUser} />}
+            {(props: any) => (
+              <WelcomeScreen {...props} setUser={props.setUser} />
+            )}
           </Tab.Screen>
         </>
       )}
