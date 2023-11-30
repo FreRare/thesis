@@ -25,17 +25,12 @@ type LayoutComponentProps = {
 function Layout(props: LayoutComponentProps) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TouchableWithoutFeedback
-        // onPress={() => Keyboard.dismiss()}
-        accessible={false}
-      >
-        <KeyboardAvoidingView style={styles.layout}>
-          {props.shouldDisplayMenuBar && (
-            <MenuBar navigation={props.navigation} />
-          )}
-          {props.children}
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+      <KeyboardAvoidingView style={styles.layout}>
+        {props.shouldDisplayMenuBar && (
+          <MenuBar navigation={props.navigation} />
+        )}
+        {props.children}
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -43,14 +38,11 @@ function Layout(props: LayoutComponentProps) {
 const styles = StyleSheet.create({
   layout: {
     marginTop: Platform.OS === "android" ? 30 : 0,
-    paddingBottom: 80,
     backgroundColor: colors.background,
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    alignContent: "center",
     justifyContent: "center",
-    zIndex: 0,
   },
 });
 export default Layout;

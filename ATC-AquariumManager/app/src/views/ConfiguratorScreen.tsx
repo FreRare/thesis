@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Layout from "../components/Layout";
-import { SelectList } from "react-native-dropdown-select-list";
 import strings from "../../config/strings";
-import { ScrollView, StyleSheet, Dimensions, View, Text } from "react-native";
+import { ScrollView, Text } from "react-native";
 import ConfiguratorDataDisplayer from "../components/ConfiguratorDataDisplayer";
 import Aquarium from "../models/Aquarium";
 import commonStyles from "../utils/commonStyles";
@@ -11,10 +10,13 @@ import AquariumConfigEditForm from "../components/AquariumConfigEditForm";
 import AquariumService from "../services/AquariumService";
 import User from "../models/User";
 import LoadingAnimation from "../components/LoadingAnimation";
+import AquariumSelectList from "../components/AquariumSelectList";
+import { RefreshControl } from "react-native";
 
 type ConfiguratorScreenProps = {
   navigation: any;
   user: User;
+  setUser: (u: User | undefined | null) => void;
 };
 
 /**
@@ -25,40 +27,15 @@ type ConfiguratorScreenProps = {
  * @returns The whole screen
  */
 function ConfiguratorScreen(props: ConfiguratorScreenProps) {
-  const [aquariums, setAquariums] = React.useState<Array<Aquarium>>(
-    props.user.aquariums
-  ); // All aquariums the user have
   // The actual aquarium which's data is displayed
   const [selectedAquarium, setSelectedAquarium] = React.useState<Aquarium>(
-    aquariums[0]
+    props.user.aquariums[0]
   );
   // The flag for editing
   const [edit, setEdit] = React.useState<boolean>(false);
   const [editLabel, setEditLabel] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-
-  /**
-   * Makes sure that the data is loaded only once and that the dropdown list data is filled up.
-   */
-  useEffect(() => {
-    if (aquariumSelectList.length <= 0) {
-      for (const aq of aquariums) {
-        aquariumSelectList.push({ key: aq.id, value: aq.name });
-      }
-    }
-  });
-
-  const aquariumSelectList: Array<{ key: number; value: string }> = []; // Data for the dropdown list
-
-  /**
-   * Sets the selected useState to the aquarium identified by val
-   * @param {number} val the ID of the selected aquarium
-   */
-  const handleSelect = (val: number) => {
-    const foundAQ = aquariums.find((aq) => aq.id === val) as Aquarium;
-    setSelectedAquarium(foundAQ);
-  };
 
   /**
    * The callback for AquariumConfigEditForm component
@@ -90,34 +67,38 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
     setEdit(true);
   };
 
+  /**
+   * Callback on refresh
+   */
+  const refreshCallback = React.useCallback(async () => {
+    setLoading(true);
+    const loadedAquariums = await AquariumService.getAquariums(
+      props.user.email
+    );
+    const newUser = props.user;
+    newUser.aquariums = loadedAquariums;
+    props.setUser(newUser);
+    setLoading(false);
+  }, []);
+
   return (
     <Layout
       navigation={props.navigation}
       shouldDisplayMenuBar={edit ? false : true}
     >
-      {loading && <LoadingAnimation />}
+      <AquariumSelectList
+        aquariums={props.user.aquariums}
+        selectCallback={setSelectedAquarium}
+      />
       <ScrollView
-        contentContainerStyle={[styles.container, { opacity: edit ? 0.1 : 1 }]}
+        contentContainerStyle={[
+          commonStyles.scrollContainer,
+          { opacity: edit ? 0.1 : 1 },
+        ]}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={refreshCallback} />
+        }
       >
-        <View style={commonStyles.horizontal}>
-          <SelectList
-            search={false}
-            inputStyles={commonStyles.dropdownListInputStyle}
-            boxStyles={commonStyles.dropdownListBoxStyle}
-            dropdownStyles={commonStyles.dropdownListDropdownStyles}
-            placeholder={strings.aquariumSelctorPlaceholder}
-            setSelected={(val: number) => handleSelect(val)}
-            data={aquariumSelectList}
-            defaultOption={
-              aquariums.length > 0
-                ? {
-                    key: aquariums[0].id,
-                    value: aquariums[0].name,
-                  }
-                : undefined
-            }
-          />
-        </View>
         {error && <Text style={{ color: "red" }}>{error}</Text>}
         {selectedAquarium instanceof Aquarium && (
           <ConfiguratorDataDisplayer
@@ -139,16 +120,5 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
     </Layout>
   );
 }
-
-const windowWidth = Dimensions.get("window").width;
-
-const styles = StyleSheet.create({
-  container: {
-    width: windowWidth,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-});
 
 export default ConfiguratorScreen;

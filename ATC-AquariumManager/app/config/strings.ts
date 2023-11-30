@@ -137,4 +137,7 @@ export default {
     networkErrorMessage:
       "Network request failed! Make sure you have proper internet connection!",
   },
+  STATS: {
+    screenTitle: "Statistics",
+  },
 };

@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     width: windowWidth,
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
+    padding: 15,
   },
   modifiedDateText: {
     fontSize: 15,

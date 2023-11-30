@@ -18,4 +18,10 @@ export default {
   cardBackGround: "#AADDAA", // CEEAD6
   loadinAnimationColor: "#174EA6",
   checkBoxColor: "#174EA6",
+  CHART: {
+    background: "#FFFFFA",
+    gradientFrom: "#0D652D",
+    gradientTo: "#34A853",
+    stroke: "#B0FFB0",
+  },
 };

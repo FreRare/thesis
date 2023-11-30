@@ -1,5 +1,7 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import colors from "../../config/colors";
+
+const windowWidth = Dimensions.get("window").width;
 
 const commonStyles = StyleSheet.create({
   input: {
@@ -28,6 +30,8 @@ const commonStyles = StyleSheet.create({
   dropdownListBoxStyle: {
     backgroundColor: colors.menuBarBackground,
     width: 300,
+    marginBottom: 20,
+    marginTop: 20,
   },
   dropdownListInputStyle: {
     color: colors.black,
@@ -35,6 +39,7 @@ const commonStyles = StyleSheet.create({
   dropdownListDropdownStyles: {
     backgroundColor: colors.menuBarBackground,
     opacity: 1,
+    height: 100,
   },
   horizontal: {
     flex: 1,
@@ -61,6 +66,15 @@ const commonStyles = StyleSheet.create({
     position: "absolute",
     padding: 7,
     backgroundColor: colors.background,
+  },
+  scrollContainer: {
+    width: windowWidth,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+    marginTop: -25,
+    flexGrow: 1,
+    paddingBottom: 60,
   },
 });
 

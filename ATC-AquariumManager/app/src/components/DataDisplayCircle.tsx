@@ -28,6 +28,14 @@ function DataDisplayCircle(props: DataDisplayCircleProps): React.JSX.Element {
 const styles = StyleSheet.create({
   conatiner: {
     flex: 1,
+    alignItems: "center",
+    marginTop: 18,
+  },
+  titleContainer: {
+    alignContent: "center",
+    justifyContent: "center",
+  },
+  dataContainer: {
     borderColor: colors.dataCircleBorder,
     backgroundColor: colors.cardBackGround,
     borderWidth: 10,
@@ -35,18 +43,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 8,
     borderTopWidth: 0,
     borderRadius: 50,
-    margin: 18,
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  titleContainer: {
-    alignContent: "center",
-    justifyContent: "center",
-    marginBottom: 20,
-    marginTop: -30,
-  },
-  dataContainer: {
-    marginTop: 30,
+    padding: 50,
   },
   titleText: {
     fontSize: 20,

@@ -4,73 +4,60 @@ import DataDisplayCircle from "../components/DataDisplayCircle";
 import strings from "../../config/strings";
 import { View, StyleSheet, Text } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
-import colors from "../../config/colors";
 import commonStyles from "../utils/commonStyles";
-import { ScrollView } from "react-native";
+import User from "../models/User";
+import AquariumSelectList from "../components/AquariumSelectList";
+import Aquarium from "../models/Aquarium";
+import { Dimensions } from "react-native";
 
 interface HomeScreenProps {
   navigation: any;
   route: any;
+  user: User;
 }
 
 function HomeScreen(props: HomeScreenProps) {
-  const [selected, setSelected] = React.useState("");
-
-  const data = [
-    { key: "1", value: "My aquarium" },
-    { key: "2", value: "My other aquarium" },
-  ];
+  const [selectedAquarium, setSelectedAquarium] = React.useState<Aquarium>(
+    props.user.aquariums[0]
+  );
 
   return (
     <Layout navigation={props.navigation} shouldDisplayMenuBar={true}>
-      <View style={styles.horizontalSelectContainer}>
-        <SelectList
-          boxStyles={commonStyles.dropdownListBoxStyle}
-          inputStyles={commonStyles.dropdownListInputStyle}
-          dropdownStyles={commonStyles.dropdownListDropdownStyles}
-          placeholder={strings.aquariumSelctorPlaceholder}
-          setSelected={(val: string) => setSelected(val)}
-          data={data}
-          save="value"
-        />
-      </View>
-      <View style={styles.horizontalDataContainer}>
-        <DataDisplayCircle
-          title={strings.temperature}
-          data="20"
-        ></DataDisplayCircle>
-        <DataDisplayCircle title={strings.ph} data="20"></DataDisplayCircle>
-      </View>
-      <View style={styles.horizontalDataContainer}>
-        <DataDisplayCircle title={strings.light} data="20"></DataDisplayCircle>
-        <DataDisplayCircle
-          title={strings.waterLevel}
-          data="20%"
-        ></DataDisplayCircle>
-      </View>
-      <View style={styles.horizontalInfoContainer}>
-        <Text>Last measured: 2023.10.23. 12:56</Text>
+      <AquariumSelectList
+        aquariums={props.user.aquariums}
+        selectCallback={setSelectedAquarium}
+      />
+      <View style={styles.container}>
+        <View style={styles.horizontalDataContainer}>
+          <DataDisplayCircle title={strings.temperature} data="20" />
+          <DataDisplayCircle title={strings.ph} data="20" />
+        </View>
+        <View style={styles.horizontalDataContainer}>
+          <DataDisplayCircle title={strings.light} data="20" />
+          <DataDisplayCircle title={strings.waterLevel} data="20%" />
+        </View>
+        <View style={styles.horizontalInfoContainer}>
+          <Text>Last measured: 2023.10.23. 12:56</Text>
+        </View>
       </View>
     </Layout>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: Dimensions.get("window").width,
+  },
   horizontalInfoContainer: {
-    flex: 0.5,
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: -20,
-  },
-  horizontalSelectContainer: {
-    flex: 0.4,
-    margin: 30,
-    zIndex: 999,
+    marginTop: -50,
   },
   horizontalDataContainer: {
     flex: 1,
     flexDirection: "row",
-    margin: 10,
   },
 });
 

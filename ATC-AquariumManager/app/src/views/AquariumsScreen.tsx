@@ -19,6 +19,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import colors from "../../config/colors";
 import AquariumService from "../services/AquariumService";
 import LoadingAnimation from "../components/LoadingAnimation";
+import commonStyles from "../utils/commonStyles";
 
 type AquariumsScreenProps = {
   navigation: any;
@@ -33,6 +34,9 @@ type AquariumsScreenProps = {
  * @returns The screen with a dropdown and the list of AquariumCards
  */
 function AquariumsScreen(props: AquariumsScreenProps) {
+  const [aquariums, setAquariums] = React.useState<Array<Aquarium>>(
+    props.user.aquariums
+  );
   const [editing, setEditing] = React.useState<boolean>(false); // Edit flag
   const [edited, setEdited] = React.useState<Aquarium | null>(null); // The edited aquarium
   const [error, setError] = React.useState<string>("");
@@ -49,6 +53,7 @@ function AquariumsScreen(props: AquariumsScreenProps) {
     const newUser = props.user;
     newUser.aquariums = loadedAquariums;
     props.setUser(newUser);
+    setAquariums(newUser.aquariums);
     setLoading(false);
   }, []);
 
@@ -128,34 +133,33 @@ function AquariumsScreen(props: AquariumsScreenProps) {
 
   return (
     <Layout navigation={props.navigation} shouldDisplayMenuBar={true}>
-      {loading && <LoadingAnimation />}
+      <View style={styles.searchContainer}>
+        <Icon name="search1" size={25} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder={strings.searchByName}
+          onChangeText={(t: string) => searchAquarium(t)}
+        />
+        <TouchableOpacity
+          disabled={editing}
+          onPress={addNewOnPress}
+          style={styles.addContainer}
+        >
+          <>
+            <Text>{strings.addNew}</Text>
+            <Icon name="addfolder" size={20} />
+          </>
+        </TouchableOpacity>
+      </View>
       <ScrollView
         contentContainerStyle={[
-          styles.container,
+          commonStyles.scrollContainer,
           { opacity: editing ? 0.1 : 1 },
         ]}
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={refreshCallback} />
         }
       >
-        <View style={styles.searchContainer}>
-          <Icon name="search1" size={25} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder={strings.searchByName}
-            onChangeText={(t: string) => searchAquarium(t)}
-          />
-          <TouchableOpacity
-            disabled={editing}
-            onPress={addNewOnPress}
-            style={styles.addContainer}
-          >
-            <>
-              <Text>{strings.addNew}</Text>
-              <Icon name="addfolder" size={20} />
-            </>
-          </TouchableOpacity>
-        </View>
         {error && <Text>{error}</Text>}
         {aqauariumCards}
       </ScrollView>
@@ -174,15 +178,9 @@ function AquariumsScreen(props: AquariumsScreenProps) {
 const windowWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-  container: {
-    width: windowWidth,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
   searchContainer: {
     width: "90%",
-    flex: 1,
+    height: 100,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
