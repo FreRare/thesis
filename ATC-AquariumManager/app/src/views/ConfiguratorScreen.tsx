@@ -39,20 +39,22 @@ function ConfiguratorScreen(props: ConfiguratorScreenProps) {
 
   /**
    * The callback for AquariumConfigEditForm component
-   * Updates data in DB and handles error messaging
+   * Updates data in DB and handles errors
    * @param config - the edited config in the form
    */
   const handleEditSubmit = async (config: AquariumConfiguration) => {
-    selectedAquarium.config = config;
     const updateResult = await AquariumService.updateConfiguration(
-      selectedAquarium
+      config,
+      selectedAquarium.id
     );
     if (updateResult.length > 0) {
       setError(updateResult);
-    } else {
-      alert(strings.successfulUpdate);
-      setError("");
+      setEdit(false);
+      return;
     }
+    alert(strings.successfulUpdate);
+    setError("");
+    selectedAquarium.config = config;
     setSelectedAquarium(selectedAquarium);
     setEdit(false);
   };

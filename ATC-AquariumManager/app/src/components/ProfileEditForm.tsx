@@ -1,16 +1,8 @@
 import React from "react";
 import User from "../models/User";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import commonStyles from "../utils/commonStyles";
 import strings from "../../config/strings";
-import colors from "../../config/colors";
 
 type ProfileEditFormProps = {
   user: User;
@@ -24,6 +16,7 @@ function ProfileEditForm(props: ProfileEditFormProps) {
   const [lastName, setLastName] = React.useState<string>(props.user.lastName);
   const [email, setEmail] = React.useState<string>(props.user.email);
 
+  // TODO: input validation
   const handleSubmit = () => {
     props.user.firstName = firstName;
     props.user.lastName = lastName;

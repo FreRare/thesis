@@ -10,7 +10,7 @@ import commonStyles from "../utils/commonStyles";
 import strings from "../../config/strings";
 
 type ChangePasswordFormProps = {
-  callback: (val: string | undefined) => void;
+  callback: (oldPass: string | undefined, newPass?: string) => void;
 };
 
 function PasswordChangeForm(props: ChangePasswordFormProps) {
@@ -26,16 +26,16 @@ function PasswordChangeForm(props: ChangePasswordFormProps) {
         <TextInput style={commonStyles.input} />
       </View>
       <View style={commonStyles.vertical}>
-        <Text>{strings.oldPasswordAgain}</Text>
+        <Text>{strings.newPassword}</Text>
         <TextInput style={commonStyles.input} />
       </View>
       <View style={commonStyles.vertical}>
-        <Text>{strings.newPassword}</Text>
+        <Text>{strings.newPasswordAgain}</Text>
         <TextInput style={commonStyles.input} />
       </View>
       <TouchableOpacity
         style={commonStyles.button}
-        onPressOut={() => props.callback(newPass)}
+        onPressOut={() => props.callback(oldPass, newPass)}
       >
         <Text>{strings.confirm}</Text>
       </TouchableOpacity>

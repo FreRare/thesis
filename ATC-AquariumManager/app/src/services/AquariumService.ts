@@ -216,29 +216,32 @@ export default class AquariumService {
    * @param aq The aquarium which's config we're updating
    * @returns - the result of the service
    */
-  static async updateConfiguration(aq: Aquarium): Promise<string> {
+  static async updateConfiguration(
+    config: AquariumConfiguration,
+    id: number
+  ): Promise<string> {
     const headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
     };
     const body = JSON.stringify({
-      id: aq.id,
-      minTemp: aq.config.minTemp,
-      maxTemp: aq.config.maxTemp,
-      minPh: aq.config.minPh,
-      maxPh: aq.config.maxPh,
-      OL1On: aq.config.OnOutlet1,
-      OL1Off: aq.config.OffOutlet1,
-      OL2On: aq.config.OnOutlet2,
-      OL2Off: aq.config.OffOutlet2,
-      OL3On: aq.config.OnOutlet3,
-      OL3Off: aq.config.OffOutlet3,
-      waterLvlAlert: aq.config.waterLvlAlert,
-      feedingTime: aq.config.feedingTime,
-      foodPortions: aq.config.foodPortions,
-      filterClean: aq.config.filterClean,
-      waterChange: aq.config.waterChange,
-      samplePeriod: aq.config.samplePeriod,
+      id: id,
+      minTemp: config.minTemp,
+      maxTemp: config.maxTemp,
+      minPh: config.minPh,
+      maxPh: config.maxPh,
+      OL1On: config.OnOutlet1,
+      OL1Off: config.OffOutlet1,
+      OL2On: config.OnOutlet2,
+      OL2Off: config.OffOutlet2,
+      OL3On: config.OnOutlet3,
+      OL3Off: config.OffOutlet3,
+      waterLvlAlert: config.waterLvlAlert,
+      feedingTime: config.feedingTime,
+      foodPortions: config.foodPortions,
+      filterClean: config.filterClean,
+      waterChange: config.waterChange,
+      samplePeriod: config.samplePeriod,
     });
 
     return fetch(strings.updateConfigApiUrl, {

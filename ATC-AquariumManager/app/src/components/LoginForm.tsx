@@ -25,6 +25,7 @@ interface LoginScreenProps {
 /**
  * Creates a login form, validates fields and handles login attempts
  * @param props - the component properties
+ * @see {LoginScreenProps} - for props
  * @returns - the form
  */
 function LoginForm(props: LoginScreenProps): React.JSX.Element {

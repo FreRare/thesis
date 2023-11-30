@@ -38,9 +38,12 @@ function ProfileScreen(props: ProfileScreenProps) {
    * Handles the password changer form submit or cancel
    * @param newPass The new password, undefined on cancel
    */
-  const handleChangePassword = (newPass: string | undefined) => {
+  const handleChangePassword = (
+    oldPass: string | undefined,
+    newPass?: string
+  ) => {
     setChangePassword(false);
-    if (newPass === undefined) {
+    if (oldPass === undefined) {
       return;
     }
     // TODO Change password

@@ -130,6 +130,7 @@ export default {
   editEmailLabel: "New email address:",
   oldPassword: "Old password:",
   oldPasswordAgain: "Confirm old password:",
+  newPasswordAgain: "Confirm new password:",
   newPassword: "New password:",
   successfulUpdate: "Successfully updated!",
   SERVICES: {

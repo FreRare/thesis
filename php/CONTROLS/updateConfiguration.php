@@ -5,11 +5,13 @@ Expexts the config's data as json in $POST
 */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
-$keys = ["id", "minTemp", "maxTemp", "minPh", "maxPh", "OL1On", "OL1Off", "OL2On", "OL2Off", "OL3On", "OL3Off", "waterLvlAlert", "feedingTime", "foodPortions", "filterChange", "waterChange", "samplePeriod"];
+$keys = ["id", "minTemp", "maxTemp", "minPh", "maxPh", "OL1On", "OL1Off", "OL2On", "OL2Off", "OL3On", "OL3Off", "waterLvlAlert", "feedingTime", "foodPortions", "filterClean", "waterChange", "samplePeriod"];
 
 foreach ($keys as $key) {
     if (!isset($_POST[$key])) {
         $result["error"] = "Missing data!";
+        error_log("CONFIG UPDATE: Missing data with key: `${$key}`");
+        break;
     }
 }
 

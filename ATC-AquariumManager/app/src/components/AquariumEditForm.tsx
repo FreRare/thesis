@@ -109,7 +109,9 @@ function AquariumEditForm(props: AquariumEditFormProps) {
           value={String(length)}
           inputMode="numeric"
           onChangeText={(t) => {
-            setLength(t.length > 0 ? Number.parseInt(t) : 0);
+            setLength(
+              t.length > 0 ? (Number.parseInt(t) ? Number.parseInt(t) : 0) : 0
+            );
           }}
         />
       </View>
@@ -121,7 +123,9 @@ function AquariumEditForm(props: AquariumEditFormProps) {
           value={String(height)}
           inputMode="numeric"
           onChangeText={(t) => {
-            setHeight(t.length > 0 ? Number.parseInt(t) : 0);
+            setHeight(
+              t.length > 0 ? (Number.parseInt(t) ? Number.parseInt(t) : 0) : 0
+            );
           }}
         />
       </View>
@@ -133,7 +137,9 @@ function AquariumEditForm(props: AquariumEditFormProps) {
           value={String(width)}
           inputMode="numeric"
           onChangeText={(t) => {
-            setWidth(t.length > 0 ? Number.parseInt(t) : 0);
+            setWidth(
+              t.length > 0 ? (Number.parseInt(t) ? Number.parseInt(t) : 0) : 0
+            );
           }}
         />
       </View>
@@ -145,7 +151,9 @@ function AquariumEditForm(props: AquariumEditFormProps) {
           value={String(fishCount)}
           inputMode="numeric"
           onChangeText={(t) => {
-            setFishCount(t.length > 0 ? Number.parseInt(t) : 0);
+            setFishCount(
+              t.length > 0 ? (Number.parseInt(t) ? Number.parseInt(t) : 0) : 0
+            );
           }}
         />
       </View>
@@ -158,7 +166,9 @@ function AquariumEditForm(props: AquariumEditFormProps) {
             value={String(systemId > 0 ? systemId : "")}
             inputMode="numeric"
             onChangeText={(t) => {
-              setSystemId(t.length > 0 ? Number.parseInt(t) : 0);
+              setSystemId(
+                t.length > 0 ? (Number.parseInt(t) ? Number.parseInt(t) : 0) : 0
+              );
             }}
           />
         </View>
