@@ -1,7 +1,8 @@
 #ifndef ServerConnector_h
 #define ServerConnector_h
 #include "AQWiFiConfig.h"
-#include "ConfigData.h"
+#include "ConfigStatus.h"
+#include "SensorData.h"
 #include "UIHandler.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
@@ -63,13 +64,21 @@ public:
      * Checks if we had update or no
      * @return the new config or null
      */
-    ConfigData* updateConfigData(ConfigData& currentConfig);
+    ConfigData* updateConfigData();
+    /**
+     * Posts the provided data to the database
+     */
+    void postSensorData(const SensorData& data);
+    /**
+     * Sends a config status code to the API when a problem occurs
+     */
+    void postErrorCode(const ConfigStatus& status);
     /**
      * Checks if the system's aquarium has been inactivated or no
      * If it is inactive resets the system to factory reset ->
      * Deletes all data from EEPROM and stands by unitl repower
      * @return If the reset was successful
-    */
+     */
     bool checkForReset();
 };
 

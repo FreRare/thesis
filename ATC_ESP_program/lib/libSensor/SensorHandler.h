@@ -1,29 +1,50 @@
 #ifndef SensorHandler_h
 #define SensorHandler_h
 #include "SensorData.h"
+#include "deviceInit.h"
+#include <DallasTemperature.h>
+#include <OneWire.h>
 
-///////////////////////////////////////////////////////////////
-// The class for handling sensors and the data coming from them
-////////////////////////////////////////////////////////////////
-
+/**
+ * This class is handling the different sensors and is able to read their data
+ * @headerfile
+ * @class
+ */
 class SensorHandler {
 private:
-    std::vector<SensorData> dailyData;
-    uint16_t readTempSensor(); // get functions will call the read functions
+    /**
+     * @private
+     * The OneWire object used by the DallasTemperature object
+     */
+    OneWire oneWire;
+    /**
+     * @private
+     * The DallasTemperature object to access the sensors
+     */
+    DallasTemperature sensors;
+    /**
+     * @private
+     * The vector which stores the samples of a day
+     */
+    SensorData* lastSamples;
+    /**
+     * Reads the temperature sensor
+     * @returns - The read temperature
+     */
+    float readTempSensor();
     uint16_t readLightSensor();
     uint16_t readWaterSensor();
-    uint16_t readPhSensor();
-    uint16_t getTempData();
-    LightIntensity getLightData();
-    uint16_t getWaterData();
-    float getPhData();
-    SensorData readSensors();
+    float readPhSensor();
 
 public:
     SensorHandler();
-    void saveSensorDataToDB();
-    std::vector<SensorData> getDailyData();
-    SensorData getNthSample(const uint16_t& n);
+    /**
+     * Reads all the sensors and makes a SensorData object out of it
+     * @returns - The SensorData object created from the sensors' data
+     * @public
+     */
+    SensorData readSensors();
+    SensorData getLastSamples();
 };
 
 #endif

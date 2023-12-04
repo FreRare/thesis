@@ -1,11 +1,10 @@
 #include <ActuatorHandler.h>
 
-bool ActuatorHandler::isChannel1Active = false;
-bool ActuatorHandler::isChannel2Active = false;
-bool ActuatorHandler::isChannel3Active = false;
+ActuatorHandler::ActuatorHandler() { pinMode(RELAY_PIN, OUTPUT); }
 
-ActuatorHandler::ActuatorHandler() { pinMode(RELAY_CHANNEL_1_PIN, OUTPUT); }
-
-void ActuatorHandler::toggleChannel1() { ActuatorHandler::isChannel1Active = !ActuatorHandler::isChannel1Active; digitalWrite(RELAY_CHANNEL_1_PIN, ActuatorHandler::isChannel1Active ? HIGH : LOW); }
-void ActuatorHandler::toggleChannel2() { ActuatorHandler::isChannel2Active = !ActuatorHandler::isChannel2Active; }
-void ActuatorHandler::toggleChannel3() { ActuatorHandler::isChannel3Active = !ActuatorHandler::isChannel3Active; }
+void ActuatorHandler::turnOnChannel1() { digitalWrite(RELAY_PIN, HIGH); }
+void ActuatorHandler::turnOffChannel1() { digitalWrite(RELAY_PIN, LOW); }
+void ActuatorHandler::turnOnChannel2() { digitalWrite(RELAY_PIN, LOW); }
+void ActuatorHandler::turnOffChannel2() { digitalWrite(RELAY_PIN, LOW); }
+void ActuatorHandler::turnOnChannel3() { digitalWrite(RELAY_PIN, LOW); }
+void ActuatorHandler::turnOffChannel3() { digitalWrite(RELAY_PIN, LOW); }

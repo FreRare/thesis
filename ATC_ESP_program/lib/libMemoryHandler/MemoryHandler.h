@@ -39,8 +39,8 @@ public:
     String readWord();
     void writeInt(const uint16_t& i);
     uint16_t readInt();
-    void writeConfigData(const ConfigData& data);
-    ConfigData readConfigData();
+    void writeConfigData(ConfigData* data);
+    ConfigData* readConfigData();
     /**
      * Clears the memory (writes 0-s)
      * addr2 is the used EEPROM_SIZE by default

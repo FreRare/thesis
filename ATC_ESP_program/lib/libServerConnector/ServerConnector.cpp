@@ -97,11 +97,10 @@ bool ServerConnector::connectToNetwork()
             return false;
         }
     }
-    httpClient.end();
     return true; // We have an ID and we could connect
 }
 
-ConfigData* ServerConnector::updateConfigData(ConfigData& currentConfig)
+ConfigData* ServerConnector::updateConfigData()
 {
     if (WiFi.status() != WL_CONNECTED) {
         Serial.println("Wifi not connected!");
@@ -118,21 +117,16 @@ ConfigData* ServerConnector::updateConfigData(ConfigData& currentConfig)
         DeserializationError err = deserializeJson(configDoc, payload);
         if (err) {
             Serial.println("JSON serialization failed!");
-            return NULL;
+            return nullptr;
         }
         ConfigData* freshConfig = new ConfigData(configDoc["data"]["minTemp"], configDoc["data"]["maxTemp"],
             configDoc["data"]["minPh"], configDoc["data"]["maxPh"], configDoc["data"]["ol1On"],
             configDoc["data"]["ol1Off"], configDoc["data"]["ol2On"], configDoc["data"]["ol2Off"],
             configDoc["data"]["ol3On"], configDoc["data"]["ol3Off"], configDoc["data"]["waterLvlAlert"],
             configDoc["data"]["feedingTime"], configDoc["data"]["foodPortions"], configDoc["data"]["samplePeriod"]);
-        if (currentConfig.equals(freshConfig)) {
-            Serial.println("The configs are up to date!");
-            return NULL;
-        } else {
-            return freshConfig;
-        }
+        return freshConfig;
     }
-    return NULL;
+    return nullptr;
 }
 
 void ServerConnector::disconnect() { WiFi.disconnect(); }

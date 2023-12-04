@@ -55,18 +55,18 @@ uint16_t MemoryHandler::readInt()
     return data;
 }
 
-void MemoryHandler::writeConfigData(const ConfigData& configData)
+void MemoryHandler::writeConfigData(ConfigData* configData)
 {
     this->actualAddress = this->configDataStartAddress;
-    EEPROM.put(this->actualAddress, configData);
+    EEPROM.put(this->actualAddress, *configData);
 }
 
-ConfigData MemoryHandler::readConfigData()
+ConfigData* MemoryHandler::readConfigData()
 {
     this->actualAddress = this->configDataStartAddress;
     ConfigData config;
     EEPROM.get(this->actualAddress, config);
-    return config;
+    return &config;
 }
 
 // Clears the memory from 0 until length address

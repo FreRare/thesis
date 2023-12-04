@@ -1,9 +1,11 @@
 #ifndef LightIntensity_h
 #define LightIntensity_h
-/*-----------------------------------------------
-The enum to follow the intensity of light
-Used both by config and samples
-------------------------------------------------*/
+
+/**
+ * The enum to follow the intensity of light
+ * Used both by config and samples
+ * @enum
+ */
 enum LightIntensity {
     DARK = 1,
     SHADY,

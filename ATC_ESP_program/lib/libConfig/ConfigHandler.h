@@ -17,18 +17,19 @@ private:
 public:
     ConfigHandler();
     ~ConfigHandler();
+    ConfigData* getConfiguration() { return this->configuration; }
     /**
      * Loads the configuration data from the EEPROM
      */
-    ConfigData loadConfigDataFromMemory();
+    void loadConfigDataFromMemory();
     /**
      * Writes the given config data to the EEPROM
      */
-    void saveConfigData(const ConfigData& data);
+    void saveConfigData(ConfigData* data);
     /**
      * Check which of the ConfigStatus enum's value is assignable to the current state of the system (sensors)
      */
-    ConfigStatus checkFullfillmentStatus(const SensorData& data, const time_t& timeNow);
+    ConfigStatus checkFullfillmentStatus(const SensorData& data);
 };
 
 #endif
