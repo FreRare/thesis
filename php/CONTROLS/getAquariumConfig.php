@@ -3,7 +3,7 @@
 // Expexts an 'id' in post for the aquariums id also a phone flag if the request is coming from phone
 require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
-if (!empty($_POST["id"])) {
+if (isset($_POST["id"])) {
     $aqId = $_POST["id"];
     $config = $DAO->selectAQConfigForAquarium($aqId);
     if ($config == null) {

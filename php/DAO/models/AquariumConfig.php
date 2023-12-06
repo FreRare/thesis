@@ -265,7 +265,7 @@ class AquariumConfig
         $t["waterLvlAlert"] = $this->waterLvlAlert;
         $t["feedingTime"] = $this->feedingTime;
         $t["foodPortions"] = $this->foodPortions;
-        $t["samplePeroid"] = $this->samplePeriod;
+        $t["samplePeriod"] = $this->samplePeriod;
 
         return (["config" => $t]);
     }

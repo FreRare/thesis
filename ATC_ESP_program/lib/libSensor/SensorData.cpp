@@ -32,8 +32,8 @@ void SensorData::SetTimeStamp(time_t timeStamp) { timeStamp = timeStamp; }
 
 char* SensorData::toCharArray()
 {
-    char* dataCharArray[CHAR_ARRAY_LENGTH] = {};
-    sprintf(*dataCharArray, "%.2f::%.2f::%d::%d::%lld", this->temperature, this->ph, this->lightAmount, this->waterLvl,
+    char* dataCharArray = new char[CHAR_ARRAY_LENGTH];
+    sprintf(dataCharArray, "%.2f::%.2f::%d::%d::%lld", this->temperature, this->ph, this->lightAmount, this->waterLvl,
         this->timeStamp);
-    return *dataCharArray;
+    return dataCharArray;
 }

@@ -128,3 +128,24 @@ bool ConfigData::equals(const ConfigData* c)
         && this->feedingTime == c->feedingTime && this->feedingPortions == c->feedingPortions
         && this->samplePeriod == c->samplePeriod;
 }
+
+void ConfigData::print()
+{
+    Serial.println("CONFIG: ");
+    Serial.print("Min Temp: ");
+    Serial.println(this->minTemp);
+    Serial.print("Max Temp: ");
+    Serial.println(this->maxTemp);
+    Serial.print("Min Ph: ");
+    Serial.println(this->minPh);
+    Serial.print("Max Ph: ");
+    Serial.println(this->maxPh);
+    Serial.print("Ol 2 On: ");
+    Serial.println(this->outlet2On);
+    Serial.print("Ol 2 Off: ");
+    Serial.println(this->outlet2Off);
+    Serial.print("Feeding time: ");
+    Serial.println(this->feedingTime);
+    Serial.print("Sample period: ");
+    Serial.println(this->samplePeriod);
+}

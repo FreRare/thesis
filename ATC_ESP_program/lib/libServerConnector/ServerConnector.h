@@ -16,7 +16,7 @@
 #define CONN_TIMEOUT 60 // Connection timeout = timeout * 2 seconds
 // (2 min should be enough after power outage for the wifi to reboot)
 #define SYSTEMID_TEXT_LENGTH 20
-#define CONFIG_UPDATE_POST_DATA_LENGTH 7
+#define CONFIG_UPDATE_POST_DATA_LENGTH 16
 #define NTP_SERVER_ADDRESS "pool.ntp.org"
 
 /**

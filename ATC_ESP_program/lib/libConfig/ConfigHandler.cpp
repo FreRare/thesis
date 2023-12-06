@@ -15,7 +15,6 @@ void ConfigHandler::saveConfigData(ConfigData* data) { ConfigHandler::memHandler
 void ConfigHandler::loadConfigDataFromMemory()
 {
     ConfigData* loadedData = ConfigHandler::memHandler->readConfigData();
-    Serial.println("Config data loaded!");
     this->configuration = loadedData;
 }
 

@@ -49,8 +49,6 @@ void UIHandler::writeLine(const char* msg, const uint8_t& line, const uint8_t& c
     if (line < 1 || line > 4) {
         UIHandler::display.print("Invalid line number!");
     }
-    Serial.print("LCD Text: ");
-    Serial.println(msg);
     UIHandler::display.setCursor(col, line - 1);
     UIHandler::display.print(msg);
 }
@@ -74,8 +72,6 @@ void UIHandler::makeScrollingText(const char* msg, const uint8_t line, const uin
         }
     }
     message[messageLen - 1] = '\0';
-    Serial.print("Scrolling text:");
-    Serial.println(message);
     // Print floating text
     for (uint8_t i = 0; i < cycles; i++) {
         for (unsigned int pos = 0; pos < messageLen; pos++) {
@@ -89,6 +85,35 @@ void UIHandler::makeScrollingText(const char* msg, const uint8_t line, const uin
             delay(delayTime);
         }
     }
+}
+
+void coorigateDigits(int h, int min, char str[6])
+{
+    if (h > 9 && min > 9) {
+        sprintf(str, "%2d:%2d", h, min);
+    } else if (h > 9) {
+        sprintf(str, "%2d:0%1d", h, min);
+    } else if (min > 9) {
+        sprintf(str, "0%1d:%2d", h, min);
+    } else {
+        sprintf(str, "0%1d:0%1d", h, min);
+    }
+}
+
+void UIHandler::writeBasicInfo(const float& ph, const float& temp)
+{
+    // Display clock data
+    int h = hour();
+    int min = minute();
+    char clockStr[6]; // (2):(2)+\0 = 6
+    coorigateDigits(h, min, clockStr);
+    UIHandler::writeLine(clockStr, 1, 3);
+    char phStr[10]; // Ph: (2.2)+\0 = 10
+    sprintf(phStr, "Ph: %2.2f", ph);
+    UIHandler::writeLine(phStr, 2, 2);
+    char tempStr[20]; // Temperature: (3) °C+\0 = 20
+    sprintf(tempStr, "Temperature: %2.1f°C", temp);
+    UIHandler::writeLine(tempStr, 3);
 }
 
 void UIHandler::clear() { UIHandler::display.clear(); }

@@ -102,6 +102,8 @@ public:
      * Checks if the gice config equals the current object
      */
     bool equals(const ConfigData* c);
+
+    void print();
 };
 
 #endif

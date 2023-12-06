@@ -1,33 +1,37 @@
 #include "ActuatorHandler.h"
 #include "ConfigHandler.h"
 #include "MemoryHandler.h"
+#include "SensorHandler.h"
 #include "ServerConnector.h"
 #include "deviceInit.h"
 #include <Arduino.h>
-#include <stdio.h>
 
 #define CONFIG_UPDATE_INTERVAL_MIN 30
 
 ServerConnector* g_server;
 ActuatorHandler* g_actuatorHandler;
 ConfigHandler* g_configHandler;
+SensorHandler* g_sensorHandler;
 
-void coorigateDigits(int h, int min, char str[6])
+void updateConfig()
 {
-    if (h > 9 && min > 9) {
-        sprintf(str, "%2d:%2d", h, min);
-    } else if (h > 9) {
-        sprintf(str, "%2d:0%1d", h, min);
-    } else if (min > 9) {
-        sprintf(str, "0%1d:%2d", h, min);
-    } else {
-        sprintf(str, "0%1d:0%1d", h, min);
+    // Update config from DB
+    ConfigData* currentConfig = g_configHandler->getConfiguration();
+    ConfigData* config = g_server->updateConfigData();
+    if (config != nullptr) {
+        Serial.println("Config downloaded!");
+        config->print();
+    }
+    // If we have no saved config or there was update save the updated config
+    if (currentConfig == nullptr || !currentConfig->equals(config)) {
+        Serial.println("Updating config in memory...");
+        g_configHandler->saveConfigData(config);
     }
 }
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
     while (!Serial)
         ;
     //! MemoryHandler::getInstance()->clearMemory(0, 512);
@@ -38,14 +42,8 @@ void setup()
     g_server = new ServerConnector();
     g_actuatorHandler = new ActuatorHandler();
     g_configHandler = new ConfigHandler();
-    // Update config from DB
-    ConfigData* currentConfig = g_configHandler->getConfiguration();
-    ConfigData* config = g_server->updateConfigData();
-    // If we have no saved config or there was update save the updated config
-    if (currentConfig == nullptr || !currentConfig->equals(config)) {
-        g_configHandler->saveConfigData(config);
-    }
-
+    g_sensorHandler = new SensorHandler();
+    updateConfig();
     // Clean up LCD
     UIHandler::getInstance()->clear();
 }
@@ -58,27 +56,24 @@ void loop()
     if (h == 0 && min == 0 && sec < 10 && sec > 0) { // At midnight sync time (10 sec interval)
         g_server->syncNTPTime();
     }
-    // Display clock data
-    char clockStr[6];
-    coorigateDigits(h, min, clockStr);
-    UIHandler::getInstance()->writeLine("Clock: ", 1);
-    UIHandler::getInstance()->writeLine(clockStr, 2, 3);
+    // Config updating with interval
+    if (min % CONFIG_UPDATE_INTERVAL_MIN == 0) {
+        updateConfig();
+    }
 
     // Light timing -> should be in ActuatorHandler
     if (h >= 8 && h <= 20) {
-        g_actuatorHandler->turnOnChannel1();
+        g_actuatorHandler->channelSwithcer(1, true);
     } else if ((h < 8 || h > 20)) {
-        g_actuatorHandler->turnOffChannel1();
+        g_actuatorHandler->channelSwithcer(1, false);
     }
-    // Config updating with interval
-    if (min % CONFIG_UPDATE_INTERVAL_MIN == 0) {
-        ConfigData* currentConfig = g_configHandler->getConfiguration();
-        ConfigData* config = g_server->updateConfigData();
-        // If we have no saved config or there was update save the updated config
-        if (currentConfig == nullptr || !currentConfig->equals(config)) {
-            g_configHandler->saveConfigData(config);
-        }
-    }
+
+    Serial.println("Reading sensors...");
+    g_sensorHandler->readSensors();
+    SensorData* sample = g_sensorHandler->getLastSamples();
+    char* sampleString = sample->toCharArray();
+    Serial.print("Sensor samples: ");
+    Serial.println(sampleString);
 
     delay(5000);
 }

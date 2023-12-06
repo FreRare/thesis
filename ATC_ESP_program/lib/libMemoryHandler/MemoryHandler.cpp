@@ -7,7 +7,6 @@ MemoryHandler* MemoryHandler::instancePtr = new MemoryHandler();
 MemoryHandler::MemoryHandler()
 {
     EEPROM.begin(EEPROM_SIZE);
-    this->sensorRecordCount = 0;
     this->actualAddress = 0;
 }
 
@@ -59,14 +58,19 @@ void MemoryHandler::writeConfigData(ConfigData* configData)
 {
     this->actualAddress = this->configDataStartAddress;
     EEPROM.put(this->actualAddress, *configData);
+    EEPROM.commit();
+    Serial.println("Wrote config data to memory: ");
+    configData->print();
 }
 
 ConfigData* MemoryHandler::readConfigData()
 {
     this->actualAddress = this->configDataStartAddress;
-    ConfigData config;
-    EEPROM.get(this->actualAddress, config);
-    return &config;
+    ConfigData* config = new ConfigData();
+    EEPROM.get(this->actualAddress, *config);
+    Serial.println("Config data read: ");
+    config->print();
+    return config;
 }
 
 // Clears the memory from 0 until length address

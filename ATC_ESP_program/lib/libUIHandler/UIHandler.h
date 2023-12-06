@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 #include <TimeLib.h>
+#include <stdio.h>
 
 #define LCD_ADDRESS 0x27
 #define LCD_ROWS 4
@@ -26,7 +27,7 @@ public:
         const char* msg, const uint8_t line, const uint16_t& delayTime = 400, const uint8_t& cycles = 1);
     static void writeLine(const char* msg, const uint8_t& line, const uint8_t& col = 0);
     static void clearLine(const uint8_t& line);
-    static void writeBasicInfo(const time_t& now, const float& ph, const uint8_t& temp);
+    static void writeBasicInfo(const float& ph, const float& temp);
     static void clear();
 };
 

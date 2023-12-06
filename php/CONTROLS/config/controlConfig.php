@@ -13,9 +13,4 @@ if (isset($_POST["email"]) && !filter_var($_POST["email"], FILTER_VALIDATE_EMAIL
     die();
 }
 
-// Escape special characters
-foreach ($_POST as $key => $value) {
-    $_POST[$key] = htmlspecialchars($value, ENT_QUOTES, "UTF-8");
-}
-
 header("Content-Type: application/json");

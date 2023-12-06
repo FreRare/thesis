@@ -4,6 +4,19 @@
 #include "deviceInit.h"
 #include <DallasTemperature.h>
 #include <OneWire.h>
+#include <TimeLib.h>
+
+#define PHOTORES_DARK_LIMIT 176
+#define PHOTORES_SHADY_LIMIT 282
+#define PHOTORES_MEDIUM_LIMIT 388
+#define PHOTORES_LIGHT_LIMIT 494
+#define PH_SENSOR_BUF_SIZE 10
+// The ph sensor is using 5 V, but it's devided down to 3.3V level so this is what the analog port will reference to
+#define REFERECNCE_VOLTAGE 3.3f
+#define ADC_RESOLUTION 1024.0f
+#define LIGHT_SENSOR_CH 2
+#define WATER_SENSOR_CH 0
+#define PH_SENSOR_CH 1
 
 /**
  * This class is handling the different sensors and is able to read their data
@@ -30,21 +43,23 @@ private:
     /**
      * Reads the temperature sensor
      * @returns - The read temperature
+     * @private
      */
     float readTempSensor();
-    uint16_t readLightSensor();
-    uint16_t readWaterSensor();
+    LightIntensity readLightSensor();
+    uint8_t readWaterSensor();
     float readPhSensor();
+    float phCalibration;
 
 public:
     SensorHandler();
     /**
      * Reads all the sensors and makes a SensorData object out of it
-     * @returns - The SensorData object created from the sensors' data
+     * @returns - The SensorData object created from the sensors' currently measured data
      * @public
      */
-    SensorData readSensors();
-    SensorData getLastSamples();
+    void readSensors();
+    SensorData* getLastSamples() { return this->lastSamples; }
 };
 
 #endif

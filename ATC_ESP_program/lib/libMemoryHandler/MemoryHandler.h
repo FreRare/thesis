@@ -21,7 +21,6 @@ public:
     const uint16_t systemIdentificationNumberAddress
         = EEPROM_ADDRESS_DIFF * 4; // WiFi credentials are 40 char * 2 + 40 diff * 2 = 40*4
     const uint16_t configDataStartAddress = EEPROM_ADDRESS_DIFF * 6; //
-    uint16_t sensorRecordCount;
     uint16_t actualAddress; // Stores the address where [the memory pointer is/will be
     ~MemoryHandler();
     MemoryHandler(const MemoryHandler& m) = delete; // Remove copy constructor

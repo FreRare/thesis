@@ -108,22 +108,31 @@ ConfigData* ServerConnector::updateConfigData()
     }
     this->httpClient.begin(this->client, ServerConnector::configUpdatePath);
     this->httpClient.addHeader("Content-Type", "application/json");
-    char postData[CONFIG_UPDATE_POST_DATA_LENGTH];
-    sprintf(postData, "id=%d", this->config->getSystemID());
+    char* postData = new char[CONFIG_UPDATE_POST_DATA_LENGTH];
+    sprintf(postData, "{\"id\":\"%d\"}", this->config->getSystemID());
     uint16_t responseCode = this->httpClient.POST(postData);
     if (responseCode == HTTP_CODE_OK) {
         String payload = this->httpClient.getString();
+        Serial.println("HTTP response OK.");
+        Serial.println(payload);
         DynamicJsonDocument configDoc(512);
         DeserializationError err = deserializeJson(configDoc, payload);
         if (err) {
             Serial.println("JSON serialization failed!");
             return nullptr;
         }
-        ConfigData* freshConfig = new ConfigData(configDoc["data"]["minTemp"], configDoc["data"]["maxTemp"],
-            configDoc["data"]["minPh"], configDoc["data"]["maxPh"], configDoc["data"]["ol1On"],
-            configDoc["data"]["ol1Off"], configDoc["data"]["ol2On"], configDoc["data"]["ol2Off"],
-            configDoc["data"]["ol3On"], configDoc["data"]["ol3Off"], configDoc["data"]["waterLvlAlert"],
-            configDoc["data"]["feedingTime"], configDoc["data"]["foodPortions"], configDoc["data"]["samplePeriod"]);
+        if (configDoc["data"]["error"]) {
+            Serial.println("Error from api!");
+            return nullptr;
+        }
+        ConfigData* freshConfig
+            = new ConfigData(configDoc["data"]["config"]["minTemp"], configDoc["data"]["config"]["maxTemp"],
+                configDoc["data"]["config"]["minPh"], configDoc["data"]["config"]["maxPh"],
+                configDoc["data"]["config"]["ol1On"], configDoc["data"]["config"]["ol1Off"],
+                configDoc["data"]["config"]["ol2On"], configDoc["data"]["config"]["ol2Off"],
+                configDoc["data"]["config"]["ol3On"], configDoc["data"]["config"]["ol3Off"],
+                configDoc["data"]["config"]["waterLvlAlert"], configDoc["data"]["config"]["feedingTime"],
+                configDoc["data"]["config"]["foodPortions"], configDoc["data"]["config"]["samplePeriod"]);
         return freshConfig;
     }
     return nullptr;

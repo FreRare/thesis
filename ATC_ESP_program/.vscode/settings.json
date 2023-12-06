@@ -16,6 +16,15 @@
     "ranges": "cpp",
     "chrono": "cpp",
     "random": "cpp",
-    "limits": "cpp"
+    "limits": "cpp",
+    "optional": "cpp",
+    "istream": "cpp",
+    "ostream": "cpp",
+    "ratio": "cpp",
+    "functional": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "utility": "cpp",
+    "variant": "cpp"
   }
 }
