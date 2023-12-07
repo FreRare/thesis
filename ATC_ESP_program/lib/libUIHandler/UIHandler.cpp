@@ -102,6 +102,7 @@ void coorigateDigits(int h, int min, char str[6])
 
 void UIHandler::writeBasicInfo(const float& ph, const float& temp)
 {
+    UIHandler::display.clear();
     // Display clock data
     int h = hour();
     int min = minute();
@@ -110,9 +111,9 @@ void UIHandler::writeBasicInfo(const float& ph, const float& temp)
     UIHandler::writeLine(clockStr, 1, 3);
     char phStr[10]; // Ph: (2.2)+\0 = 10
     sprintf(phStr, "Ph: %2.2f", ph);
-    UIHandler::writeLine(phStr, 2, 2);
+    UIHandler::writeLine(phStr, 2);
     char tempStr[20]; // Temperature: (3) °C+\0 = 20
-    sprintf(tempStr, "Temperature: %2.1f°C", temp);
+    sprintf(tempStr, "Temperature: %2.1f %cC", temp, (char)223);
     UIHandler::writeLine(tempStr, 3);
 }
 

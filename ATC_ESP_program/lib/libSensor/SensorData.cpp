@@ -10,25 +10,25 @@ SensorData::SensorData(
 {
 }
 
-float SensorData::GetTemperature() const { return temperature; }
+float SensorData::getTemperature() const { return temperature; }
 
-void SensorData::SetTemperature(float temperature) { temperature = temperature; }
+void SensorData::setTemperature(float temperature) { temperature = temperature; }
 
-LightIntensity SensorData::GetLightAmount() const { return lightAmount; }
+LightIntensity SensorData::getLightAmount() const { return lightAmount; }
 
-void SensorData::SetLightAmount(LightIntensity lightAmount) { lightAmount = lightAmount; }
+void SensorData::setLightAmount(LightIntensity lightAmount) { lightAmount = lightAmount; }
 
-uint8_t SensorData::GetWaterLvl() const { return waterLvl; }
+uint8_t SensorData::getWaterLvl() const { return waterLvl; }
 
-void SensorData::SetWaterLvl(uint8_t waterLvl) { waterLvl = waterLvl; }
+void SensorData::setWaterLvl(uint8_t waterLvl) { waterLvl = waterLvl; }
 
-float SensorData::GetPh() const { return ph; }
+float SensorData::getPh() const { return ph; }
 
-void SensorData::SetPh(float ph) { ph = ph; }
+void SensorData::setPh(float ph) { ph = ph; }
 
-time_t SensorData::GetTimeStamp() const { return timeStamp; }
+time_t SensorData::getTimeStamp() const { return timeStamp; }
 
-void SensorData::SetTimeStamp(time_t timeStamp) { timeStamp = timeStamp; }
+void SensorData::setTimeStamp(time_t timeStamp) { timeStamp = timeStamp; }
 
 char* SensorData::toCharArray()
 {

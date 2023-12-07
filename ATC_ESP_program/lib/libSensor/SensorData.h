@@ -24,25 +24,25 @@ public:
     SensorData(
         const float& temp, const float& ph, const LightIntensity& light, const uint8_t& waterLvl, const time_t& time);
 
-    float GetTemperature() const;
+    float getTemperature() const;
 
-    void SetTemperature(float temperature);
+    void setTemperature(float temperature);
 
-    LightIntensity GetLightAmount() const;
+    LightIntensity getLightAmount() const;
 
-    void SetLightAmount(LightIntensity lightAmount);
+    void setLightAmount(LightIntensity lightAmount);
 
-    uint8_t GetWaterLvl() const;
+    uint8_t getWaterLvl() const;
 
-    void SetWaterLvl(uint8_t waterLvl);
+    void setWaterLvl(uint8_t waterLvl);
 
-    float GetPh() const;
+    float getPh() const;
 
-    void SetPh(float ph);
+    void setPh(float ph);
 
-    time_t GetTimeStamp() const;
+    time_t getTimeStamp() const;
 
-    void SetTimeStamp(time_t timeStamp);
+    void setTimeStamp(time_t timeStamp);
 
     /**
      * @public

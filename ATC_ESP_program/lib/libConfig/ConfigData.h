@@ -62,7 +62,7 @@ public:
 
     uint16_t GetOutlet3Off() const { return outlet3Off; }
 
-    uint8_t GetWaterLvlAlert() const { return waterLvlAlert; }
+    uint8_t getWaterLvlAlert() const { return waterLvlAlert; }
 
     uint16_t GetFeedingTime() const { return feedingTime; }
 
@@ -90,7 +90,7 @@ public:
 
     void SetOutlet3Off(uint16_t outlet3Off);
 
-    void SetWaterLvlAlert(uint8_t waterLvlAlert);
+    void setWaterLvlAlert(uint8_t waterLvlAlert);
 
     void SetFeedingTime(uint16_t feedingTime);
 

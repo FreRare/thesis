@@ -97,7 +97,7 @@ void ConfigData::SetOutlet3Off(uint16_t outlet3Off)
     }
 }
 
-void ConfigData::SetWaterLvlAlert(uint8_t waterLvlAlert)
+void ConfigData::setWaterLvlAlert(uint8_t waterLvlAlert)
 {
     if (waterLvlAlert <= MAX_WATER_LVL) {
         waterLvlAlert = waterLvlAlert;

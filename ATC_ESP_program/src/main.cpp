@@ -74,6 +74,7 @@ void loop()
     char* sampleString = sample->toCharArray();
     Serial.print("Sensor samples: ");
     Serial.println(sampleString);
+    UIHandler::writeBasicInfo(sample->getPh(), sample->getTemperature());
 
     delay(5000);
 }
