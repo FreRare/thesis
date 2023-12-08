@@ -7,7 +7,7 @@ class SensorSample
     private $ph;
     private $waterLvl;
     private $lightAmount;
-    public function __construct($id, $sampleTime, $temp, $ph, $waterLvl, $lightAmount)
+    public function __construct(int $id, DateTime $sampleTime, float $temp, float $ph, int $waterLvl, int $lightAmount)
     {
         $this->id = $id;
         $this->sampleTime = $sampleTime;

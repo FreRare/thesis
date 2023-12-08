@@ -64,10 +64,7 @@ LightIntensity SensorHandler::readLightSensor()
 
 uint8_t SensorHandler::readWaterSensor()
 {
-    digitalWrite(WATER_LVL_SENSOR_POWER, HIGH);
-    delay(10);
     const uint16_t value = analogRead(ANALOG_SENSOR_PIN);
-    digitalWrite(WATER_LVL_SENSOR_POWER, LOW);
     Serial.print("Water measured: ");
     Serial.println(value);
     // TODO: return valid percentage

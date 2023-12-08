@@ -15,8 +15,9 @@
 
 #define CONN_TIMEOUT 60 // Connection timeout = timeout * 2 seconds
 // (2 min should be enough after power outage for the wifi to reboot)
-#define SYSTEMID_TEXT_LENGTH 20
-#define CONFIG_UPDATE_POST_DATA_LENGTH 16
+#define SYSTEMID_TEXT_LENGTH 20 // The length of the string to display system id
+#define CONFIG_UPDATE_POST_DATA_LENGTH 17 // The length of the str to send config update json
+#define SESNOR_DATA_POST_LENGTH 116 // The length of the str to post sensor data
 #define NTP_SERVER_ADDRESS "pool.ntp.org"
 
 /**
@@ -30,7 +31,6 @@ private:
     WiFiUDP ntpUDP;
     NTPClient* timeClient;
     AQWiFiConfig* config;
-    static const char* API_URL;
     static const char* connectionCheckPath;
     static const char* timePath;
     static const char* sensorDataUploadPath;
@@ -68,7 +68,7 @@ public:
     /**
      * Posts the provided data to the database
      */
-    void postSensorData(const SensorData& data);
+    bool postSensorData(const SensorData* data);
     /**
      * Sends a config status code to the API when a problem occurs
      */

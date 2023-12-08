@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS configs(
 CREATE TABLE IF NOT EXISTS sensorSamples(
     id BIGINT NOT NULL,
     sampleTime DATETIME NOT NULL,
-    temp FLOAT(2, 2) NOT NULL,
-    ph FLOAT(2, 2) NOT NULL,
+    temp DECIMAL(4, 2) NOT NULL,
+    ph DECIMAL(4, 2) NOT NULL,
     waterLvl INT NOT NULL,
     lightAmount INT NOT NULL,
 

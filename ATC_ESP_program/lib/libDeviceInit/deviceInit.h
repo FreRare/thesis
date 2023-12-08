@@ -4,14 +4,15 @@
 
 // PIN DEFINITIONS
 //-------------------------
-#define DIGITAL_TEMP_SENSOR_PIN D5 // For the digital temp sensor
-#define RELAY_PIN D0 // MUX Y (for relays)
+#define DIGITAL_TEMP_SENSOR_PIN D9 // For the digital temp sensor
 #define ANALOG_SENSOR_PIN A0 // MUX X (for sensors)
-#define MUX_SELECT_A D3 // MUX A selector
-#define MUX_SELECT_B D4 // MUX B selector
-#define FEEDER_SERVO_PIN D6 // Servo pin for feeder (used in PWM)
-#define WATER_LVL_SENSOR_POWER D7 // Water sensor power pin (to turn on/off the sensor)
+#define MUX_SELECT_A D7 // MUX A selector
+#define MUX_SELECT_B D6 // MUX B selector
+#define FEEDER_MOTOR_PIN D5 // Servo pin for feeder (used in PWM)
 #define CALIBRATION_BTN_PIN D8 // Button for calibrating the sensors, mostly the water lvl 100%
+#define RELAY_CH1_PIN D4
+#define RELAY_CH2_PIN D3
+#define RELAY_CH3_PIN D0
 //-----------------------------
 
 /**

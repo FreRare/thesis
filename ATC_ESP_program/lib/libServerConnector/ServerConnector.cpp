@@ -1,6 +1,5 @@
 #include "ServerConnector.h"
 
-const char* ServerConnector::API_URL = "http://atc.takacsnet.hu/CONTROLS";
 const char* ServerConnector::connectionCheckPath = "http://atc.takacsnet.hu/CONTROLS/connectionCheck.php";
 const char* ServerConnector::timePath = "http://atc.takacsnet.hu/CONTROLS/getCurrentTime.php";
 const char* ServerConnector::sensorDataUploadPath = "http://atc.takacsnet.hu/CONTROLS/sensorDataUpload.php";
@@ -136,6 +135,28 @@ ConfigData* ServerConnector::updateConfigData()
         return freshConfig;
     }
     return nullptr;
+}
+
+bool ServerConnector::postSensorData(const SensorData* data)
+{
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("Sensor data posting: Network not connected!");
+        return false;
+    }
+    char* sensorDataJson = new char[SESNOR_DATA_POST_LENGTH];
+    sprintf(sensorDataJson,
+        "{\"id\":\"%d\",\"temp\":\"%2.2f\",\"ph\":\"%2.2f\",\"light\":\"%1d\",\"water\":\"%d\",\"timestamp\":\"%lld\"}",
+        this->config->getSystemID(), data->getTemperature(), data->getPh(), data->getLightAmount(), data->getWaterLvl(),
+        data->getTimeStamp());
+    this->httpClient.begin(this->client, ServerConnector::sensorDataUploadPath);
+    uint16_t responseCode = this->httpClient.POST(sensorDataJson);
+    if (responseCode != HTTP_CODE_OK) {
+        Serial.print("Sensor data posting: HTTP error: ");
+        Serial.println(responseCode);
+        return false;
+    }
+    Serial.println("Sensor data posted successfully!");
+    return true;
 }
 
 void ServerConnector::disconnect() { WiFi.disconnect(); }

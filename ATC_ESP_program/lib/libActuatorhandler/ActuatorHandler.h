@@ -4,10 +4,6 @@
 #include <Arduino.h>
 
 #define CHANNEL_COUNT 3
-#define CH1_PIN D7 // D7
-#define CH2_PIN D8 // D8
-#define CH3_PIN D9 // RX
-#define CH4_PIN D10 // TX - both can be used as digital GPIO //! WRITE ONLY
 
 class ActuatorHandler {
 private:
@@ -23,6 +19,7 @@ public:
      * @param state
      */
     void channelSwithcer(const uint8_t& channel, const bool& state);
+    void feed(const uint8_t& portions);
 };
 
 #endif

@@ -2,7 +2,6 @@
 
 ActuatorHandler::ActuatorHandler()
 {
-    pinMode(RELAY_PIN, OUTPUT);
     this->channelStates = new bool[CHANNEL_COUNT];
     for (uint8_t i = 0; i < CHANNEL_COUNT; i++) {
         this->channelStates[i] = false;
@@ -11,7 +10,7 @@ ActuatorHandler::ActuatorHandler()
 
 void ActuatorHandler::channelSwithcer(const uint8_t& channel, const bool& state)
 {
-    if (channel > 4 || channel == 0) {
+    if (channel > 3 || channel == 0) {
         Serial.println("Invalid channel!");
         return;
     }
@@ -23,16 +22,13 @@ void ActuatorHandler::channelSwithcer(const uint8_t& channel, const bool& state)
     const uint8_t stateToWrite = state ? HIGH : LOW;
     switch (channel) {
     case 1:
-        digitalWrite(CH1_PIN, stateToWrite);
+        digitalWrite(RELAY_CH1_PIN, stateToWrite);
         break;
     case 2:
-        digitalWrite(CH2_PIN, stateToWrite);
+        digitalWrite(RELAY_CH2_PIN, stateToWrite);
         break;
     case 3:
-        digitalWrite(CH3_PIN, stateToWrite);
-        break;
-    case 4:
-        digitalWrite(CH4_PIN, stateToWrite);
+        digitalWrite(RELAY_CH3_PIN, stateToWrite);
         break;
     default:
         break;
@@ -40,3 +36,5 @@ void ActuatorHandler::channelSwithcer(const uint8_t& channel, const bool& state)
     // Set state to current
     this->channelStates[channel - 1] = state;
 }
+
+void ActuatorHandler::feed(const uint8_t& portions) { return; }

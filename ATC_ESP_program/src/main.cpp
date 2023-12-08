@@ -68,13 +68,12 @@ void loop()
         g_actuatorHandler->channelSwithcer(1, false);
     }
 
-    Serial.println("Reading sensors...");
-    g_sensorHandler->readSensors();
-    SensorData* sample = g_sensorHandler->getLastSamples();
-    char* sampleString = sample->toCharArray();
-    Serial.print("Sensor samples: ");
-    Serial.println(sampleString);
-    UIHandler::writeBasicInfo(sample->getPh(), sample->getTemperature());
-
+    if (sec > 0 && sec < 10) {
+        g_sensorHandler->readSensors();
+        SensorData* sample = g_sensorHandler->getLastSamples();
+        g_server->postSensorData(sample);
+    }
+    UIHandler::writeBasicInfo(
+        g_sensorHandler->getLastSamples()->getPh(), g_sensorHandler->getLastSamples()->getTemperature());
     delay(5000);
 }

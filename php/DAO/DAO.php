@@ -29,7 +29,7 @@ class AQDAO implements AQDAOI
     private const CREATE_CONFIG = "INSERT INTO configs (id, minTemp, maxTemp, minPh, maxPh, OnOutlet1, OffOutlet1, OnOutlet2, OffOutlet2, OnOutlet3, OffOutlet3, waterLvlAlert, feedingTime, foodPortions, filterClean, waterChange, samplePeriod, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private const DELETE_CONFIG = "DELETE FROM configs WHERE id = ?";
     private const UPDATE_CONFIG = "UPDATE configs SET minTemp = ?, maxTemp = ?, minPh = ?, maxPh = ?, OnOutlet1 = ?, OffOutlet1 = ?, OnOutlet2 = ?, OffOutlet2 = ?, OnOutlet3 = ?, OffOutlet3 = ?, waterLvlAlert = ?, feedingTime = ?, foodPortions = ?, filterClean = ?, waterChange = ?, samplePeriod = ?, lastModifiedDate = ? WHERE id = ?";
-    private const SELECT_SENSOR_SAMPLES_FOR_AQUARIUM = "SELECT * FROM sensorSamples WHERE id = ?";
+    private const SELECT_SENSOR_SAMPLES_FOR_AQUARIUM = "SELECT temp, ph, waterLvl, lightAmount, sampleTime FROM sensorSamples WHERE id = ?";
     private const SELECT_SENSOR_SAMPLES_FOR_AQUARIUM_IN_RANGE = "SELECT * FROM sensorSamples WHERE id = ? AND sampleTime >= ? AND sampleTime <= ?";
     private const CREATE_SENSOR_SAMPLE = "INSERT INTO sensorSamples (id, sampleTime, temp, ph, waterLvl, lightAmount) VALUES (?, ?, ?, ?, ?, ?)";
     private const DELETE_SENSOR_SAMPLE = "DELETE FROM sensorSamples WHERE id = ?";
@@ -243,7 +243,7 @@ class AQDAO implements AQDAOI
         $samplePeriod = $aqConfig->getSamplePeriod();
         $lastModifiedDate = $aqConfig->getLastModifiedDate()->format('Y-m-d H:i:s');
 
-        $stm->bind_param("issssiiiiiiiiiiiis", $aquariumId, $minTemp, $maxTemp, $minPh, $maxPh, $lightOn, $lightOff, $filterOn, $filterOff, $airOn, $airOff, $waterLvlAlert, $feedingTime, $foodPortions, $filterClean, $waterChange, $samplePeriod, $lastModifiedDate);
+        $stm->bind_param("iddddiiiiiiiiiiiis", $aquariumId, $minTemp, $maxTemp, $minPh, $maxPh, $lightOn, $lightOff, $filterOn, $filterOff, $airOn, $airOff, $waterLvlAlert, $feedingTime, $foodPortions, $filterClean, $waterChange, $samplePeriod, $lastModifiedDate);
         $success = $stm->execute();
         $stm->close();
         return $success;
@@ -291,14 +291,12 @@ class AQDAO implements AQDAOI
         $stm = $this->connection->prepare(AQDAO::SELECT_SENSOR_SAMPLES_FOR_AQUARIUM);
         $stm->bind_param("i", $id);
         $stm->execute();
-        $res = $stm->get_result();
-        $stm->close();
+        $stm->bind_result($temp, $ph, $water, $light, $time);
         $samples = [];
-        if ($res->num_rows > 0) {
-            while ($row = $res->fetch_assoc()) {
-                $samples[] = new SensorSample($row["id"], new DateTime("@" . $row["sampleTime"]), $row["temp"], $row["ph"], $row["waterLvl"], $row["lightAmount"]);
-            }
+        while ($stm->fetch()) {
+            $samples[] = new SensorSample($id, new DateTime($time), $temp, $ph, $water, $light);
         }
+        $stm->close();
         return $samples;
     }
 
@@ -314,7 +312,7 @@ class AQDAO implements AQDAOI
         $samples = [];
         if ($res->num_rows > 0) {
             while ($row = $res->fetch_assoc()) {
-                $samples[] = new SensorSample($row["id"], new DateTime("@" . $row["sampleTime"]), $row["temp"], $row["ph"], $row["waterLvl"], $row["lightAmount"]);
+                $samples[] = new SensorSample($row["id"], new DateTime($row["sampleTime"]), $row["temp"], $row["ph"], $row["waterLvl"], $row["lightAmount"]);
             }
         }
         return $samples;
@@ -330,7 +328,7 @@ class AQDAO implements AQDAOI
         $waterLvl = $sample->getWaterLvl();
         $lightAmount = $sample->getLightAmount();
 
-        $stm->bind_param("isisii", $aquariumId, $sampleTime, $temp, $ph, $waterLvl, $lightAmount);
+        $stm->bind_param("isddii", $aquariumId, $sampleTime, $temp, $ph, $waterLvl, $lightAmount);
         $success = $stm->execute();
         $stm->close();
         return $success;
@@ -385,7 +383,6 @@ class AQDAO implements AQDAOI
         $stm->bind_param("s", $mail);
         $stm->execute();
         $stm->bind_result($id, $name, $length, $height, $width, $fishCount, $inactive);
-
         $resultAquariums = [];
         while ($stm->fetch()) {
             $resultAquariums[] = new Aquarium($id, $name, $length, $height, $width, $fishCount);
