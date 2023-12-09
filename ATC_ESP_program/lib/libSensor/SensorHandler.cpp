@@ -109,13 +109,13 @@ void SensorHandler::readSensors()
 {
     float temp = this->readTempSensor();
     selectMux(LIGHT_SENSOR_CH);
-    delay(3000);
+    delay(1500);
     LightIntensity light = this->readLightSensor();
     selectMux(WATER_SENSOR_CH);
-    delay(3000);
+    delay(1500);
     uint8_t water = this->readWaterSensor();
     selectMux(PH_SENSOR_CH);
-    delay(3000);
+    delay(1500);
     float ph = this->readPhSensor();
     this->lastSamples = new SensorData(temp, ph, light, water, now());
 }

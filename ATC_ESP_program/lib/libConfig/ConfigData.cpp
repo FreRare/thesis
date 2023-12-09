@@ -21,11 +21,11 @@ ConfigData::ConfigData(const float& minT, const float& maxT, const float& minPh,
 {
 }
 
-void ConfigData::SetMinTemp(float minTemp) { minTemp = minTemp; }
+void ConfigData::setMinTemp(float minTemp) { minTemp = minTemp; }
 
-void ConfigData::SetMaxTemp(float maxTemp) { maxTemp = maxTemp; }
+void ConfigData::setMaxTemp(float maxTemp) { maxTemp = maxTemp; }
 
-void ConfigData::SetMinPh(float minPh)
+void ConfigData::setMinPh(float minPh)
 {
     if (minPh >= MIN_PH && minPh < MAX_PH) {
         minPh = minPh;
@@ -34,7 +34,7 @@ void ConfigData::SetMinPh(float minPh)
     }
 }
 
-void ConfigData::SetMaxPh(float maxPh)
+void ConfigData::setMaxPh(float maxPh)
 {
     if (maxPh >= MIN_PH && maxPh < MAX_PH) {
         maxPh = maxPh;
@@ -43,7 +43,7 @@ void ConfigData::SetMaxPh(float maxPh)
     }
 }
 
-void ConfigData::SetOutlet1On(uint16_t outlet1On)
+void ConfigData::setOutlet1On(uint16_t outlet1On)
 {
     if (outlet1On <= MAX_TIMING_VAL) {
         outlet1On = outlet1On;
@@ -52,7 +52,7 @@ void ConfigData::SetOutlet1On(uint16_t outlet1On)
     }
 }
 
-void ConfigData::SetOutlet1Off(uint16_t outlet1Off)
+void ConfigData::setOutlet1Off(uint16_t outlet1Off)
 {
     if (outlet1Off <= MAX_TIMING_VAL) {
         outlet1Off = outlet1Off;
@@ -61,7 +61,7 @@ void ConfigData::SetOutlet1Off(uint16_t outlet1Off)
     }
 }
 
-void ConfigData::SetOutlet2On(uint16_t outlet2On)
+void ConfigData::setOutlet2On(uint16_t outlet2On)
 {
     if (outlet2On <= MAX_TIMING_VAL) {
         outlet2On = outlet2On;
@@ -70,7 +70,7 @@ void ConfigData::SetOutlet2On(uint16_t outlet2On)
     }
 }
 
-void ConfigData::SetOutlet2Off(uint16_t outlet2Off)
+void ConfigData::setOutlet2Off(uint16_t outlet2Off)
 {
     if (outlet2Off <= MAX_TIMING_VAL) {
         outlet2Off = outlet2Off;
@@ -79,7 +79,7 @@ void ConfigData::SetOutlet2Off(uint16_t outlet2Off)
     }
 }
 
-void ConfigData::SetOutlet3On(uint16_t outlet3On)
+void ConfigData::setOutlet3On(uint16_t outlet3On)
 {
     if (outlet3On <= MAX_TIMING_VAL) {
         outlet3On = outlet3On;
@@ -88,7 +88,7 @@ void ConfigData::SetOutlet3On(uint16_t outlet3On)
     }
 }
 
-void ConfigData::SetOutlet3Off(uint16_t outlet3Off)
+void ConfigData::setOutlet3Off(uint16_t outlet3Off)
 {
     if (outlet3Off <= MAX_TIMING_VAL) {
         outlet3Off = outlet3Off;
@@ -106,7 +106,7 @@ void ConfigData::setWaterLvlAlert(uint8_t waterLvlAlert)
     }
 }
 
-void ConfigData::SetFeedingTime(uint16_t feedingTime)
+void ConfigData::setFeedingTime(uint16_t feedingTime)
 {
     if (feedingTime <= MAX_TIMING_VAL) {
         feedingTime = feedingTime;
@@ -115,9 +115,9 @@ void ConfigData::SetFeedingTime(uint16_t feedingTime)
     }
 }
 
-void ConfigData::SetFeedingPortions(uint8_t feedingPortions) { feedingPortions = feedingPortions; }
+void ConfigData::setFeedingPortions(uint8_t feedingPortions) { feedingPortions = feedingPortions; }
 
-void ConfigData::SetSamplePeriod(SamplePeriod samplePeriod) { samplePeriod = samplePeriod; }
+void ConfigData::setSamplePeriod(SamplePeriod samplePeriod) { samplePeriod = samplePeriod; }
 
 bool ConfigData::equals(const ConfigData* c)
 {

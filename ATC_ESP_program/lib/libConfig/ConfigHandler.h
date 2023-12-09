@@ -28,8 +28,9 @@ public:
     void saveConfigData(ConfigData* data);
     /**
      * Check which of the ConfigStatus enum's value is assignable to the current state of the system (sensors)
+     * @warning This function should be executed maximum once every minute bc all timings are minute accurate!
      */
-    ConfigStatus checkFullfillmentStatus(const SensorData& data);
+    ConfigStatus checkFullfillmentStatus(const SensorData* data);
 };
 
 #endif

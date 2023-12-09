@@ -12,7 +12,6 @@ enum ConfigStatus {
     LOW_PH,
     HIGH_PH,
     LOW_WATER,
-    LEAKAGE,
     OUTLET_1_ON,
     OUTLET_1_OFF,
     OUTLET_2_ON,

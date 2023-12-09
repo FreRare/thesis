@@ -42,61 +42,61 @@ public:
         const uint16_t& OL3Off, const uint8_t& waterLvlAlert, const uint16_t& feedingTime, const uint8_t& foodPort,
         const SamplePeriod& samplePer);
 
-    float GetMinTemp() const { return minTemp; }
+    float getMinTemp() const { return minTemp; }
 
-    float GetMaxTemp() const { return maxTemp; }
+    float getMaxTemp() const { return maxTemp; }
 
-    float GetMinPh() const { return minPh; }
+    float getMinPh() const { return minPh; }
 
-    float GetMaxPh() const { return maxPh; }
+    float getMaxPh() const { return maxPh; }
 
-    uint16_t GetOutlet1On() const { return outlet1On; }
+    uint16_t getOutlet1On() const { return outlet1On; }
 
-    uint16_t GetOutlet1Off() const { return outlet1Off; }
+    uint16_t getOutlet1Off() const { return outlet1Off; }
 
-    uint16_t GetOutlet2On() const { return outlet2On; }
+    uint16_t getOutlet2On() const { return outlet2On; }
 
-    uint16_t GetOutlet2Off() const { return outlet2Off; }
+    uint16_t getOutlet2Off() const { return outlet2Off; }
 
-    uint16_t GetOutlet3On() const { return outlet3On; }
+    uint16_t getOutlet3On() const { return outlet3On; }
 
-    uint16_t GetOutlet3Off() const { return outlet3Off; }
+    uint16_t getOutlet3Off() const { return outlet3Off; }
 
     uint8_t getWaterLvlAlert() const { return waterLvlAlert; }
 
-    uint16_t GetFeedingTime() const { return feedingTime; }
+    uint16_t getFeedingTime() const { return feedingTime; }
 
-    uint8_t GetFeedingPortions() const { return feedingPortions; }
+    uint8_t getFeedingPortions() const { return feedingPortions; }
 
-    SamplePeriod GetSamplePeriod() const { return samplePeriod; }
+    SamplePeriod getSamplePeriod() const { return samplePeriod; }
 
-    void SetMinTemp(float minTemp);
+    void setMinTemp(float minTemp);
 
-    void SetMaxTemp(float maxTemp);
+    void setMaxTemp(float maxTemp);
 
-    void SetMinPh(float minPh);
+    void setMinPh(float minPh);
 
-    void SetMaxPh(float maxPh);
+    void setMaxPh(float maxPh);
 
-    void SetOutlet1On(uint16_t outlet1On);
+    void setOutlet1On(uint16_t outlet1On);
 
-    void SetOutlet1Off(uint16_t outlet1Off);
+    void setOutlet1Off(uint16_t outlet1Off);
 
-    void SetOutlet2On(uint16_t outlet2On);
+    void setOutlet2On(uint16_t outlet2On);
 
-    void SetOutlet2Off(uint16_t outlet2Off);
+    void setOutlet2Off(uint16_t outlet2Off);
 
-    void SetOutlet3On(uint16_t outlet3On);
+    void setOutlet3On(uint16_t outlet3On);
 
-    void SetOutlet3Off(uint16_t outlet3Off);
+    void setOutlet3Off(uint16_t outlet3Off);
 
     void setWaterLvlAlert(uint8_t waterLvlAlert);
 
-    void SetFeedingTime(uint16_t feedingTime);
+    void setFeedingTime(uint16_t feedingTime);
 
-    void SetFeedingPortions(uint8_t feedingPortions);
+    void setFeedingPortions(uint8_t feedingPortions);
 
-    void SetSamplePeriod(SamplePeriod samplePeriod);
+    void setSamplePeriod(SamplePeriod samplePeriod);
 
     /**
      * Checks if the gice config equals the current object

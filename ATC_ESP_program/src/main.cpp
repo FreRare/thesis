@@ -5,13 +5,18 @@
 #include "ServerConnector.h"
 #include "deviceInit.h"
 #include <Arduino.h>
+#include <chrono>
 
-#define CONFIG_UPDATE_INTERVAL_MIN 30
+using namespace std::chrono;
+
+#define UPDATE_INTERVAL_MIN 30
 
 ServerConnector* g_server;
 ActuatorHandler* g_actuatorHandler;
 ConfigHandler* g_configHandler;
 SensorHandler* g_sensorHandler;
+bool gb_statusCheckFlag = true;
+uint8_t g_lastMinute = 0;
 
 void updateConfig()
 {
@@ -50,30 +55,40 @@ void setup()
 
 void loop()
 {
+    auto start = high_resolution_clock::now();
     int h = hour();
     int min = minute();
     int sec = second();
+    const uint16_t minutesSinceMidnight = h * 60 + min;
     if (h == 0 && min == 0 && sec < 10 && sec > 0) { // At midnight sync time (10 sec interval)
         g_server->syncNTPTime();
+        // We can reset last minute storage here
+        g_lastMinute = 0;
     }
     // Config updating with interval
-    if (min % CONFIG_UPDATE_INTERVAL_MIN == 0) {
+    if (min % UPDATE_INTERVAL_MIN == 0) {
         updateConfig();
     }
-
-    // Light timing -> should be in ActuatorHandler
-    if (h >= 8 && h <= 20) {
-        g_actuatorHandler->channelSwithcer(1, true);
-    } else if ((h < 8 || h > 20)) {
-        g_actuatorHandler->channelSwithcer(1, false);
+    // Make sure status check is only performed once every minute
+    if (g_lastMinute < minutesSinceMidnight) {
+        g_lastMinute = minutesSinceMidnight;
+        gb_statusCheckFlag = true;
     }
 
-    if (sec > 0 && sec < 10) {
-        g_sensorHandler->readSensors();
-        SensorData* sample = g_sensorHandler->getLastSamples();
-        g_server->postSensorData(sample);
+    // Status checking and acting
+    if (gb_statusCheckFlag) {
+        ConfigStatus actualStatus = g_configHandler->checkFullfillmentStatus(g_sensorHandler->getLastSamples());
+        switch (actualStatus) {
+            // TODO: decide what to do...
+        }
+        gb_statusCheckFlag = false;
     }
+
     UIHandler::writeBasicInfo(
         g_sensorHandler->getLastSamples()->getPh(), g_sensorHandler->getLastSamples()->getTemperature());
+    auto stop = high_resolution_clock::now();
+    auto runtime = duration_cast<milliseconds>(stop - start);
+    Serial.print("Runtime of currently ran loop is: [ms]");
+    Serial.println(runtime.count());
     delay(5000);
 }

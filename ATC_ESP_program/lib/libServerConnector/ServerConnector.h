@@ -77,9 +77,9 @@ public:
      * Checks if the system's aquarium has been inactivated or no
      * If it is inactive resets the system to factory reset ->
      * Deletes all data from EEPROM and stands by unitl repower
-     * @return If the reset was successful
+     * @return TRUE if the reset was successful
      */
-    bool checkForReset();
+    bool checkForFactoryReset();
 };
 
 #endif // ! ServerConnector_h
