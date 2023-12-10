@@ -16,7 +16,7 @@ ActuatorHandler* g_actuatorHandler;
 ConfigHandler* g_configHandler;
 SensorHandler* g_sensorHandler;
 bool gb_statusCheckFlag = true;
-uint8_t g_lastMinute = 0;
+uint8_t g_statusCheckLastMinute = 0;
 
 void updateConfig()
 {
@@ -31,6 +31,78 @@ void updateConfig()
     if (currentConfig == nullptr || !currentConfig->equals(config)) {
         Serial.println("Updating config in memory...");
         g_configHandler->saveConfigData(config);
+    }
+}
+
+/**
+ * @brief This function reads all the sensors and send's the measeured data to the server
+ * @see SensorHandler - to read the data
+ * @see ServerConnector - to post it to the server
+ * @return true - if the sending was successful
+ * @return false - if the sending encountered some problems (network issues mostly)
+ */
+bool takeSensorSample()
+{
+    g_sensorHandler->readSensors();
+    const SensorData* sample = g_sensorHandler->getLastSamples();
+    return g_server->postSensorData(sample);
+}
+
+/**
+ * @brief Decides what to do based on the config status
+ * Calls the ActuatorHandler's checkFullfillmentStatus function and decides what actions to take based on the status.
+ * This function is only called once every minute, so timings can be delayed by minutes, if they're timed to the same
+ * minute
+ */
+void statusHandler()
+{
+    ConfigStatus actualStatus = g_configHandler->checkFullfillmentStatus(g_sensorHandler->getLastSamples());
+    switch (actualStatus) {
+    case ConfigStatus::LOW_TEMP: // TODO: send notification
+        break;
+    case ConfigStatus::HIGH_TEMP: // TODO: send notification
+        break;
+    case ConfigStatus::LOW_PH: // TODO: send notification
+        break;
+    case ConfigStatus::HIGH_PH: // TODO: send notification
+        break;
+    case ConfigStatus::LOW_WATER: // TODO: send notification
+        break;
+    case ConfigStatus::OUTLET_1_ON:
+        g_actuatorHandler->channelSwithcer(1, true);
+        break;
+    case ConfigStatus::OUTLET_1_OFF:
+        g_actuatorHandler->channelSwithcer(1, false);
+        break;
+    case ConfigStatus::OUTLET_2_ON:
+        g_actuatorHandler->channelSwithcer(2, true);
+        break;
+    case ConfigStatus::OUTLET_2_OFF:
+        g_actuatorHandler->channelSwithcer(2, false);
+        break;
+    case ConfigStatus::OUTLET_3_ON:
+        g_actuatorHandler->channelSwithcer(3, true);
+        break;
+    case ConfigStatus::OUTLET_3_OFF:
+        g_actuatorHandler->channelSwithcer(3, false);
+        break;
+    case ConfigStatus::SAMPLE_TIME:
+        if (!takeSensorSample()) {
+            // TODO: send error
+        }
+        break;
+    case ConfigStatus::FEEDING_TIME:
+        g_actuatorHandler->feed(g_configHandler->getConfiguration()->getFeedingPortions());
+        break;
+    case ConfigStatus::BROKEN_LIGHT: // TODO: send notification
+        break;
+    case ConfigStatus::ERROR: // TODO: send error
+        break;
+    case ConfigStatus::OK_STATUS:
+        Serial.println("Everything is OK!");
+        break;
+    default:
+        break;
     }
 }
 
@@ -63,24 +135,21 @@ void loop()
     if (h == 0 && min == 0 && sec < 10 && sec > 0) { // At midnight sync time (10 sec interval)
         g_server->syncNTPTime();
         // We can reset last minute storage here
-        g_lastMinute = 0;
+        g_statusCheckLastMinute = 0;
     }
     // Config updating with interval
     if (min % UPDATE_INTERVAL_MIN == 0) {
         updateConfig();
     }
     // Make sure status check is only performed once every minute
-    if (g_lastMinute < minutesSinceMidnight) {
-        g_lastMinute = minutesSinceMidnight;
+    if (g_statusCheckLastMinute < minutesSinceMidnight) {
+        g_statusCheckLastMinute = minutesSinceMidnight;
         gb_statusCheckFlag = true;
     }
 
     // Status checking and acting
     if (gb_statusCheckFlag) {
-        ConfigStatus actualStatus = g_configHandler->checkFullfillmentStatus(g_sensorHandler->getLastSamples());
-        switch (actualStatus) {
-            // TODO: decide what to do...
-        }
+        statusHandler();
         gb_statusCheckFlag = false;
     }
 

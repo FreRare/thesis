@@ -62,6 +62,13 @@ ConfigStatus ConfigHandler::checkFullfillmentStatus(const SensorData* data)
     if (minutesSinceMidnight == this->configuration->getFeedingTime()) {
         return ConfigStatus::FEEDING_TIME;
     }
+    // ! OUTLET 1 should be the light switching outlet
+    // If light should be on but measured light is low we have a broken light
+    if (minutesSinceMidnight > this->configuration->getOutlet1On()
+        && minutesSinceMidnight < this->configuration->getOutlet1Off()
+        && data->getLightAmount() <= LightIntensity::SHADY) {
+        return ConfigStatus::BROKEN_LIGHT;
+    }
     // Sample periods
     const uint16_t hours = hour();
     const uint16_t minutes = minute();
