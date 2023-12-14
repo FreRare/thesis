@@ -11,7 +11,8 @@ export default class AuthService {
    */
   static async tryLogin(
     email: string,
-    password: string
+    password: string,
+    token?: string
   ): Promise<User | string> {
     const headers = {
       Accept: "application/json",
@@ -20,8 +21,9 @@ export default class AuthService {
     const loginData = JSON.stringify({
       email: email,
       password: password,
+      token: token,
     });
-    return fetch(strings.loginApiUrl, {
+    return fetch(strings.PATHS.loginApiUrl, {
       method: "POST",
       headers: headers,
       body: loginData,
@@ -60,7 +62,7 @@ export default class AuthService {
     const data = {
       token: token,
     };
-    return fetch(strings.tokenLoginApiUrl, {
+    return fetch(strings.PATHS.tokenLoginApiUrl, {
       headers: headers,
       method: "POST",
       body: JSON.stringify(data),
@@ -115,7 +117,7 @@ export default class AuthService {
       aquarium_id: aquariumID,
       device_token: deviceToken,
     });
-    return fetch(strings.registrationApiUrl, {
+    return fetch(strings.PATHS.registrationApiUrl, {
       method: "POST",
       headers: headers,
       body: content,
@@ -138,5 +140,33 @@ export default class AuthService {
         }
       })
       .catch(CommonServiceCallback.catchCallback);
+  }
+
+  /**
+   * Deletes the user with the given email address (sets it to inactive)
+   * @param email - The email addresss of the user
+   */
+  static async deleteUser(email: string): Promise<string> {
+    const headers = {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    };
+    const content = JSON.stringify({
+      email: email,
+    });
+    return fetch(strings.PATHS.deleteUserApiUrl, {
+      headers: headers,
+      body: content,
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        const data = responseData["data"];
+        if (data["error"]) {
+          return data["error"];
+        } else if (data["success"]) {
+          return "";
+        }
+      });
   }
 }

@@ -1,16 +1,24 @@
 export default {
+  PATHS: {
+    loginApiUrl: "https://atc.takacsnet.hu/CONTROLS/user/login.php",
+    registrationApiUrl: "https://atc.takacsnet.hu/CONTROLS/user/register.php",
+    tokenLoginApiUrl:
+      "https://atc.takacsnet.hu/CONTROLS/user/loginWithToken.php",
+    getAquariumsApiUrl:
+      "https://atc.takacsnet.hu/CONTROLS/aquarium/getAquariums.php",
+    updateAquariumApiUrl:
+      "https://atc.takacsnet.hu/CONTROLS/aquarium/updateAquarium.php",
+    createAquariumApiUrl:
+      "https://atc.takacsnet.hu/CONTROLS/aquarium/createAquarium.php",
+    deleteAquariumApiUrl:
+      "https://atc.takacsnet.hu/CONTROLS/aquarium/deleteAquarium.php",
+    updateConfigApiUrl:
+      "https://atc.takacsnet.hu/CONTROLS/aquarium/updateConfiguration.php",
+    getAquariumConfigApiUrl:
+      "https://atc.takacsnet.hu/CONTROLS/aquarium/getAquariumConfig.php",
+    deleteUserApiUrl: "https://atc.takacsnet.hu/CONTROLS/user/deleteUser.php",
+  },
   expoProjectId: "9d33dc99-5dc7-4cbf-9fa8-8b351cd1b878",
-  loginApiUrl: "https://atc.takacsnet.hu/CONTROLS/login.php",
-  registrationApiUrl: "https://atc.takacsnet.hu/CONTROLS/register.php",
-  tokenLoginApiUrl: "https://atc.takacsnet.hu/CONTROLS/loginWithToken.php",
-  getAquariumsApiUrl: "https://atc.takacsnet.hu/CONTROLS/getAquariums.php",
-  updateAquariumApiUrl: "https://atc.takacsnet.hu/CONTROLS/updateAquarium.php",
-  createAquariumApiUrl: "https://atc.takacsnet.hu/CONTROLS/createAquarium.php",
-  deleteAquariumApiUrl: "https://atc.takacsnet.hu/CONTROLS/deleteAquarium.php",
-  updateConfigApiUrl:
-    "https://atc.takacsnet.hu/CONTROLS/updateConfiguration.php",
-  getAquariumConfigApiUrl:
-    "https://atc.takacsnet.hu/CONTROLS/getAquariumConfig.php",
   projetName: "ATC - Aquarium Manager",
   home: "Home",
   aquariumSelctorPlaceholder: "Select your aquarium",
@@ -133,6 +141,12 @@ export default {
   newPasswordAgain: "Confirm new password:",
   newPassword: "New password:",
   successfulUpdate: "Successfully updated!",
+  ALERTS: {
+    deleteAquariumAlertMessage:
+      "Are you sure you want to delete this aquarium? By deleting it the ATC-system will set to factory reset and only be usable again after reboot.",
+    deleteAndFactoryResetAlertMessage:
+      "Are you sure you want to delete your last aquarium? By deleting an aquarium which is connected to an ATC-system you accept that the system will go into factory reset mode and only can be used again if rebooted (switching it on and off). Also by removing your last aquarium from the list your account will be inactivated since you have no working ATC-systems. Press YES if you still want to continue.",
+  },
   SERVICES: {
     networkErrorDetect: "Network request failed",
     networkErrorMessage:

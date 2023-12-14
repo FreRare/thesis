@@ -15,6 +15,7 @@ import User from "../models/User";
 import AuthService from "../services/AuthService";
 import LoadingAnimation from "./LoadingAnimation";
 import commonStyles from "../utils/commonStyles";
+import { registerForPushNotifications } from "../utils/NotoficationTokenGenerator";
 
 interface LoginScreenProps {
   navigation: any;
@@ -73,7 +74,11 @@ function LoginForm(props: LoginScreenProps): React.JSX.Element {
       setLoading(false);
       return;
     }
-    AuthService.tryLogin(email, pass)
+    const token = await registerForPushNotifications();
+    if(!token){
+      alert(strings.pushNotificationsDeniedAlertMessage);
+    }
+    AuthService.tryLogin(email, pass, token ? token : undefined)
       .then((loginData) => {
         if (loginData instanceof User) {
           props.setUser(loginData, isRememberMe); // Save user

@@ -18,7 +18,7 @@ export default class AquariumService {
       email: userEmail,
     });
 
-    const aquariums = await fetch(strings.getAquariumsApiUrl, {
+    const aquariums = await fetch(strings.PATHS.getAquariumsApiUrl, {
       method: "POST",
       headers: headers,
       body: body,
@@ -60,7 +60,7 @@ export default class AquariumService {
         id: aq.id,
         phone: true,
       });
-      const configForAq = await fetch(strings.getAquariumConfigApiUrl, {
+      const configForAq = await fetch(strings.PATHS.getAquariumConfigApiUrl, {
         method: "POST",
         headers: headers,
         body: configBody,
@@ -121,7 +121,7 @@ export default class AquariumService {
       fishCount: aq.fishCount,
     });
 
-    return fetch(strings.updateAquariumApiUrl, {
+    return fetch(strings.PATHS.updateAquariumApiUrl, {
       method: "POST",
       headers: headers,
       body: body,
@@ -162,7 +162,7 @@ export default class AquariumService {
       email: userEmail,
     });
 
-    return fetch(strings.updateAquariumApiUrl, {
+    return fetch(strings.PATHS.updateAquariumApiUrl, {
       method: "POST",
       headers: headers,
       body: body,
@@ -193,7 +193,7 @@ export default class AquariumService {
     const body = JSON.stringify({
       id: aq.id,
     });
-    return fetch(strings.deleteAquariumApiUrl, {
+    return fetch(strings.PATHS.deleteAquariumApiUrl, {
       method: "POST",
       headers: headers,
       body: body,
@@ -244,7 +244,7 @@ export default class AquariumService {
       samplePeriod: config.samplePeriod,
     });
 
-    return fetch(strings.updateConfigApiUrl, {
+    return fetch(strings.PATHS.updateConfigApiUrl, {
       method: "POST",
       headers: headers,
       body: body,

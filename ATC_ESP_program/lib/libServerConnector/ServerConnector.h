@@ -32,7 +32,6 @@ private:
     NTPClient* timeClient;
     AQWiFiConfig* config;
     static const char* connectionCheckPath;
-    static const char* timePath;
     static const char* sensorDataUploadPath;
     static const char* notificationPath;
     static const char* configUpdatePath;

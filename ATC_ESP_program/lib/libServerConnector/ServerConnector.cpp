@@ -1,10 +1,9 @@
 #include "ServerConnector.h"
 
-const char* ServerConnector::connectionCheckPath = "http://atc.takacsnet.hu/CONTROLS/connectionCheck.php";
-const char* ServerConnector::timePath = "http://atc.takacsnet.hu/CONTROLS/getCurrentTime.php";
-const char* ServerConnector::sensorDataUploadPath = "http://atc.takacsnet.hu/CONTROLS/sensorDataUpload.php";
-const char* ServerConnector::notificationPath = "http://atc.takacsnet.hu/CONTROLS/notification.php";
-const char* ServerConnector::configUpdatePath = "http://atc.takacsnet.hu/CONTROLS/getAquariumConfig.php";
+const char* ServerConnector::connectionCheckPath = "http://atc.takacsnet.hu/CONTROLS/aquarium/connectionCheck.php";
+const char* ServerConnector::sensorDataUploadPath = "http://atc.takacsnet.hu/CONTROLS/aquarium/sensorDataUpload.php";
+const char* ServerConnector::notificationPath = "http://atc.takacsnet.hu/CONTROLS/notification/notification.php";
+const char* ServerConnector::configUpdatePath = "http://atc.takacsnet.hu/CONTROLS/aquarium/getAquariumConfig.php";
 
 ServerConnector::ServerConnector()
 {

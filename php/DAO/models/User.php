@@ -53,6 +53,11 @@ class User
         return $this->authToken;
     }
 
+    public function setDeviceToken(string $token)
+    {
+        $this->deviceToken = $token;
+    }
+
     public function toJSON(): string
     {
         $t = [];

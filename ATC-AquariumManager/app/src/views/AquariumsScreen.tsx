@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   RefreshControl,
+  Alert,
 } from "react-native";
 import React, { useEffect } from "react";
 import User from "../models/User";
@@ -20,6 +21,7 @@ import colors from "../../config/colors";
 import AquariumService from "../services/AquariumService";
 import LoadingAnimation from "../components/LoadingAnimation";
 import commonStyles from "../utils/commonStyles";
+import AuthService from "../services/AuthService";
 
 type AquariumsScreenProps = {
   navigation: any;
@@ -58,26 +60,40 @@ function AquariumsScreen(props: AquariumsScreenProps) {
   }, []);
 
   /**
-   * Edit callbacl for AquariumCard, handles create-update-delete
-   * @see {AquariumService} - to handle DB interactions
-   * @param aq - the aquarium to be handled
-   * @param del - flag if we want to delete
-   * @returns - void
+   * Deletes the aquariums provided also if lastOne is true removes the user
+   * @param aq - The aquarium to delete
+   * @param lastOne - The flag if it's the last one or no - In case it's the last one we delete the user too
    */
-  const editHandler = async (aq: Aquarium, del?: boolean) => {
-    setLoading(true);
+  const deleteAquarium = async (aq: Aquarium, lastOne: boolean) => {
     setEdited(null);
     setEditing(false);
-    if (del) {
-      const deleteResult = await AquariumService.deleteAquarium(aq);
-      if (deleteResult.length > 0) {
-        setError(deleteResult);
-      } else {
-        alert("Successfully deleted " + aq.name + "!");
-      }
-      setLoading(false);
+    setLoading(true);
+    const deleteResult = await AquariumService.deleteAquarium(aq);
+    if (deleteResult.length > 0) {
+      setError(deleteResult);
       return;
     }
+    if (lastOne) {
+      // If last one than delete user and log out
+      const userDeleteResult = await AuthService.deleteUser(props.user.email);
+      if (userDeleteResult.length > 0) {
+        setError(userDeleteResult);
+        return;
+      }
+      props.setUser(null);
+    }
+    alert("Successfully deleted!");
+    setLoading(false);
+  };
+
+  /**
+   * This function creates or updates an aquarium decided by if the provided aquarium is already on the list or no
+   * @param aq - The new or updateable aquarium
+   */
+  const updateAquarium = async (aq: Aquarium) => {
+    setEdited(null);
+    setEditing(false);
+    setLoading(true);
     const index = aquariums.indexOf(aq);
     if (index < 0) {
       // If we added a new aquarium
@@ -99,6 +115,67 @@ function AquariumsScreen(props: AquariumsScreenProps) {
     }
     aquariums[index] = aq;
     setLoading(false);
+  };
+
+  /**
+   * Edit callback for AquariumCard, handles create-update-delete
+   * Basically just handles the confirmations and calls the action functions
+   * @see {AquariumService} - to handle DB interactions
+   * @param aq - the aquarium to be handled
+   * @param del - flag if we want to delete
+   * @returns - void
+   */
+  const editHandler = async (aq: Aquarium, del?: boolean) => {
+    if (del) {
+      // If we're about to delete the last aquarium -> we're about to leave the system, meaning deletion of all aquariums, user and setting the atc-system to factory reset
+      Alert.alert(
+        strings.confirmation,
+        strings.ALERTS.deleteAquariumAlertMessage,
+        [
+          {
+            text: strings.no,
+            onPress: () => {
+              return;
+            },
+            style: "cancel",
+          },
+          {
+            text: strings.yes,
+            onPress: async () => {
+              // If this is the last aquarium do an extra confirm
+              if (
+                aquariums.length === 1 &&
+                aquariums.find((aqu) => aqu.id === aq.id)
+              ) {
+                Alert.alert(
+                  strings.confirm,
+                  strings.ALERTS.deleteAndFactoryResetAlertMessage,
+                  [
+                    {
+                      text: strings.no,
+                      onPress: () => {
+                        return;
+                      },
+                      style: "cancel",
+                    },
+                    {
+                      text: strings.yes,
+                      onPress: () => {
+                        deleteAquarium(aq, true);
+                      },
+                    },
+                  ]
+                );
+              } else {
+                deleteAquarium(aq, false);
+              }
+            },
+          },
+        ]
+      );
+    } else {
+      updateAquarium(aq);
+    }
   };
 
   /**

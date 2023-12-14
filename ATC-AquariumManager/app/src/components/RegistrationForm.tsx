@@ -11,11 +11,11 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import strings from "../../config/strings";
 import colors from "../../config/colors";
-import * as Notifications from "expo-notifications";
 import User from "../models/User";
 import AuthService from "../services/AuthService";
 import LoadingAnimation from "./LoadingAnimation";
 import commonStyles from "../utils/commonStyles";
+import { registerForPushNotifications } from "../utils/NotoficationTokenGenerator";
 
 interface RegistrationFormProps {
   navigation: any;
@@ -33,27 +33,6 @@ function RegistrationForm(props: RegistrationFormProps) {
   const [aqId, setAqId] = React.useState(""); // need to convert to number
   const [isRememberMe, setIsRememberMe] = React.useState<boolean>(true);
   const [loading, setLoading] = React.useState<boolean>(false);
-
-  // this function handles the app for push notifications
-  // registeres the app and gets the token for the device what we can store in db later
-  const registerForPushNotifications = async (): Promise<false | string> => {
-    const { granted } = await Notifications.getPermissionsAsync();
-    if (!granted) {
-      const { status } = await Notifications.requestPermissionsAsync();
-      if (status !== "granted") {
-        alert("Permission denied for push notifications!");
-        return false;
-      }
-    }
-    const token = (
-      await Notifications.getExpoPushTokenAsync({
-        projectId: strings.expoProjectId,
-      })
-    ).data;
-    return token;
-    // Token stores the device registration token it can be sent to server
-    // TODO! should be updated per installation IDK how yet
-  };
 
   /**
    * Validates all the fields in the form.
