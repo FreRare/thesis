@@ -6,12 +6,10 @@
 #define CHANNEL_COUNT 3
 
 class ActuatorHandler {
-private:
-    bool* channelStates;
-
 public:
     ActuatorHandler();
     ~ActuatorHandler();
+    static bool* channelStates;
     /**
      * @brief Switches the provided channel to the given state
      * Switches the provided channel into the provided state if the channel isn't in that state already

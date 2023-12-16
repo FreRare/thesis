@@ -24,8 +24,10 @@ void updateConfig()
     ConfigData* currentConfig = g_configHandler->getConfiguration();
     ConfigData* config = g_server->updateConfigData();
     if (config != nullptr) {
-        Serial.println("Config downloaded!");
         config->print();
+    } else {
+        Serial.println("Downloaded config is null!!!");
+        return;
     }
     // If we have no saved config or there was update save the updated config
     if (currentConfig == nullptr || !currentConfig->equals(config)) {
@@ -43,6 +45,7 @@ void updateConfig()
  */
 bool takeSensorSample()
 {
+    return true; // TODO: delete this row
     g_sensorHandler->readSensors();
     const SensorData* sample = g_sensorHandler->getLastSamples();
     return g_server->postSensorData(sample);
@@ -56,7 +59,10 @@ bool takeSensorSample()
  */
 void statusHandler()
 {
-    ConfigStatus actualStatus = g_configHandler->checkFullfillmentStatus(g_sensorHandler->getLastSamples());
+    SensorData* lastSamples = g_sensorHandler->getLastSamples();
+    ConfigStatus actualStatus = g_configHandler->checkFullfillmentStatus(lastSamples);
+    Serial.print("Status is: ");
+    Serial.println(actualStatus);
     switch (actualStatus) {
     case ConfigStatus::LOW_TEMP: // TODO: send notification
         break;
@@ -127,7 +133,6 @@ void setup()
 
 void loop()
 {
-    auto start = high_resolution_clock::now();
     int h = hour();
     int min = minute();
     int sec = second();
@@ -152,12 +157,9 @@ void loop()
         statusHandler();
         gb_statusCheckFlag = false;
     }
-
-    UIHandler::writeBasicInfo(
-        g_sensorHandler->getLastSamples()->getPh(), g_sensorHandler->getLastSamples()->getTemperature());
-    auto stop = high_resolution_clock::now();
-    auto runtime = duration_cast<milliseconds>(stop - start);
-    Serial.print("Runtime of currently ran loop is: [ms]");
-    Serial.println(runtime.count());
+    if (g_sensorHandler->getLastSamples() != nullptr) {
+        UIHandler::writeBasicInfo(
+            g_sensorHandler->getLastSamples()->getPh(), g_sensorHandler->getLastSamples()->getTemperature());
+    }
     delay(5000);
 }

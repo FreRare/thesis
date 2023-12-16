@@ -2,6 +2,7 @@
 #define ConfigHanlder_h
 #include "../libEnums/ConfigStatus.h"
 #include "../libSensor/SensorData.h"
+#include "ActuatorHandler.h"
 #include "ConfigData.h"
 #include "MemoryHandler.h"
 #include <TimeLib.h>

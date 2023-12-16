@@ -437,7 +437,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
     // Temp and ph should be rounded up to 2 decimal and d1 should be lower than d2
     if (
       props.label.includes(strings.temperature) ||
-      props.label.includes(strings.ph)
+      props.label.includes(strings.ph) || props.label.includes(strings.outlet1) || props.label.includes(strings.outlet2) || props.label.includes(strings.outlet3)
     ) {
       d1 = Math.round((parsedData1 + Number.EPSILON) * 100) / 100;
       d2 = Math.round((parsedData2 + Number.EPSILON) * 100) / 100;
