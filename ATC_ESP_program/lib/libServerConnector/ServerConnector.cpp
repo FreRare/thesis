@@ -111,8 +111,6 @@ ConfigData* ServerConnector::updateConfigData()
     uint16_t responseCode = this->httpClient.POST(postData);
     if (responseCode == HTTP_CODE_OK) {
         String payload = this->httpClient.getString();
-        Serial.println("HTTP response OK.");
-        Serial.println(payload);
         DynamicJsonDocument configDoc(512);
         DeserializationError err = deserializeJson(configDoc, payload);
         if (err) {

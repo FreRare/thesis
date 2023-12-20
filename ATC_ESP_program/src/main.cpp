@@ -16,17 +16,15 @@ ActuatorHandler* g_actuatorHandler;
 ConfigHandler* g_configHandler;
 SensorHandler* g_sensorHandler;
 bool gb_statusCheckFlag = true;
-uint8_t g_statusCheckLastMinute = 0;
+uint16_t g_statusCheckLastMinute = 0;
 
 void updateConfig()
 {
     // Update config from DB
     ConfigData* currentConfig = g_configHandler->getConfiguration();
     ConfigData* config = g_server->updateConfigData();
-    if (config != nullptr) {
-        config->print();
-    } else {
-        Serial.println("Downloaded config is null!!!");
+    if (config == nullptr) {
+        Serial.println("Downloaded config is NULL!");
         return;
     }
     // If we have no saved config or there was update save the updated config
@@ -143,7 +141,7 @@ void loop()
         g_statusCheckLastMinute = 0;
     }
     // Config updating with interval
-    if (min % UPDATE_INTERVAL_MIN == 0) {
+    if (min % UPDATE_INTERVAL_MIN == 0 && sec < 10 && sec > 0) {
         updateConfig();
     }
     // Make sure status check is only performed once every minute

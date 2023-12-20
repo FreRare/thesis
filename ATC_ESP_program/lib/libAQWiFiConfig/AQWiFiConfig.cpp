@@ -41,6 +41,7 @@ AQWiFiConfig::~AQWiFiConfig()
 String AQWiFiConfig::getSSID() { return this->WIFI_SSID; }
 String AQWiFiConfig::getPassword() { return this->WIFI_PASS; }
 uint8_t AQWiFiConfig::getSystemID() { return this->systemID; }
+
 void AQWiFiConfig::saveSystemID(const uint16_t& id)
 {
     this->systemID = id;

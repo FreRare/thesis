@@ -31,8 +31,8 @@ void selectMux(uint8_t channel)
 
 SensorHandler::SensorHandler()
     : oneWire(DIGITAL_TEMP_SENSOR_PIN)
-    , sensors(&oneWire),
-    lastSamples(nullptr)
+    , sensors(&oneWire)
+    , lastSamples(nullptr)
 {
     this->sensors.begin(); // Begin the onewire transmission for sensors
     this->phCalibration = 0.8f;

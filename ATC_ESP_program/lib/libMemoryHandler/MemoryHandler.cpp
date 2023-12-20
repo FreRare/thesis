@@ -68,8 +68,6 @@ ConfigData* MemoryHandler::readConfigData()
     this->actualAddress = this->configDataStartAddress;
     ConfigData* config = new ConfigData();
     EEPROM.get(this->actualAddress, *config);
-    Serial.println("Config data read: ");
-    config->print();
     return config;
 }
 

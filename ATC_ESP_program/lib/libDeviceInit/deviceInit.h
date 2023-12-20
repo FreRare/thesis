@@ -2,21 +2,20 @@
 #define deviceInit_h
 #include <Arduino.h>
 
-// PIN DEFINITIONS
+// PIN DEFINITIONS (Relays and feeder will be controlled trough shift register)
+// ! D1 & D2 are used by the LCD
 //-------------------------
-#define DIGITAL_TEMP_SENSOR_PIN D9 // For the digital temp sensor
 #define ANALOG_SENSOR_PIN A0 // MUX X (for sensors)
-#define MUX_SELECT_A D7 // MUX A selector
-#define MUX_SELECT_B D6 // MUX B selector
-#define FEEDER_MOTOR_PIN D5 // Servo pin for feeder (used in PWM)
-#define CALIBRATION_BTN_PIN D8 // Button for calibrating the sensors, mostly the water lvl 100%
-#define RELAY_CH1_PIN D4
-#define RELAY_CH2_PIN D3
-#define RELAY_CH3_PIN D0
+#define DIGITAL_TEMP_SENSOR_PIN D9 // For the digital temp sensor (RX)
+#define MUX_SELECT_A D8 // MUX A selector
+#define MUX_SELECT_B D7 // MUX B selector
+#define SHIFT_REGISTER_CLK_PIN D5 // Shift register clock
+#define SHIFT_REGISTER_LATCH_PIN D6 // Shift register latch
+#define SHIFT_REGISTER_DATA_PIN D0 // Shift register data
 //-----------------------------
 
 /**
- * @brief Initial pin setup of the device
+ * @brief Initial pin setup of the ESP
  * Sets all pins to the right mode
  */
 void pinSetup();

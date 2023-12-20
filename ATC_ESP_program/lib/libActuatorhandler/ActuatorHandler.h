@@ -4,8 +4,19 @@
 #include <Arduino.h>
 
 #define CHANNEL_COUNT 3
+// On the shift register we don't use Q0 for easier pcb planning
+#define SR_RELAY1_ON B00000010 // Values for shift register to control relays (only 3 used)
+#define SR_RELAY2_ON B00000100
+#define SR_RELAY3_ON B00001000
+#define SR_RELAY4_ON B00010000
+#define SR_FEEDER_ON B00100000 // For the feeder motor
+#define SR_PROBLEM_LED_ON B01000000 // For the LED
+#define SR_OFF B00000000
 
 class ActuatorHandler {
+private:
+    uint8_t shiftRegisterState;
+
 public:
     ActuatorHandler();
     ~ActuatorHandler();
