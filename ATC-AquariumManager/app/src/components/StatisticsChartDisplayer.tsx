@@ -1,9 +1,16 @@
 import React from "react";
-import { Dimensions, StyleSheet, TouchableOpacity, Text } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+} from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import colors from "../../config/colors";
 import strings from "../../config/strings";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
+import commonStyles from "../utils/commonStyles";
 
 /**
  * To help decide which suffixes to use due to the label
@@ -15,11 +22,11 @@ const chartDecisionMap = [
   },
   {
     label: strings.ph,
-    yAxisSuffix: "",
+    yAxisSuffix: " ",
   },
   {
     label: strings.light,
-    yAxisSuffix: "",
+    yAxisSuffix: " ",
   },
   {
     label: strings.waterLevel,
@@ -28,20 +35,13 @@ const chartDecisionMap = [
 ];
 
 /**
- * @enum - to store the different options for data display times
+ * This array holds the options for the data range selector
  */
-const enum dataViewOptions {
-  HOURS_6 = "6 hours",
-  HOURS_12 = "12 hours",
-  PAST_24_HOURS = "Last 24 hours",
-  TODAY = "Today",
-  YESTERDAY = "Yesterday",
-  PICK_A_DAY = "Pick a date",
-  THIS_WEEK = "This week",
-  PICK_A_WEEK = "Pick a week",
-  THIS_MONTH = "This month",
-  PICK_A_MONTH = "Pick a month",
-}
+const dataViewOptions = [
+  strings.STATS.dayDataRangeText,
+  strings.STATS.weekDataRangeText,
+  strings.STATS.monthDataRangeText,
+];
 
 /**
  * The properties of the component
@@ -64,80 +64,108 @@ type StatisticsChartDisplayerProps = {
 function StatisticsChartDisplayer(
   props: StatisticsChartDisplayerProps
 ): React.JSX.Element {
-  const defaultLabels = [];
-  for (let i = 0; i < 24; i++) {
-    defaultLabels.push(`${i}:00`);
-  }
-  const defaultChartData = {
-    labels: defaultLabels,
-    datasets: [
-      {
-        data: [
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
+  const [ySuffix, setYSuffix] = React.useState<string>("");
+  const [chartLabels, setChartLabels] = React.useState<Array<string>>([]);
+  const [data, setData] = React.useState<Array<number>>(props.data);
+  const [chartData, setChartData] = React.useState<LineChartData>();
+  const [highlighted, setHighlighted] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    // Setting Y axis suffix based on the label
+    if (ySuffix.length <= 0) {
+      for (const map of chartDecisionMap) {
+        if (map.label === props.label) {
+          setYSuffix(map.yAxisSuffix);
+        }
+      }
+    }
+    // Setting chart labels for default (24 hours)
+    if (chartLabels.length <= 0) {
+      for (let i = 0; i < 24; i++) {
+        chartLabels.push(`${i}:00`);
+      }
+    }
+    // Setting chart config (chart's data and labels)
+    if (!chartData) {
+      setChartData({
+        labels: chartLabels,
+        datasets: [
+          {
+            data: [
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+            ],
+          },
         ],
-      },
-    ],
+      });
+    }
+  });
+
+  const dateRangeChanger = (index: number) => {
+    // TODO: Set chart data and labels
+    setHighlighted(index);
   };
 
-  const [labels, setLabels] = React.useState<Array<string>>([]);
-  const [data, setData] = React.useState<Array<number>>([]);
-  const [chartData, setChartData] =
-    React.useState<LineChartData>(defaultChartData);
-
-  /**
-   * Sets the displayable data to match the choosen dates
-   */
-  const dataClipper = (val?: Date, val2?: Date) => {
-    // TODO: this should use setData to crop the dataset between val and val2's dates
-  };
+  const dateRangeSelector = dataViewOptions.map((item, index) => (
+    <TouchableOpacity
+      key={index}
+      style={[
+        styles.dateRangeSelectorTouchable,
+        highlighted === index
+          ? styles.dateRangeSelectorTouchableHighlighted
+          : undefined,
+      ]}
+      onPress={() => dateRangeChanger(index)}
+    >
+      <Text style={styles.dateRangeSelectorText}>{item}</Text>
+    </TouchableOpacity>
+  ));
 
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onLongPress={() => {
-        alert("LONG PRESS");
-      }}
-    >
-      <Text>CHART</Text>
-      <LineChart
-        data={chartData}
-        width={Dimensions.get("window").width - 40}
-        height={260}
-        yAxisLabel="$"
-        yAxisSuffix="k"
-        yAxisInterval={1}
-        verticalLabelRotation={280}
-        xLabelsOffset={10}
-        chartConfig={chartConfig}
-        style={styles.chart}
-        fromNumber={10}
-        bezier
-      />
-    </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.title}>
+        <Text>{props.label}</Text>
+      </View>
+      {chartData && (
+        <LineChart
+          data={chartData}
+          width={Dimensions.get("window").width - 40}
+          height={260}
+          yAxisLabel="$"
+          yAxisSuffix="k"
+          yAxisInterval={1}
+          verticalLabelRotation={280}
+          xLabelsOffset={10}
+          chartConfig={chartConfig}
+          fromNumber={10}
+          bezier
+        />
+      )}
+      <View style={styles.dateRangeSelectorContainer}>{dateRangeSelector}</View>
+    </View>
   );
 }
 
@@ -160,8 +188,41 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 8,
   },
-  chart: {
-    borderRadius: 15,
+  title: {
+    flex: 1,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    backgroundColor: colors.CHART.dateSelectorBG,
+  },
+  dateRangeSelectorContainer: {
+    height: 40,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    backgroundColor: colors.CHART.dateSelectorBG,
+  },
+  dateRangeSelectorTouchable: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  dateRangeSelectorTouchableHighlighted: {
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.CHART.dateSelectorHighlight,
+    borderRadius: 50,
+  },
+  dateRangeSelectorText: {
+    fontStyle: "italic",
   },
 });
 

@@ -23,5 +23,7 @@ export default {
     gradientFrom: "#0D652D",
     gradientTo: "#34A853",
     stroke: "#B0FFB0",
+    dateSelectorBG: "#E3E3E3",
+    dateSelectorHighlight: "#BCBCBC",
   },
 };

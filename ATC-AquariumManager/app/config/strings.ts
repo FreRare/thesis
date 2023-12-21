@@ -154,5 +154,8 @@ export default {
   },
   STATS: {
     screenTitle: "Statistics",
+    dayDataRangeText: "1 day",
+    weekDataRangeText: "1 week",
+    monthDataRangeText: "1 month",
   },
 };

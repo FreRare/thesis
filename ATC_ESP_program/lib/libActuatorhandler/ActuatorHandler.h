@@ -29,6 +29,7 @@ public:
      */
     void channelSwithcer(const uint8_t& channel, const bool& state);
     void feed(const uint8_t& portions);
+    void turnProblemLed(bool state);
 };
 
 #endif

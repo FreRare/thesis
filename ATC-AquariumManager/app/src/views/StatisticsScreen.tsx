@@ -24,9 +24,9 @@ function StatisticsScreen(props: StatisticsScreenProps) {
         selectCallback={setSelectedAquarium}
       />
       <ScrollView contentContainerStyle={commonStyles.scrollContainer}>
-        <StatisticsChartDisplayer label={"Bezier chart"} data={[]} />
-        <StatisticsChartDisplayer label={"Bezier chart"} data={[]} />
-        <StatisticsChartDisplayer label={"Bezier chart"} data={[]} />
+        <StatisticsChartDisplayer label={"Temperature"} data={[]} />
+        <StatisticsChartDisplayer label={"Ph"} data={[]} />
+        <StatisticsChartDisplayer label={"Light"} data={[]} />
       </ScrollView>
     </Layout>
   );
