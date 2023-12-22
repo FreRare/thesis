@@ -101,7 +101,7 @@ interface AQDAOI
      * @param int $id
      * @return array<SensorSample> The samples as an array
      */
-    function selectSensorSamplesForAquarium(int $id): array;
+    function selectSensorSamplesForAquarium(int $id, bool $onlyLast): array;
     /**
      * Uploads the provided sample to the database
      * @param SensorSample $obj

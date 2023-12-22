@@ -17,6 +17,8 @@ export default {
     getAquariumConfigApiUrl:
       "https://atc.takacsnet.hu/CONTROLS/aquarium/getAquariumConfig.php",
     deleteUserApiUrl: "https://atc.takacsnet.hu/CONTROLS/user/deleteUser.php",
+    getSensorSamplesApiUrl:
+      "https://atc.takacsnet.hu/CONTROLS/aquarium/getSensorSamples.php",
   },
   expoProjectId: "9d33dc99-5dc7-4cbf-9fa8-8b351cd1b878",
   projetName: "ATC - Aquarium Manager",

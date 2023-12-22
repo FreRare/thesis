@@ -10,7 +10,7 @@ import { LineChart } from "react-native-chart-kit";
 import colors from "../../config/colors";
 import strings from "../../config/strings";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
-import commonStyles from "../utils/commonStyles";
+import SensorSample from "../models/SensorSample";
 
 /**
  * To help decide which suffixes to use due to the label
@@ -44,13 +44,89 @@ const dataViewOptions = [
 ];
 
 /**
+ * Returns how many days are there in the provided month in the given year
+ * @param year - the year
+ * @param month - the month
+ * @returns The number of days
+ */
+const getDaysOfTheMonth = (year: number, month: number): number => {
+  return new Date(year, month, 0).getDate();
+};
+
+/**
+ * Gets the last N days from the given date (d-m-Y, all with numbers)
+ * @param lastDay - the day
+ * @param lastMonth - the month
+ * @param lastYear - the year
+ * @returns The list of the dates as (m-d) format (m is with letters)
+ */
+const getLastNDays = (
+  lastDay: number,
+  lastMonth: number,
+  lastYear: number,
+  N: number
+): Array<string> => {
+  const days = [];
+  const monthList = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  let numberSub = 0; // Stores how many days we should get off the current day
+  for (let i = 0; i < N; i++) {
+    // If we reach 0 -> we start a new month
+    if (lastDay - numberSub === 0) {
+      lastMonth -= 1;
+      if (lastMonth === 0) {
+        lastMonth = 12;
+      }
+      lastDay = getDaysOfTheMonth(lastYear, lastMonth);
+      console.log("Days of the month is: ", lastDay);
+      numberSub = 0; // Reset descender value
+    }
+    days.push(`${monthList[lastMonth - 1]}-${lastDay - numberSub}`);
+    numberSub++;
+  }
+  return days;
+};
+
+/**
+ * Finds the last sample in the provided data set by date, and returns the sample and the day and month of measure
+ * @param data - the dataset
+ * @returns - {sample, day, month} format data
+ */
+const findLastSampleAndDates = (data: Array<SensorSample>) => {
+  // Find the last sample
+  const lastSample = data.reduce((latest, current) => {
+    return current.sampleTime > latest.sampleTime ? current : latest;
+  }, data[0]);
+  // Get the last date's month and day
+  let lastMonth = Number.parseInt(
+    lastSample.sampleTime.toISOString().split("T")[0].split("-")[1]
+  ); // Get m
+  let lastDay = Number.parseInt(
+    lastSample.sampleTime.toISOString().split("T")[0].split("-")[2]
+  ); // Get d
+  return { lastSample, lastDay, lastMonth };
+};
+
+/**
  * The properties of the component
  * @member label - the label of the chart displayed as Text
  * @member data - the whole data set we're using, we decide later which parts to use
  */
 type StatisticsChartDisplayerProps = {
   label: string;
-  data: Array<number>;
+  data: Array<SensorSample>;
 };
 
 /**
@@ -64,11 +140,65 @@ type StatisticsChartDisplayerProps = {
 function StatisticsChartDisplayer(
   props: StatisticsChartDisplayerProps
 ): React.JSX.Element {
-  const [ySuffix, setYSuffix] = React.useState<string>("");
-  const [chartLabels, setChartLabels] = React.useState<Array<string>>([]);
-  const [data, setData] = React.useState<Array<number>>(props.data);
-  const [chartData, setChartData] = React.useState<LineChartData>();
+  const [ySuffix, setYSuffix] = React.useState<string>(""); // The suffix for Y axis
+  const [chartData, setChartData] = React.useState<LineChartData>(); // The data for the line chart (contains the displayable data and the labels)
   const [highlighted, setHighlighted] = React.useState<number>(0);
+
+  /**
+   * Creates the labels for daily view
+   * @returns - the array of strings (0:00 - 23:00)
+   */
+  const dayLabelsGenerator = (): Array<string> => {
+    const dayLabels = [];
+    for (let i = 0; i < 24; i++) {
+      dayLabels.push(`${i}:00`);
+    }
+    return dayLabels;
+  };
+
+  /**
+   * Creates the labels for weekly view
+   * @returns - the array of strings (mon - sun, splitting a day into two [0:00 - 12:00])
+   */
+  const weekLabelsGenerator = (): Array<string> => {
+    const weekLabels: Array<string> = [];
+    const { lastSample, lastDay, lastMonth } = findLastSampleAndDates(
+      props.data
+    );
+    // Go 7 days back
+    const weekDays: Array<string> = getLastNDays(
+      lastDay,
+      lastMonth,
+      lastSample.sampleTime.getFullYear(),
+      7
+    );
+    weekDays.reverse(); // Reverse the list
+    for (let i = 0; i < weekDays.length; i++) {
+      weekLabels.push(weekDays[i]);
+      weekLabels.push("12:00");
+    }
+    return weekLabels;
+  };
+
+  /**
+   * Creates the labels for monthly view
+   * @returns - the array of strings (past 30 days from the last sample)
+   */
+  const monthLabelsGenerator = (): Array<string> => {
+    // Get the last data
+    const { lastSample, lastDay, lastMonth } = findLastSampleAndDates(
+      props.data
+    );
+    // Get last 30 days
+    const monthDays = getLastNDays(
+      lastDay,
+      lastMonth,
+      lastSample.sampleTime.getFullYear(),
+      30
+    );
+    monthDays.reverse();
+    return monthDays;
+  };
 
   React.useEffect(() => {
     // Setting Y axis suffix based on the label
@@ -79,16 +209,10 @@ function StatisticsChartDisplayer(
         }
       }
     }
-    // Setting chart labels for default (24 hours)
-    if (chartLabels.length <= 0) {
-      for (let i = 0; i < 24; i++) {
-        chartLabels.push(`${i}:00`);
-      }
-    }
     // Setting chart config (chart's data and labels)
     if (!chartData) {
       setChartData({
-        labels: chartLabels,
+        labels: dayLabelsGenerator(),
         datasets: [
           {
             data: [
@@ -124,11 +248,58 @@ function StatisticsChartDisplayer(
     }
   });
 
+  /**
+   * Handles the date range changes
+   * Changes the labels and the data of the chart (week and month views have 3 data sets [min-max-avg])
+   * @param index - The index of the dateRange choosen
+   */
   const dateRangeChanger = (index: number) => {
-    // TODO: Set chart data and labels
+    // TODO: Finish week and month views
+    const dataArray: Array<number> = [];
+    switch (index) {
+      case 0:
+        for (let i = 0; i < 24; i++) {
+          dataArray.push(Math.random() * 100);
+        }
+        setChartData({
+          labels: dayLabelsGenerator(),
+          datasets: [
+            {
+              data: dataArray,
+            },
+          ],
+        });
+        break;
+      case 1:
+        for (let i = 0; i < 14; i++) {
+          dataArray.push(Math.random() * 100);
+        }
+        setChartData({
+          labels: weekLabelsGenerator(),
+          datasets: [
+            {
+              data: dataArray,
+            },
+          ],
+        });
+        break;
+      case 2:
+        for (let i = 0; i < 30; i++) {
+          dataArray.push(Math.random() * 100);
+        }
+        setChartData({
+          labels: monthLabelsGenerator(),
+          datasets: [
+            {
+              data: dataArray,
+            },
+          ],
+        });
+    }
     setHighlighted(index);
   };
 
+  // The selector for date ranges (day, week, month)
   const dateRangeSelector = dataViewOptions.map((item, index) => (
     <TouchableOpacity
       key={index}
@@ -154,13 +325,12 @@ function StatisticsChartDisplayer(
           data={chartData}
           width={Dimensions.get("window").width - 40}
           height={260}
-          yAxisLabel="$"
-          yAxisSuffix="k"
-          yAxisInterval={1}
           verticalLabelRotation={280}
-          xLabelsOffset={10}
+          xLabelsOffset={20}
           chartConfig={chartConfig}
-          fromNumber={10}
+          fromZero={true}
+          withVerticalLines={false}
+          style={styles.chart}
           bezier
         />
       )}
@@ -173,7 +343,7 @@ const chartConfig = {
   backgroundColor: colors.CHART.background,
   backgroundGradientFrom: colors.CHART.gradientFrom,
   backgroundGradientTo: colors.CHART.gradientTo,
-  decimalPlaces: 2,
+  decimalPlaces: 1,
   color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
   labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
   propsForDots: {
@@ -181,6 +351,7 @@ const chartConfig = {
     strokeWidth: "3",
     stroke: colors.CHART.stroke,
   },
+  barPercentage: 1,
 };
 
 const styles = StyleSheet.create({
@@ -188,6 +359,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 8,
   },
+  chart: {},
   title: {
     flex: 1,
     height: 40,

@@ -47,5 +47,18 @@ class SensorSample
         return $this->lightAmount;
     }
 
+    public function toJSON()
+    {
+        $t = [];
+        $t["id"] = $this->getId();
+        $t["sampleTime"] = $this->getSampleTime();
+        $t["temp"] = $this->getTemp();
+        $t["ph"] = $this->getPh();
+        $t["water"] = $this->getWaterLvl();
+        $t["light"] = $this->getLightAmount();
+
+        return json_encode(["sample" => $t]);
+    }
+
 
 }
