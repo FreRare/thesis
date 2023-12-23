@@ -10,7 +10,6 @@ export default class AquariumConfiguration {
   private _OffOutlet2: number;
   private _OnOutlet3: number;
   private _OffOutlet3: number;
-  private _waterLvlAlert: number;
   private _feedingTime: number;
   private _foodPortions: number;
   private _filterClean: number;
@@ -30,7 +29,6 @@ export default class AquariumConfiguration {
     OffO2 = 1200, // timepick-
     OnO3 = 480, // timepick
     OffO3 = 1200, // timepick-
-    waterLvlAlert = 75, //input
     feedingTime = 660, // timepick
     foodportions = 1, // input-
     filterClean = 0, // dropdown
@@ -49,7 +47,6 @@ export default class AquariumConfiguration {
     this._OffOutlet2 = OffO2;
     this._OnOutlet3 = OnO3;
     this._OffOutlet3 = OffO3;
-    this._waterLvlAlert = waterLvlAlert;
     this._feedingTime = feedingTime;
     this._foodPortions = foodportions;
     this._filterClean = filterClean;
@@ -130,13 +127,6 @@ export default class AquariumConfiguration {
   }
   public set OffOutlet3(value: number) {
     this._OffOutlet3 = value;
-  }
-
-  public get waterLvlAlert(): number {
-    return this._waterLvlAlert;
-  }
-  public set waterLvlAlert(value: number) {
-    this._waterLvlAlert = value;
   }
 
   public get feedingTime(): number {

@@ -191,10 +191,10 @@ function RegistrationForm(props: RegistrationFormProps) {
       <BouncyCheckbox
         size={25}
         style={{ flex: 1 }}
-        fillColor={colors.checkBoxColor}
+        fillColor={colors.primary}
         innerIconStyle={{ borderWidth: 2 }}
         text={strings.rememberMe}
-        textStyle={{ color: colors.checkBoxColor, textDecorationLine: "none" }}
+        textStyle={{ color: colors.primary, textDecorationLine: "none" }}
         isChecked={isRememberMe}
         onPress={() => {
           setIsRememberMe(!isRememberMe);

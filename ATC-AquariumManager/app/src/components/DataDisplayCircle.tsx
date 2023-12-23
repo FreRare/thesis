@@ -29,28 +29,27 @@ const styles = StyleSheet.create({
   conatiner: {
     flex: 1,
     alignItems: "center",
-    marginTop: 18,
   },
   titleContainer: {
     alignContent: "center",
     justifyContent: "center",
   },
   dataContainer: {
-    borderColor: colors.dataCircleBorder,
-    backgroundColor: colors.cardBackGround,
+    borderColor: colors.secondary,
+    backgroundColor: colors.third,
     borderWidth: 10,
     borderRightWidth: 8,
     borderLeftWidth: 8,
     borderTopWidth: 0,
-    borderRadius: 50,
-    padding: 50,
+    borderRadius: 45,
+    padding: 40,
   },
   titleText: {
     fontSize: 20,
     fontFamily: "sans-serif-medium",
   },
   dataText: {
-    fontSize: 30,
+    fontSize: 25,
   },
 });
 

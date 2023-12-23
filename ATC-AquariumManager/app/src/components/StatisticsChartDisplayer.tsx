@@ -11,6 +11,7 @@ import colors from "../../config/colors";
 import strings from "../../config/strings";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
 import SensorSample from "../models/SensorSample";
+import LoadingAnimation from "./LoadingAnimation";
 
 /**
  * To help decide which suffixes to use due to the label
@@ -254,7 +255,7 @@ function StatisticsChartDisplayer(
    * @param index - The index of the dateRange choosen
    */
   const dateRangeChanger = (index: number) => {
-    // TODO: Finish week and month views
+    // TODO: add valid data
     const dataArray: Array<number> = [];
     switch (index) {
       case 0:
@@ -318,20 +319,22 @@ function StatisticsChartDisplayer(
   return (
     <View style={styles.container}>
       <View style={styles.title}>
-        <Text>{props.label}</Text>
+        <Text style={{ fontSize: 20, color: colors.textPrimary }}>
+          {props.label}
+        </Text>
       </View>
+      {!chartData && <LoadingAnimation />}
       {chartData && (
         <LineChart
           data={chartData}
-          width={Dimensions.get("window").width - 40}
+          width={Dimensions.get("window").width - 10}
           height={260}
           verticalLabelRotation={280}
+          yAxisSuffix={ySuffix}
           xLabelsOffset={20}
           chartConfig={chartConfig}
           fromZero={true}
-          withVerticalLines={false}
           style={styles.chart}
-          bezier
         />
       )}
       <View style={styles.dateRangeSelectorContainer}>{dateRangeSelector}</View>
@@ -340,26 +343,29 @@ function StatisticsChartDisplayer(
 }
 
 const chartConfig = {
-  backgroundColor: colors.CHART.background,
-  backgroundGradientFrom: colors.CHART.gradientFrom,
-  backgroundGradientTo: colors.CHART.gradientTo,
+  backgroundColor: colors.third,
+  backgroundGradientFrom: colors.third,
+  backgroundGradientTo: colors.third,
   decimalPlaces: 1,
-  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-  labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+  color: (opacity = 1) => `rgba(117, 152, 193, ${opacity})`,
+  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
   propsForDots: {
     r: "3",
     strokeWidth: "3",
-    stroke: colors.CHART.stroke,
+    stroke: colors.secondary,
   },
-  barPercentage: 1,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginVertical: 8,
+    marginVertical: 10,
   },
-  chart: {},
+  chart: {
+    borderRightWidth: 2,
+    borderLeftWidth: 2,
+    borderColor: colors.secondary,
+  },
   title: {
     flex: 1,
     height: 40,
@@ -367,11 +373,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    backgroundColor: colors.CHART.dateSelectorBG,
+    borderTopWidth: 2,
+    borderRightWidth: 2,
+    borderLeftWidth: 2,
+    borderColor: colors.secondary,
+    backgroundColor: colors.third,
   },
   dateRangeSelectorContainer: {
+    flex: 1,
     height: 40,
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
@@ -379,7 +389,11 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    backgroundColor: colors.CHART.dateSelectorBG,
+    borderBottomWidth: 2,
+    borderRightWidth: 2,
+    borderLeftWidth: 2,
+    borderColor: colors.secondary,
+    backgroundColor: colors.third,
   },
   dateRangeSelectorTouchable: {
     flex: 1,
@@ -390,7 +404,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.CHART.dateSelectorHighlight,
+    backgroundColor: colors.darkThird,
     borderRadius: 50,
   },
   dateRangeSelectorText: {

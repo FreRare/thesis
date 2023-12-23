@@ -20,7 +20,7 @@ class AquariumConfig
     private $samplePeriod;
     private $lastModifiedDate;
 
-    public function __construct(int $AquariumId, float $minTemp = 20, float $maxTemp = 28, float $minPh = 6.5, float $maxPh = 8, int $onOutlet1 = 480, int $offOutlet1 = 1200, int $onOutlet2 = 480, int $offOutlet2 = 1200, int $onOutet3 = 480, int $offOutlet3 = 1200, int $waterLvlAlert = 70, int $feedingTime = 600, int $foodPortions = 1, int $filterClean = 0, int $waterChange = 0, int $samplePeriod = 2, DateTime $lastModifiedDate = null)
+    public function __construct(int $AquariumId, float $minTemp = 20, float $maxTemp = 28, float $minPh = 6.5, float $maxPh = 8, int $onOutlet1 = 480, int $offOutlet1 = 1200, int $onOutlet2 = 480, int $offOutlet2 = 1200, int $onOutet3 = 480, int $offOutlet3 = 1200, int $feedingTime = 600, int $foodPortions = 1, int $filterClean = 0, int $waterChange = 0, int $samplePeriod = 2, DateTime $lastModifiedDate = null)
     {
         $this->AquariumId = $AquariumId;
         $this->minTemp = $minTemp;
@@ -33,7 +33,6 @@ class AquariumConfig
         $this->offOutlet2 = $offOutlet2;
         $this->onOutlet3 = $onOutet3;
         $this->offOutlet3 = $offOutlet3;
-        $this->waterLvlAlert = $waterLvlAlert;
         $this->feedingTime = $feedingTime;
         $this->foodPortions = $foodPortions;
         $this->filterClean = $filterClean;
@@ -99,11 +98,6 @@ class AquariumConfig
     public function getOffOutlet3()
     {
         return $this->offOutlet3;
-    }
-
-    public function getWaterLvlAlert()
-    {
-        return $this->waterLvlAlert;
     }
 
     public function getFeedingTime()
@@ -190,11 +184,6 @@ class AquariumConfig
         $this->offOutlet3 = $offOutlet3;
     }
 
-    public function setWaterLvlAlert($waterLvlAlert): void
-    {
-        $this->waterLvlAlert = $waterLvlAlert;
-    }
-
     public function setFeedingTime($feedingTime): void
     {
         $this->feedingTime = $feedingTime;
@@ -238,7 +227,6 @@ class AquariumConfig
         $t["ol1Off"] = $this->offOutlet1;
         $t["ol2Off"] = $this->offOutlet2;
         $t["ol3Off"] = $this->offOutlet3;
-        $t["waterLvlAlert"] = $this->waterLvlAlert;
         $t["feedingTime"] = $this->feedingTime;
         $t["foodPortions"] = $this->foodPortions;
         $t["filterClean"] = $this->filterClean;
@@ -262,7 +250,6 @@ class AquariumConfig
         $t["ol1Off"] = $this->offOutlet1;
         $t["ol2Off"] = $this->offOutlet2;
         $t["ol3Off"] = $this->offOutlet3;
-        $t["waterLvlAlert"] = $this->waterLvlAlert;
         $t["feedingTime"] = $this->feedingTime;
         $t["foodPortions"] = $this->foodPortions;
         $t["samplePeriod"] = $this->samplePeriod;

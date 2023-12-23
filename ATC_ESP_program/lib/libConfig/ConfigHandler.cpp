@@ -44,7 +44,8 @@ ConfigStatus ConfigHandler::checkFullfillmentStatus(const SensorData* data)
         if (data->getPh() > this->configuration->getMaxPh()) {
             return ConfigStatus::HIGH_PH;
         }
-        if (data->getWaterLvl() < this->configuration->getWaterLvlAlert()) {
+        if (data->getWaterLvl() < 1) {
+            // TODO: This 1 should be a valid enum number [OK, MEDIUM, LOW] enum for water level
             return ConfigStatus::LOW_WATER;
         }
         // ! OUTLET 1 should be the light switching outlet

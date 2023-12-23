@@ -25,7 +25,9 @@ function AquariumCard(props: AquariumCardProps) {
     <View style={styles.card}>
       <View style={commonStyles.horizontal}>
         <View style={styles.vertical}>
-          <Text style={{ marginRight: "20%" }}>{props.item.name}</Text>
+          <Text style={{ marginRight: "20%", fontSize: 20 }}>
+            {props.item.name}
+          </Text>
         </View>
         <View style={styles.verticalRight}>
           <Icon
@@ -64,8 +66,8 @@ const styles = StyleSheet.create({
     height: 140,
     width: "100%",
     borderWidth: 4,
-    borderColor: colors.menuHighlightBG,
-    backgroundColor: colors.cardBackGround,
+    borderColor: colors.secondary,
+    backgroundColor: colors.third,
     borderRadius: 30,
     margin: 15,
     padding: 15,

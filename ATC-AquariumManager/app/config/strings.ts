@@ -73,7 +73,7 @@ export default {
   cleaning: "Cleaning",
   filterClean: "Filter cleaning",
   waterChange: "Water changing",
-  waterAndSmaples: "Water and sample",
+  samples: "Sample period",
   invalidWaterLevel: "Water level should be a valid percentage!",
   lastModified: "Last modified: ",
   never: "Never",

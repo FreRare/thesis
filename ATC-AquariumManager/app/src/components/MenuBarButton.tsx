@@ -46,7 +46,7 @@ function MenuBarButton(props: any) {
             StyleSheet.absoluteFillObject,
             {
               backgroundColor: selected
-                ? colors.menuHighlightBG
+                ? colors.secondary
                 : colors.menuBarBackground,
               borderRadius: 10,
               margin: -10,
@@ -58,7 +58,7 @@ function MenuBarButton(props: any) {
             <Icon
               name={item.icon as string}
               size={30}
-              color={selected ? colors.menuBarBackground : colors.secondary}
+              color={selected ? colors.menuBarBackground : colors.primary}
             />
           </Animatable.View>
           <Animatable.View ref={textRef}>

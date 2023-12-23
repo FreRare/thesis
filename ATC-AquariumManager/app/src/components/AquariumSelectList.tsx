@@ -1,6 +1,5 @@
 import React from "react";
 import Aquarium from "../models/Aquarium";
-import { View, StyleSheet } from "react-native";
 import commonStyles from "../utils/commonStyles";
 import { SelectList } from "react-native-dropdown-select-list";
 import strings from "../../config/strings";

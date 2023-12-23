@@ -74,9 +74,9 @@ function ConfiguratorDataDisplayer(props: ConfiguratorDataDisplayerProps) {
         editDisabled={props.editDisabled}
       />
       <ConfiguratorDataSegmentDisplayer
-        label={strings.waterAndSmaples}
-        data1={props.aquariumConfigData.waterLvlAlert}
-        data2={props.aquariumConfigData.samplePeriod}
+        label={strings.samples}
+        data1={props.aquariumConfigData.samplePeriod}
+        data2={undefined}
         editCallback={props.editCallback}
         editDisabled={props.editDisabled}
       />

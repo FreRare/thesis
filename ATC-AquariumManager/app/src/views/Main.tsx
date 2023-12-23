@@ -4,7 +4,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import useUser from "../utils/hooks/useUser";
 
 function Main() {
-  const [loading, setLoading] = React.useState<boolean>(true);
   const [user, setUser] = useUser();
 
   return (

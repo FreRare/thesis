@@ -43,9 +43,9 @@ const dataSegmentLabelDecisionMap = [
     dataFormatter: getCleanStringValue,
   },
   {
-    labels: strings.waterAndSmaples,
-    data1Label: strings.waterLevelAlert,
-    data2Label: strings.samplePeriod,
+    labels: strings.samples,
+    data1Label: strings.samplePeriod,
+    data2Label: "",
     dataFormatter: (dat: number) => {
       return String(dat);
     },
@@ -56,7 +56,7 @@ const dataSegmentLabelDecisionMap = [
 type ConfiguratorDataSegmentDisplayerProps = {
   label: string;
   data1: number;
-  data2: number;
+  data2: number | undefined;
   editCallback: (label: string) => void;
   editDisabled: boolean;
 };
@@ -88,7 +88,9 @@ function ConfiguratorDataSegmentDisplayer(
         dsm.labels.toLocaleLowerCase().includes(props.label.toLocaleLowerCase())
       ) {
         setData1ToDisplay(dsm.dataFormatter(props.data1));
-        setData2ToDisplay(dsm.dataFormatter(props.data2));
+        setData2ToDisplay(
+          dsm.dataFormatter(props.data2 != undefined ? props.data2 : -1)
+        );
       }
     }
 
@@ -99,8 +101,8 @@ function ConfiguratorDataSegmentDisplayer(
       );
     }
     // Water & samples is a different case too
-    if (props.label === strings.waterAndSmaples) {
-      setData2ToDisplay(getStringValue(props.data2));
+    if (props.label === strings.samples) {
+      setData1ToDisplay(getStringValue(props.data1));
     }
   });
   const [dataLabels, setDataLabels] = React.useState<Array<string>>([]);
@@ -130,10 +132,12 @@ function ConfiguratorDataSegmentDisplayer(
           <Text style={styles.dataText}>{data1ToDisplay}</Text>
           <Text style={styles.dataText}>{dataLabels[0]}</Text>
         </View>
-        <View style={styles.dataSegment}>
-          <Text style={styles.dataText}>{data2ToDisplay}</Text>
-          <Text style={styles.dataText}>{dataLabels[1]}</Text>
-        </View>
+        {props.data2 != undefined && (
+          <View style={styles.dataSegment}>
+            <Text style={styles.dataText}>{data2ToDisplay}</Text>
+            <Text style={styles.dataText}>{dataLabels[1]}</Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -150,7 +154,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: colors.secondary,
     borderRadius: 20,
-    backgroundColor: colors.cardBackGround,
+    backgroundColor: colors.third,
   },
   dataContainer: {
     flex: 1,

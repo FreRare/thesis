@@ -127,7 +127,7 @@ ConfigData* ServerConnector::updateConfigData()
                 configDoc["data"]["config"]["ol1On"], configDoc["data"]["config"]["ol1Off"],
                 configDoc["data"]["config"]["ol2On"], configDoc["data"]["config"]["ol2Off"],
                 configDoc["data"]["config"]["ol3On"], configDoc["data"]["config"]["ol3Off"],
-                configDoc["data"]["config"]["waterLvlAlert"], configDoc["data"]["config"]["feedingTime"],
+                configDoc["data"]["config"]["feedingTime"],
                 configDoc["data"]["config"]["foodPortions"], configDoc["data"]["config"]["samplePeriod"]);
         return freshConfig;
     }

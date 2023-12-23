@@ -10,7 +10,7 @@ import colors from "../../config/colors";
 function LoadingAnimation(): React.JSX.Element {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size={120} color={colors.loadinAnimationColor} />
+      <ActivityIndicator size={120} color={colors.darkPrimary} />
     </View>
   );
 }

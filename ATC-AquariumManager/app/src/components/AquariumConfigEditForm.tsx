@@ -42,7 +42,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
    * 2 unique ones are feeding and waterLvl+Samples so far
    * ! Important, so the form body can decide which cases not to use the default inputs
    */
-  const uniqueFormCases = strings.feeding + strings.waterAndSmaples;
+  const uniqueFormCases = strings.feeding + strings.samples;
 
   const [data1, setData1] = React.useState<number | string>(-1);
   const [data2, setData2] = React.useState<number | string>(-1);
@@ -71,10 +71,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         cleanDropdownData.push({ key: i, value: Clean.getCleanStringValue(i) });
       }
     }
-    if (
-      props.label === strings.waterAndSmaples &&
-      sampleDropdownData.length <= 0
-    ) {
+    if (props.label === strings.samples && sampleDropdownData.length <= 0) {
       for (let i = 0; i < Sample.ENUM_LENGTH; i++) {
         sampleDropdownData.push({ key: i, value: Sample.getStringValue(i) });
       }
@@ -123,7 +120,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         setData1(props.editableConfig.feedingTime);
         setData2(props.editableConfig.foodPortions);
         break;
-      case strings.waterAndSmaples: // Numeric + Dropdown
+      case strings.samples: // Numeric + Dropdown
         setData1(props.editableConfig.waterLvlAlert);
         setData2(props.editableConfig.samplePeriod);
         break;
@@ -166,7 +163,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         props.editableConfig.filterClean = dat1;
         props.editableConfig.waterChange = dat2;
         return;
-      case strings.waterAndSmaples:
+      case strings.samples:
         props.editableConfig.waterLvlAlert = dat1;
         props.editableConfig.samplePeriod = dat2;
     }
@@ -334,19 +331,8 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
           </View>
         </>
       )}
-      {props.label === strings.waterAndSmaples && (
+      {props.label === strings.samples && (
         <>
-          <View style={commonStyles.horizontal}>
-            <Text style={styles.dropdownLabel}>{strings.waterLevel} (%):</Text>
-            <TextInput
-              style={commonStyles.input}
-              keyboardType="numeric"
-              value={data1 ? String(data1) : ""}
-              onChangeText={(t: string) => {
-                setData1(t);
-              }}
-            />
-          </View>
           <View style={commonStyles.horizontal}>
             <Text style={styles.dropdownLabel}>{strings.samplePeriod}:</Text>
             <SelectList
@@ -382,13 +368,6 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
     if (Number.isNaN(parsedData1) || Number.isNaN(parsedData2)) {
       setErrorMsg(strings.numberParseError);
       return;
-    }
-    // validate water level percentage
-    if (props.label === strings.waterAndSmaples) {
-      if (parsedData1 > 100 || parsedData1 < 0) {
-        setErrorMsg(strings.invalidWaterLevel);
-        return;
-      }
     }
     // Make sure of valid portions input
     if (props.label === strings.feeding) {
@@ -437,7 +416,10 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
     // Temp and ph should be rounded up to 2 decimal and d1 should be lower than d2
     if (
       props.label.includes(strings.temperature) ||
-      props.label.includes(strings.ph) || props.label.includes(strings.outlet1) || props.label.includes(strings.outlet2) || props.label.includes(strings.outlet3)
+      props.label.includes(strings.ph) ||
+      props.label.includes(strings.outlet1) ||
+      props.label.includes(strings.outlet2) ||
+      props.label.includes(strings.outlet3)
     ) {
       d1 = Math.round((parsedData1 + Number.EPSILON) * 100) / 100;
       d2 = Math.round((parsedData2 + Number.EPSILON) * 100) / 100;

@@ -30,7 +30,6 @@ private:
     uint16_t outlet2Off;
     uint16_t outlet3On;
     uint16_t outlet3Off;
-    uint8_t waterLvlAlert; // max 100
     uint16_t feedingTime; // When to feed fish (1 time a day)
     uint8_t feedingPortions; // The amount of rotations the servo should make
     SamplePeriod samplePeriod; // How often to take samples
@@ -39,7 +38,7 @@ public:
     ConfigData() = default;
     ConfigData(const float& minT, const float& maxT, const float& minPh, const float& maxPh, const uint16_t& OL1On,
         const uint16_t& OL1Off, const uint16_t& OL2On, const uint16_t& OL2Off, const uint16_t& OL3On,
-        const uint16_t& OL3Off, const uint8_t& waterLvlAlert, const uint16_t& feedingTime, const uint8_t& foodPort,
+        const uint16_t& OL3Off, const uint16_t& feedingTime, const uint8_t& foodPort,
         const SamplePeriod& samplePer);
 
     float getMinTemp() const { return minTemp; }
@@ -61,8 +60,6 @@ public:
     uint16_t getOutlet3On() const { return outlet3On; }
 
     uint16_t getOutlet3Off() const { return outlet3Off; }
-
-    uint8_t getWaterLvlAlert() const { return waterLvlAlert; }
 
     uint16_t getFeedingTime() const { return feedingTime; }
 
@@ -89,8 +86,6 @@ public:
     void setOutlet3On(uint16_t outlet3On);
 
     void setOutlet3Off(uint16_t outlet3Off);
-
-    void setWaterLvlAlert(uint8_t waterLvlAlert);
 
     void setFeedingTime(uint16_t feedingTime);
 

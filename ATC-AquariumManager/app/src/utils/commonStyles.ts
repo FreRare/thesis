@@ -30,7 +30,7 @@ const commonStyles = StyleSheet.create({
   dropdownListBoxStyle: {
     backgroundColor: colors.menuBarBackground,
     width: 300,
-    marginBottom: 20,
+    marginBottom: 10,
     marginTop: 20,
   },
   dropdownListInputStyle: {
@@ -40,6 +40,8 @@ const commonStyles = StyleSheet.create({
     backgroundColor: colors.menuBarBackground,
     opacity: 1,
     height: 100,
+    zIndex: 999,
+    position: "relative",
   },
   horizontal: {
     flex: 1,
@@ -60,7 +62,7 @@ const commonStyles = StyleSheet.create({
     width: "70%",
     alignItems: "center",
     justifyContent: "center",
-    borderColor: colors.menuTopBorder,
+    borderColor: colors.secondary,
     borderWidth: 3,
     borderRadius: 20,
     position: "absolute",
