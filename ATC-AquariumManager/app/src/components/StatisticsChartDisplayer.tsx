@@ -91,7 +91,6 @@ const getLastNDays = (
         lastMonth = 12;
       }
       lastDay = getDaysOfTheMonth(lastYear, lastMonth);
-      console.log("Days of the month is: ", lastDay);
       numberSub = 0; // Reset descender value
     }
     days.push(`${monthList[lastMonth - 1]}-${lastDay - numberSub}`);
@@ -106,10 +105,14 @@ const getLastNDays = (
  * @returns - {sample, day, month} format data
  */
 const findLastSampleAndDates = (data: Array<SensorSample>) => {
+  console.log("Reducing array: ", data);
   // Find the last sample
   const lastSample = data.reduce((latest, current) => {
-    return current.sampleTime > latest.sampleTime ? current : latest;
+    return current.sampleTime.getTime() > latest.sampleTime.getTime()
+      ? current
+      : latest;
   }, data[0]);
+  console.log("Last sample is: ", lastSample);
   // Get the last date's month and day
   let lastMonth = Number.parseInt(
     lastSample.sampleTime.toISOString().split("T")[0].split("-")[1]
@@ -210,44 +213,107 @@ function StatisticsChartDisplayer(
         }
       }
     }
-    // Setting chart config (chart's data and labels)
-    if (!chartData) {
+    // Setting chart config (chart's data and labels) if we have data to work from
+    if (!chartData && props.data.length > 0) {
       setChartData({
         labels: dayLabelsGenerator(),
         datasets: [
           {
-            data: [
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-              Math.random() * 100,
-            ],
+            data: dayDataGenerator(),
           },
         ],
       });
     }
   });
+
+  /**
+   * Generates the array of data to the date view
+   * Gets the last sample and gets the data for the given day and sorts it by time and gets the needed data for the chart based on the label
+   * Also fills out the blank areas with the last and first data values
+   * @returns - The array of numbers to display, can be more than 24
+   */
+  const dayDataGenerator = (): Array<number> => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    let samplesInDateRange = props.data.filter((s) => {
+      return s.sampleTime >= today && s.sampleTime < tomorrow;
+    });
+    // If we have no samples for today, get last available samples
+    if (samplesInDateRange.length <= 0) {
+      alert("No samples found for today, displaying last measured samples!");
+      // Get last sample and count back a day
+      const lastSample = findLastSampleAndDates(props.data);
+      const yesterday = new Date(lastSample.lastSample.sampleTime);
+      yesterday.setDate(yesterday.getDate() - 1);
+      // Filter samples for date ranges and sort by date ascending
+      samplesInDateRange = props.data
+        .filter((s) => {
+          return (
+            s.sampleTime.getTime() <=
+              lastSample.lastSample.sampleTime.getTime() &&
+            s.sampleTime.getTime() > yesterday.getTime()
+          );
+        })
+        .sort((a, b) => {
+          if (a.sampleTime.getTime() > b.sampleTime.getTime()) {
+            return 1;
+          }
+          if (a.sampleTime.getTime() < b.sampleTime.getTime()) {
+            return -1;
+          }
+          return 0;
+        });
+    }
+    // Fill out blank points if we have any
+    if (samplesInDateRange[0].sampleTime.getHours() > 0) {
+      for (let i = samplesInDateRange[0].sampleTime.getHours(); i >= 0; i--) {
+        samplesInDateRange.unshift(samplesInDateRange[0]);
+      }
+    }
+    if (
+      samplesInDateRange[samplesInDateRange.length - 1].sampleTime.getHours() <
+      23
+    ) {
+      for (
+        let i =
+          samplesInDateRange[
+            samplesInDateRange.length - 1
+          ].sampleTime.getHours();
+        i <= 23;
+        i++
+      ) {
+        samplesInDateRange.push(
+          samplesInDateRange[samplesInDateRange.length - 1]
+        );
+      }
+    }
+    const sampleData = [];
+    // Switching what to display dou to the label of the chart
+    switch (props.label) {
+      case strings.temperature:
+        for (const sample of samplesInDateRange) {
+          sampleData.push(sample.temp);
+        }
+        break;
+      case strings.ph:
+        for (const sample of samplesInDateRange) {
+          sampleData.push(sample.ph);
+        }
+        break;
+      case strings.light:
+        for (const sample of samplesInDateRange) {
+          sampleData.push(sample.lightAmount);
+        }
+        break;
+      case strings.waterLevel:
+        for (const sample of samplesInDateRange) {
+          sampleData.push(sample.waterLvl);
+        }
+        break;
+    }
+    return sampleData;
+  };
 
   /**
    * Handles the date range changes
@@ -259,14 +325,11 @@ function StatisticsChartDisplayer(
     const dataArray: Array<number> = [];
     switch (index) {
       case 0:
-        for (let i = 0; i < 24; i++) {
-          dataArray.push(Math.random() * 100);
-        }
         setChartData({
           labels: dayLabelsGenerator(),
           datasets: [
             {
-              data: dataArray,
+              data: dayDataGenerator(),
             },
           ],
         });
@@ -333,8 +396,9 @@ function StatisticsChartDisplayer(
           yAxisSuffix={ySuffix}
           xLabelsOffset={20}
           chartConfig={chartConfig}
-          fromZero={true}
+          withShadow={highlighted === 0}
           style={styles.chart}
+          bezier
         />
       )}
       <View style={styles.dateRangeSelectorContainer}>{dateRangeSelector}</View>
@@ -346,12 +410,12 @@ const chartConfig = {
   backgroundColor: colors.third,
   backgroundGradientFrom: colors.third,
   backgroundGradientTo: colors.third,
-  decimalPlaces: 1,
+  decimalPlaces: 2,
   color: (opacity = 1) => `rgba(117, 152, 193, ${opacity})`,
   labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
   propsForDots: {
-    r: "3",
-    strokeWidth: "3",
+    r: "2",
+    strokeWidth: "2",
     stroke: colors.secondary,
   },
 };
@@ -394,6 +458,8 @@ const styles = StyleSheet.create({
     borderLeftWidth: 2,
     borderColor: colors.secondary,
     backgroundColor: colors.third,
+    paddingBottom: 2,
+    paddingTop: 2,
   },
   dateRangeSelectorTouchable: {
     flex: 1,

@@ -8,6 +8,7 @@ import AquariumSelectList from "../components/AquariumSelectList";
 import commonStyles from "../utils/commonStyles";
 import SensorSample from "../models/SensorSample";
 import SensorSampleService from "../services/SensorSampleService";
+import strings from "../../config/strings";
 
 type StatisticsScreenProps = {
   navigation: any;
@@ -63,9 +64,9 @@ function StatisticsScreen(props: StatisticsScreenProps) {
           <RefreshControl refreshing={loading} onRefresh={refreshCallback} />
         }
       >
-        <StatisticsChartDisplayer label={"Temperature"} data={samples} />
-        <StatisticsChartDisplayer label={"Ph"} data={[]} />
-        <StatisticsChartDisplayer label={"Light"} data={[]} />
+        <StatisticsChartDisplayer label={strings.temperature} data={samples} />
+        <StatisticsChartDisplayer label={strings.ph} data={samples} />
+        <StatisticsChartDisplayer label={strings.light} data={samples} />
       </ScrollView>
     </Layout>
   );
