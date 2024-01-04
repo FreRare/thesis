@@ -12,116 +12,7 @@ import strings from "../../config/strings";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
 import SensorSample from "../models/SensorSample";
 import LoadingAnimation from "./LoadingAnimation";
-
-/**
- * To help decide which suffixes to use due to the label
- */
-const chartDecisionMap = [
-  {
-    label: strings.temperature,
-    yAxisSuffix: "°C",
-  },
-  {
-    label: strings.ph,
-    yAxisSuffix: " ",
-  },
-  {
-    label: strings.light,
-    yAxisSuffix: " ",
-  },
-  {
-    label: strings.waterLevel,
-    yAxisSuffix: "%",
-  },
-];
-
-/**
- * This array holds the options for the data range selector
- */
-const dataViewOptions = [
-  strings.STATS.dayDataRangeText,
-  strings.STATS.weekDataRangeText,
-  strings.STATS.monthDataRangeText,
-];
-
-/**
- * Returns how many days are there in the provided month in the given year
- * @param year - the year
- * @param month - the month
- * @returns The number of days
- */
-const getDaysOfTheMonth = (year: number, month: number): number => {
-  return new Date(year, month, 0).getDate();
-};
-
-/**
- * Gets the last N days from the given date (d-m-Y, all with numbers)
- * @param lastDay - the day
- * @param lastMonth - the month
- * @param lastYear - the year
- * @returns The list of the dates as (m-d) format (m is with letters)
- */
-const getLastNDays = (
-  lastDay: number,
-  lastMonth: number,
-  lastYear: number,
-  N: number
-): Array<string> => {
-  const days = [];
-  const monthList = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  let numberSub = 0; // Stores how many days we should get off the current day
-  for (let i = 0; i < N; i++) {
-    // If we reach 0 -> we start a new month
-    if (lastDay - numberSub === 0) {
-      lastMonth -= 1;
-      if (lastMonth === 0) {
-        lastMonth = 12;
-      }
-      lastDay = getDaysOfTheMonth(lastYear, lastMonth);
-      numberSub = 0; // Reset descender value
-    }
-    days.push(`${monthList[lastMonth - 1]}-${lastDay - numberSub}`);
-    numberSub++;
-  }
-  return days;
-};
-
-/**
- * Finds the last sample in the provided data set by date, and returns the sample and the day and month of measure
- * @param data - the dataset
- * @returns - {sample, day, month} format data
- */
-const findLastSampleAndDates = (data: Array<SensorSample>) => {
-  console.log("Reducing array: ", data);
-  // Find the last sample
-  const lastSample = data.reduce((latest, current) => {
-    return current.sampleTime.getTime() > latest.sampleTime.getTime()
-      ? current
-      : latest;
-  }, data[0]);
-  console.log("Last sample is: ", lastSample);
-  // Get the last date's month and day
-  let lastMonth = Number.parseInt(
-    lastSample.sampleTime.toISOString().split("T")[0].split("-")[1]
-  ); // Get m
-  let lastDay = Number.parseInt(
-    lastSample.sampleTime.toISOString().split("T")[0].split("-")[2]
-  ); // Get d
-  return { lastSample, lastDay, lastMonth };
-};
+import { Dataset } from "react-native-chart-kit/dist/HelperTypes";
 
 /**
  * The properties of the component
@@ -147,6 +38,194 @@ function StatisticsChartDisplayer(
   const [ySuffix, setYSuffix] = React.useState<string>(""); // The suffix for Y axis
   const [chartData, setChartData] = React.useState<LineChartData>(); // The data for the line chart (contains the displayable data and the labels)
   const [highlighted, setHighlighted] = React.useState<number>(0);
+
+  /**
+   * To help decide which suffixes to use due to the label
+   */
+  const chartDecisionMap = [
+    {
+      label: strings.temperature,
+      yAxisSuffix: "°C",
+    },
+    {
+      label: strings.ph,
+      yAxisSuffix: " ",
+    },
+    {
+      label: strings.light,
+      yAxisSuffix: " ",
+    },
+    {
+      label: strings.waterLevel,
+      yAxisSuffix: "%",
+    },
+  ];
+
+  /**
+   * This array holds the options for the data range selector
+   */
+  const dataViewOptions = [
+    strings.STATS.dayDataRangeText,
+    strings.STATS.weekDataRangeText,
+    strings.STATS.twoWeeksDataRangeText,
+    strings.STATS.monthDataRangeText,
+  ];
+
+  /**
+   * Returns how many days are there in the provided month in the given year
+   * @param year - the year
+   * @param month - the month
+   * @returns The number of days
+   */
+  const getDaysOfTheMonth = (year: number, month: number): number => {
+    return new Date(year, month, 0).getDate();
+  };
+
+  /**
+   * Gets the last N days from the given date (d-m-Y, all with numbers)
+   * @param lastDay - the day
+   * @param lastMonth - the month
+   * @param lastYear - the year
+   * @returns The list of the dates as (m-d) format (m is with letters)
+   */
+  const getLastNDays = (
+    lastDay: number,
+    lastMonth: number,
+    lastYear: number,
+    N: number
+  ): Array<string> => {
+    const days = [];
+    const monthList = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    let numberSub = 0; // Stores how many days we should get off the current day
+    for (let i = 0; i < N; i++) {
+      // If we reach 0 -> we start a new month
+      if (lastDay - numberSub === 0) {
+        lastMonth -= 1;
+        if (lastMonth === 0) {
+          lastMonth = 12;
+        }
+        lastDay = getDaysOfTheMonth(lastYear, lastMonth);
+        numberSub = 0; // Reset descender value
+      }
+      days.push(`${monthList[lastMonth - 1]}-${lastDay - numberSub}`);
+      numberSub++;
+    }
+    return days;
+  };
+
+  /**
+   * Finds the last sample in the provided data set by date, and returns the sample and the day and month of measure
+   * @param data - the dataset
+   * @returns - {sample, day, month} format data
+   */
+  const findLastSampleAndDates = (data: Array<SensorSample>) => {
+    // Find the last sample
+    const lastSample = data.reduce((latest, current) => {
+      return current.sampleTime.getTime() > latest.sampleTime.getTime()
+        ? current
+        : latest;
+    }, data[0]);
+    // Get the last date's month and day
+    let lastMonth = Number.parseInt(
+      lastSample.sampleTime.toISOString().split("T")[0].split("-")[1]
+    ); // Get m
+    let lastDay = Number.parseInt(
+      lastSample.sampleTime.toISOString().split("T")[0].split("-")[2]
+    ); // Get d
+    return { lastSample, lastDay, lastMonth };
+  };
+
+  /**
+   * This function can be used to sort the samples in an array
+   * @param a sample A
+   * @param b smaple B
+   * @returns 1 0 -1 due to the sort order
+   */
+  const sortSamplesByTimeAscending = (a: SensorSample, b: SensorSample) => {
+    if (a.sampleTime.getTime() > b.sampleTime.getTime()) {
+      return 1;
+    }
+    if (a.sampleTime.getTime() < b.sampleTime.getTime()) {
+      return -1;
+    }
+    return 0;
+  };
+
+  /**
+   * Gets the maximum values for the days
+   * @param samples The array of samples to work with (only the data and the time)
+   * @returns The values mapped by the dates
+   */
+  const getMaxDailyValues = (
+    samples: Array<{ value: number; time: Date }>
+  ): Map<string, number> => {
+    // Getting max values per day
+    const maxValues = new Map<string, number>();
+    samples.forEach((sample) => {
+      const dateKey = sample.time.toISOString().split("T")[0];
+      if (!maxValues.has(dateKey) || sample.value > maxValues.get(dateKey)!) {
+        maxValues.set(dateKey, sample.value);
+      }
+    });
+    return maxValues;
+  };
+
+  /**
+   * Gets the minimum values for the days
+   * @param samples The array of samples to work with (only the data and the time)
+   * @returns The values mapped by the dates
+   */
+  const getMinDailyValues = (samples: Array<{ value: number; time: Date }>) => {
+    // Getting min values
+    const minValues = new Map<string, number>();
+    samples.forEach((sample) => {
+      const dateKey = sample.time.toISOString().split("T")[0];
+      if (!minValues.has(dateKey) || sample.value < minValues.get(dateKey)!) {
+        minValues.set(dateKey, sample.value);
+      }
+    });
+    return minValues;
+  };
+
+  /**
+   * Gets the average values per day
+   * @param samples The array of samples only data and time
+   * @returns the average values mapped with the date
+   */
+  const getAvgDailyValues = (samples: Array<{ value: number; time: Date }>) => {
+    // Getting avg values
+    const sumValuesByDay = new Map<string, { sum: number; count: number }>();
+    samples.forEach((sample) => {
+      const dateKey = sample.time.toISOString().split("T")[0];
+      if (!sumValuesByDay.has(dateKey)) {
+        sumValuesByDay.set(dateKey, { sum: sample.value, count: 1 });
+      } else {
+        const currentDayValues = sumValuesByDay.get(dateKey);
+        if (currentDayValues) {
+          currentDayValues.sum += sample.value;
+          currentDayValues.count += 1;
+        }
+      }
+    });
+    const averageValues = new Map<string, number>();
+    sumValuesByDay.forEach((value, day) => {
+      averageValues.set(day, value.sum / value.count);
+    });
+    return averageValues;
+  };
 
   /**
    * Creates the labels for daily view
@@ -179,8 +258,33 @@ function StatisticsChartDisplayer(
     weekDays.reverse(); // Reverse the list
     for (let i = 0; i < weekDays.length; i++) {
       weekLabels.push(weekDays[i]);
-      weekLabels.push("12:00");
     }
+    return weekLabels;
+  };
+
+  /**
+   * Generates labels for two days view
+   * @returns the labels as an array
+   */
+  const twoWeeksLabelsGenerator = (): Array<string> => {
+    const weekLabels: Array<string> = [];
+
+    const { lastSample, lastDay, lastMonth } = findLastSampleAndDates(
+      props.data
+    );
+
+    const weekDays: Array<string> = getLastNDays(
+      lastDay,
+      lastMonth,
+      lastSample.sampleTime.getFullYear(),
+      14
+    );
+
+    weekDays.reverse();
+    for (let i = 0; i < weekDays.length; i++) {
+      weekLabels.push(weekDays[i]);
+    }
+
     return weekLabels;
   };
 
@@ -204,6 +308,7 @@ function StatisticsChartDisplayer(
     return monthDays;
   };
 
+  // On create initialization of suffixes and dataset
   React.useEffect(() => {
     // Setting Y axis suffix based on the label
     if (ySuffix.length <= 0) {
@@ -217,102 +322,234 @@ function StatisticsChartDisplayer(
     if (!chartData && props.data.length > 0) {
       setChartData({
         labels: dayLabelsGenerator(),
-        datasets: [
-          {
-            data: dayDataGenerator(),
-          },
-        ],
+        datasets: dataGenerator(1),
       });
     }
   });
 
   /**
-   * Generates the array of data to the date view
-   * Gets the last sample and gets the data for the given day and sorts it by time and gets the needed data for the chart based on the label
-   * Also fills out the blank areas with the last and first data values
-   * @returns - The array of numbers to display, can be more than 24
+   * Generates the dataset(s) for the charts based on the provided number of days
+   * @param daysCount - the number of days
+   * @returns The dataset with coloring
    */
-  const dayDataGenerator = (): Array<number> => {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    let samplesInDateRange = props.data.filter((s) => {
-      return s.sampleTime >= today && s.sampleTime < tomorrow;
-    });
-    // If we have no samples for today, get last available samples
+  const dataGenerator = (daysCount: number): Array<Dataset> => {
+    if ((daysCount > 1 && daysCount < 7) || daysCount > 31) {
+      throw Error(
+        `Invalid days given to data generator! Cannot generate data for ${daysCount} days!!`
+      );
+    }
+    // Getting the date of today and the day 7 days before
+    let today = new Date();
+    let lastDate = new Date(today);
+    lastDate.setDate(lastDate.getDate() - daysCount);
+
+    // Getting samples in date range
+    let samplesInDateRange = props.data
+      .filter((s) => {
+        return s.sampleTime <= today && s.sampleTime > lastDate;
+      })
+      .sort(sortSamplesByTimeAscending);
+
+    // Check if we have samples for that time
     if (samplesInDateRange.length <= 0) {
-      alert("No samples found for today, displaying last measured samples!");
-      // Get last sample and count back a day
-      const lastSample = findLastSampleAndDates(props.data);
-      const yesterday = new Date(lastSample.lastSample.sampleTime);
-      yesterday.setDate(yesterday.getDate() - 1);
-      // Filter samples for date ranges and sort by date ascending
+      // If we dont go to the last ones
+      alert(
+        `No ${props.label} samples found for the past ${daysCount} day(s), showing last available samples!`
+      );
+      // Recreating time window
+      const lastSampleData = findLastSampleAndDates(props.data);
+      today = lastSampleData.lastSample.sampleTime;
+      lastDate = new Date(lastSampleData.lastSample.sampleTime);
+      lastDate.setDate(lastDate.getDate() - daysCount);
+
       samplesInDateRange = props.data
         .filter((s) => {
           return (
-            s.sampleTime.getTime() <=
-              lastSample.lastSample.sampleTime.getTime() &&
-            s.sampleTime.getTime() > yesterday.getTime()
+            s.sampleTime.getTime() <= today.getTime() &&
+            s.sampleTime.getTime() > lastDate.getTime()
           );
         })
-        .sort((a, b) => {
-          if (a.sampleTime.getTime() > b.sampleTime.getTime()) {
-            return 1;
-          }
-          if (a.sampleTime.getTime() < b.sampleTime.getTime()) {
-            return -1;
-          }
-          return 0;
-        });
+        .sort(sortSamplesByTimeAscending);
     }
-    // Fill out blank points if we have any
-    if (samplesInDateRange[0].sampleTime.getHours() > 0) {
-      for (let i = samplesInDateRange[0].sampleTime.getHours(); i >= 0; i--) {
-        samplesInDateRange.unshift(samplesInDateRange[0]);
-      }
-    }
-    if (
-      samplesInDateRange[samplesInDateRange.length - 1].sampleTime.getHours() <
-      23
-    ) {
-      for (
-        let i =
-          samplesInDateRange[
-            samplesInDateRange.length - 1
-          ].sampleTime.getHours();
-        i <= 23;
-        i++
-      ) {
-        samplesInDateRange.push(
-          samplesInDateRange[samplesInDateRange.length - 1]
-        );
-      }
-    }
-    const sampleData = [];
-    // Switching what to display dou to the label of the chart
+
+    // Getting what values to work with based on the label
+    const valuesToWorkWith: Array<{ value: number; time: Date }> = [];
     switch (props.label) {
       case strings.temperature:
-        for (const sample of samplesInDateRange) {
-          sampleData.push(sample.temp);
-        }
+        samplesInDateRange.forEach((sample) => {
+          valuesToWorkWith.push({
+            value: sample.temp,
+            time: sample.sampleTime,
+          });
+        });
         break;
       case strings.ph:
-        for (const sample of samplesInDateRange) {
-          sampleData.push(sample.ph);
-        }
+        samplesInDateRange.forEach((sample) => {
+          valuesToWorkWith.push({ value: sample.ph, time: sample.sampleTime });
+        });
         break;
       case strings.light:
-        for (const sample of samplesInDateRange) {
-          sampleData.push(sample.lightAmount);
-        }
+        samplesInDateRange.forEach((sample) => {
+          valuesToWorkWith.push({
+            value: sample.lightAmount,
+            time: sample.sampleTime,
+          });
+        });
         break;
       case strings.waterLevel:
-        for (const sample of samplesInDateRange) {
-          sampleData.push(sample.waterLvl);
-        }
+        samplesInDateRange.forEach((sample) => {
+          valuesToWorkWith.push({
+            value: sample.waterLvl,
+            time: sample.sampleTime,
+          });
+        });
         break;
     }
-    return sampleData;
+    // The final data to return
+    const finalDataset = [];
+    // Fill out blank points if we have any
+    if (daysCount === 1) {
+      if (valuesToWorkWith[0].time.getHours() > 0) {
+        for (let i = valuesToWorkWith[0].time.getHours(); i >= 0; i--) {
+          valuesToWorkWith.unshift(valuesToWorkWith[0]);
+        }
+      }
+      if (valuesToWorkWith[valuesToWorkWith.length - 1].time.getHours() < 23) {
+        for (
+          let i = valuesToWorkWith[valuesToWorkWith.length - 1].time.getHours();
+          i <= 23;
+          i++
+        ) {
+          valuesToWorkWith.push(valuesToWorkWith[valuesToWorkWith.length - 1]);
+        }
+      }
+      const values: number[] = [];
+      valuesToWorkWith.forEach((s) => {
+        values.push(s.value);
+      });
+      finalDataset.push({
+        data: values,
+      });
+    } else if (daysCount >= 7) {
+      // Get values we want to use
+      const maxValues = getMaxDailyValues(valuesToWorkWith);
+      const minValues = getMinDailyValues(valuesToWorkWith);
+      const avgValues = getAvgDailyValues(valuesToWorkWith);
+      // To store the values for the datasets
+      const maxValuesArray: number[] = [];
+      const minValuesArray: number[] = [];
+      const avgValuesArray: number[] = [];
+      // Check if we need to fillout blanks
+      // Max values holes
+      if (maxValues.size < daysCount) {
+        const dataDates = Array.from(maxValues.keys()).sort();
+        const lastDataDate = new Date(dataDates[0]);
+        const firstDataDate = new Date(dataDates[dataDates.length - 1]);
+        // Filling up holes before and after
+        const missingDataFromBefore = Math.floor(
+          (lastDataDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        const missingDataFromAfter = Math.floor(
+          (today.getTime() - lastDataDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        // Fill up holes before
+        for (let i = 0; i < missingDataFromBefore; i++) {
+          const valToPut = maxValues.get(
+            lastDataDate.toISOString().split("T")[0]
+          );
+          maxValuesArray.push(valToPut === undefined ? 0 : valToPut);
+        }
+        // Fill up with data
+        for (let i = 0; i < maxValues.size; i++) {
+          const valToPut = maxValues.get(dataDates[i]);
+          maxValuesArray.push(valToPut === undefined ? 0 : valToPut);
+        }
+        // Fill up holes after
+        for (let i = 0; i < missingDataFromAfter; i++) {
+          const valToPut = maxValues.get(
+            firstDataDate.toISOString().split("T")[0]
+          );
+          maxValuesArray.push(valToPut === undefined ? 0 : valToPut);
+        }
+      }
+      if (minValues.size < daysCount) {
+        const dataDates = Array.from(minValues.keys()).sort();
+        const lastDataDate = new Date(dataDates[0]);
+        const firstDataDate = new Date(dataDates[dataDates.length - 1]);
+        // Filling up holes before and after
+        const missingDataFromBefore = Math.floor(
+          (lastDataDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        const missingDataFromAfter = Math.floor(
+          (today.getTime() - lastDataDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        // Fill up holes before
+        for (let i = 0; i < missingDataFromBefore; i++) {
+          const valToPut = minValues.get(
+            lastDataDate.toISOString().split("T")[0]
+          );
+          minValuesArray.push(valToPut === undefined ? 0 : valToPut);
+        }
+        // Fill up with data
+        for (let i = 0; i < minValues.size; i++) {
+          const valToPut = minValues.get(dataDates[i]);
+          minValuesArray.push(valToPut === undefined ? 0 : valToPut);
+        }
+        // Fill up holes after
+        for (let i = 0; i < missingDataFromAfter; i++) {
+          const valToPut = minValues.get(
+            firstDataDate.toISOString().split("T")[0]
+          );
+          minValuesArray.push(valToPut === undefined ? 0 : valToPut);
+        }
+      }
+      if (avgValues.size < daysCount) {
+        const dataDates = Array.from(avgValues.keys()).sort();
+        const lastDataDate = new Date(dataDates[0]);
+        const firstDataDate = new Date(dataDates[dataDates.length - 1]);
+        // Filling up holes before and after
+        const missingDataFromBefore = Math.floor(
+          (lastDataDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        const missingDataFromAfter = Math.floor(
+          (today.getTime() - lastDataDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        // Fill up holes before
+        for (let i = 0; i < missingDataFromBefore; i++) {
+          const valToPut = avgValues.get(
+            lastDataDate.toISOString().split("T")[0]
+          );
+          avgValuesArray.push(valToPut === undefined ? 0 : valToPut);
+        }
+        // Fill up with data
+        for (let i = 0; i < avgValues.size; i++) {
+          const valToPut = avgValues.get(dataDates[i]);
+          avgValuesArray.push(valToPut === undefined ? 0 : valToPut);
+        }
+        // Fill up holes after
+        for (let i = 0; i < missingDataFromAfter; i++) {
+          const valToPut = avgValues.get(
+            firstDataDate.toISOString().split("T")[0]
+          );
+          avgValuesArray.push(valToPut === undefined ? 0 : valToPut);
+        }
+      }
+      console.log("Max values are: ", maxValuesArray);
+      finalDataset.push({
+        data: maxValuesArray,
+        color: () => "red",
+      });
+      finalDataset.push({
+        data: avgValuesArray,
+        color: () => "gray",
+      });
+      finalDataset.push({
+        data: minValuesArray,
+        color: () => "blue",
+      });
+    }
+
+    return finalDataset;
   };
 
   /**
@@ -321,43 +558,29 @@ function StatisticsChartDisplayer(
    * @param index - The index of the dateRange choosen
    */
   const dateRangeChanger = (index: number) => {
-    // TODO: add valid data
-    const dataArray: Array<number> = [];
     switch (index) {
       case 0:
         setChartData({
           labels: dayLabelsGenerator(),
-          datasets: [
-            {
-              data: dayDataGenerator(),
-            },
-          ],
+          datasets: dataGenerator(1),
         });
         break;
       case 1:
-        for (let i = 0; i < 14; i++) {
-          dataArray.push(Math.random() * 100);
-        }
         setChartData({
           labels: weekLabelsGenerator(),
-          datasets: [
-            {
-              data: dataArray,
-            },
-          ],
+          datasets: dataGenerator(7),
         });
         break;
       case 2:
-        for (let i = 0; i < 30; i++) {
-          dataArray.push(Math.random() * 100);
-        }
+        setChartData({
+          labels: twoWeeksLabelsGenerator(),
+          datasets: dataGenerator(14),
+        });
+        break;
+      case 3:
         setChartData({
           labels: monthLabelsGenerator(),
-          datasets: [
-            {
-              data: dataArray,
-            },
-          ],
+          datasets: dataGenerator(30),
         });
     }
     setHighlighted(index);

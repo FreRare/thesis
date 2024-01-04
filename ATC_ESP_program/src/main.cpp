@@ -35,7 +35,7 @@ void updateConfig()
 }
 
 /**
- * @brief This function reads all the sensors and send's the measeured data to the server
+ * @brief This function reads all the sensors and sends the measured data to the server
  * @see SensorHandler - to read the data
  * @see ServerConnector - to post it to the server
  * @return true - if the sending was successful

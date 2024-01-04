@@ -158,6 +158,7 @@ export default {
     screenTitle: "Statistics",
     dayDataRangeText: "1 day",
     weekDataRangeText: "1 week",
+    twoWeeksDataRangeText: "2 weeks",
     monthDataRangeText: "1 month",
   },
 };

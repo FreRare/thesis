@@ -3,7 +3,7 @@
 // The instance pointer to return when want to use class
 MemoryHandler* MemoryHandler::instancePtr = new MemoryHandler();
 
-// Constructor, setting the non constant values to 0
+// Constructor, setting the non-constant values to 0
 MemoryHandler::MemoryHandler()
 {
     EEPROM.begin(EEPROM_SIZE);
@@ -79,7 +79,7 @@ void MemoryHandler::clearMemory(const int& addr1, const int& addr2)
         EEPROM.write(this->actualAddress, 0);
         Serial.println("Deleting...");
     }
-    Serial.println("Memory cleared from " + String(addr1) + " - " + String(addr2) + "! (upper address discluded)");
+    Serial.println("Memory cleared from " + String(addr1) + " - " + String(addr2) + "! (upper address not included)");
     EEPROM.commit();
     delay(10);
 }
