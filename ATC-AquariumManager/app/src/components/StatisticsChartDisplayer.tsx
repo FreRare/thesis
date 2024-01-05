@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { LineChart } from "react-native-chart-kit";
+import { BarChart, LineChart } from "react-native-chart-kit";
 import colors from "../../config/colors";
 import strings from "../../config/strings";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
@@ -38,6 +38,23 @@ function StatisticsChartDisplayer(
   const [ySuffix, setYSuffix] = React.useState<string>(""); // The suffix for Y axis
   const [chartData, setChartData] = React.useState<LineChartData>(); // The data for the line chart (contains the displayable data and the labels)
   const [highlighted, setHighlighted] = React.useState<number>(0);
+  const [chartLabels, setChartLabels] = React.useState<Array<string>>([]);
+  const barChartType =
+    props.label === strings.light || props.label === strings.waterLevel;
+  const monthList = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   /**
    * To help decide which suffixes to use due to the label
@@ -82,46 +99,25 @@ function StatisticsChartDisplayer(
   };
 
   /**
-   * Gets the last N days from the given date (d-m-Y, all with numbers)
-   * @param lastDay - the day
-   * @param lastMonth - the month
-   * @param lastYear - the year
-   * @returns The list of the dates as (m-d) format (m is with letters)
+   * Generates the upcoming or past N days as an array of strings
+   * @param date The date we want to use as a reference
+   * @param N The number of days we want to move
+   * @param upcoming Flag if we should move forward, defaults to false
+   * @returns The array filled with the needed dates
    */
-  const getLastNDays = (
-    lastDay: number,
-    lastMonth: number,
-    lastYear: number,
-    N: number
+  const getPastOrUpcomingNDays = (
+    date: Date,
+    N: number,
+    upcoming = false
   ): Array<string> => {
     const days = [];
-    const monthList = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    let numberSub = 0; // Stores how many days we should get off the current day
+    const referenceDate = date;
+    const tempDate = new Date(referenceDate);
     for (let i = 0; i < N; i++) {
-      // If we reach 0 -> we start a new month
-      if (lastDay - numberSub === 0) {
-        lastMonth -= 1;
-        if (lastMonth === 0) {
-          lastMonth = 12;
-        }
-        lastDay = getDaysOfTheMonth(lastYear, lastMonth);
-        numberSub = 0; // Reset descender value
-      }
-      days.push(`${monthList[lastMonth - 1]}-${lastDay - numberSub}`);
-      numberSub++;
+      tempDate.setDate(
+        upcoming ? tempDate.getDate() + 1 : tempDate.getDate() - 1
+      );
+      days.push(`${monthList[tempDate.getMonth()]}-${tempDate.getDate()}`);
     }
     return days;
   };
@@ -228,84 +224,41 @@ function StatisticsChartDisplayer(
   };
 
   /**
-   * Creates the labels for daily view
-   * @returns - the array of strings (0:00 - 23:00)
+   * Fills up the missing holes in the array
+   * @param before The number of data missing from before
+   * @param after The number of data missing from after
+   * @param values The values we have
+   * @param dates The dates of the data members in the set
+   * @param lastDate  The last date we want data for
+   * @param firstDate The first date we want data for
+   * @returns The array full of data for the needed time window
    */
-  const dayLabelsGenerator = (): Array<string> => {
-    const dayLabels = [];
-    for (let i = 0; i < 24; i++) {
-      dayLabels.push(`${i}:00`);
+  const fillMissingDataHoles = (
+    before: number,
+    after: number,
+    values: Map<string, number>,
+    dates: Array<string>,
+    lastDate: Date,
+    firstDate: Date
+  ): Array<number> => {
+    const resultArray = [];
+
+    // Fill up holes before
+    for (let i = 0; i < before; i++) {
+      const valToPut = values.get(lastDate.toISOString().split("T")[0]);
+      resultArray.push(valToPut === undefined ? 0 : valToPut);
     }
-    return dayLabels;
-  };
-
-  /**
-   * Creates the labels for weekly view
-   * @returns - the array of strings (mon - sun, splitting a day into two [0:00 - 12:00])
-   */
-  const weekLabelsGenerator = (): Array<string> => {
-    const weekLabels: Array<string> = [];
-    const { lastSample, lastDay, lastMonth } = findLastSampleAndDates(
-      props.data
-    );
-    // Go 7 days back
-    const weekDays: Array<string> = getLastNDays(
-      lastDay,
-      lastMonth,
-      lastSample.sampleTime.getFullYear(),
-      7
-    );
-    weekDays.reverse(); // Reverse the list
-    for (let i = 0; i < weekDays.length; i++) {
-      weekLabels.push(weekDays[i]);
+    // Fill up with data
+    for (let i = 0; i < values.size; i++) {
+      const valToPut = values.get(dates[i]);
+      resultArray.push(valToPut === undefined ? 0 : valToPut);
     }
-    return weekLabels;
-  };
-
-  /**
-   * Generates labels for two days view
-   * @returns the labels as an array
-   */
-  const twoWeeksLabelsGenerator = (): Array<string> => {
-    const weekLabels: Array<string> = [];
-
-    const { lastSample, lastDay, lastMonth } = findLastSampleAndDates(
-      props.data
-    );
-
-    const weekDays: Array<string> = getLastNDays(
-      lastDay,
-      lastMonth,
-      lastSample.sampleTime.getFullYear(),
-      14
-    );
-
-    weekDays.reverse();
-    for (let i = 0; i < weekDays.length; i++) {
-      weekLabels.push(weekDays[i]);
+    // Fill up holes after
+    for (let i = 0; i < after; i++) {
+      const valToPut = values.get(firstDate.toISOString().split("T")[0]);
+      resultArray.push(valToPut === undefined ? 0 : valToPut);
     }
-
-    return weekLabels;
-  };
-
-  /**
-   * Creates the labels for monthly view
-   * @returns - the array of strings (past 30 days from the last sample)
-   */
-  const monthLabelsGenerator = (): Array<string> => {
-    // Get the last data
-    const { lastSample, lastDay, lastMonth } = findLastSampleAndDates(
-      props.data
-    );
-    // Get last 30 days
-    const monthDays = getLastNDays(
-      lastDay,
-      lastMonth,
-      lastSample.sampleTime.getFullYear(),
-      30
-    );
-    monthDays.reverse();
-    return monthDays;
+    return resultArray;
   };
 
   // On create initialization of suffixes and dataset
@@ -320,19 +273,18 @@ function StatisticsChartDisplayer(
     }
     // Setting chart config (chart's data and labels) if we have data to work from
     if (!chartData && props.data.length > 0) {
-      setChartData({
-        labels: dayLabelsGenerator(),
-        datasets: dataGenerator(1),
-      });
+      dataGenerator(1);
     }
   });
 
   /**
    * Generates the dataset(s) for the charts based on the provided number of days
+   * It's designed not to generate data between 2-6 days //! (1 and 7+ are supported in case of invalid days an error is thrown!)
+   * In case of 7+ days it generates 3 different sets with MAX-AVG-MIN values per day colored with red-gray-blue
+   * It also generates the labels based on where we have the last data, uses the chartData useState to update the values
    * @param daysCount - the number of days
-   * @returns The dataset with coloring
    */
-  const dataGenerator = (daysCount: number): Array<Dataset> => {
+  const dataGenerator = (daysCount: number) => {
     if ((daysCount > 1 && daysCount < 7) || daysCount > 31) {
       throw Error(
         `Invalid days given to data generator! Cannot generate data for ${daysCount} days!!`
@@ -349,7 +301,6 @@ function StatisticsChartDisplayer(
         return s.sampleTime <= today && s.sampleTime > lastDate;
       })
       .sort(sortSamplesByTimeAscending);
-
     // Check if we have samples for that time
     if (samplesInDateRange.length <= 0) {
       // If we dont go to the last ones
@@ -370,6 +321,17 @@ function StatisticsChartDisplayer(
           );
         })
         .sort(sortSamplesByTimeAscending);
+      // Making sure we have some data to display
+      if (samplesInDateRange.length <= 0) {
+        alert(
+          `Not ${props.label} samples found so there are no statistics to display!`
+        );
+        return [
+          {
+            data: [],
+          },
+        ];
+      }
     }
 
     // Getting what values to work with based on the label
@@ -407,6 +369,7 @@ function StatisticsChartDisplayer(
     }
     // The final data to return
     const finalDataset = [];
+    let labels: Array<string> = [];
     // Fill out blank points if we have any
     if (daysCount === 1) {
       if (valuesToWorkWith[0].time.getHours() > 0) {
@@ -430,16 +393,20 @@ function StatisticsChartDisplayer(
       finalDataset.push({
         data: values,
       });
+      for (let i = 0; i < 24; i++) {
+        labels.push(`${i < 10 ? "0" + i : i}:00`);
+      }
     } else if (daysCount >= 7) {
       // Get values we want to use
       const maxValues = getMaxDailyValues(valuesToWorkWith);
       const minValues = getMinDailyValues(valuesToWorkWith);
       const avgValues = getAvgDailyValues(valuesToWorkWith);
       // To store the values for the datasets
-      const maxValuesArray: number[] = [];
-      const minValuesArray: number[] = [];
-      const avgValuesArray: number[] = [];
+      let maxValuesArray: number[] = [];
+      let minValuesArray: number[] = [];
+      let avgValuesArray: number[] = [];
       // Check if we need to fillout blanks
+      // ! All values should be missing the same number of data, so it's enough to check for one set
       // Max values holes
       if (maxValues.size < daysCount) {
         const dataDates = Array.from(maxValues.keys()).sort();
@@ -450,91 +417,58 @@ function StatisticsChartDisplayer(
           (lastDataDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
         );
         const missingDataFromAfter = Math.floor(
-          (today.getTime() - lastDataDate.getTime()) / (1000 * 60 * 60 * 24)
+          (today.getTime() - firstDataDate.getTime()) / (1000 * 60 * 60 * 24)
         );
-        // Fill up holes before
-        for (let i = 0; i < missingDataFromBefore; i++) {
-          const valToPut = maxValues.get(
-            lastDataDate.toISOString().split("T")[0]
-          );
-          maxValuesArray.push(valToPut === undefined ? 0 : valToPut);
-        }
-        // Fill up with data
-        for (let i = 0; i < maxValues.size; i++) {
-          const valToPut = maxValues.get(dataDates[i]);
-          maxValuesArray.push(valToPut === undefined ? 0 : valToPut);
-        }
-        // Fill up holes after
-        for (let i = 0; i < missingDataFromAfter; i++) {
-          const valToPut = maxValues.get(
-            firstDataDate.toISOString().split("T")[0]
-          );
-          maxValuesArray.push(valToPut === undefined ? 0 : valToPut);
-        }
+        console.log(
+          `Missing values from max! Before: ${missingDataFromBefore}, After: ${missingDataFromAfter}`
+        );
+        // Get labels for before
+        const labelsFromBefore = getPastOrUpcomingNDays(
+          lastDataDate,
+          missingDataFromBefore
+        ).reverse();
+        const labelsBetween: Array<string> = [];
+        maxValues.forEach((value, day) => {
+          const date = new Date(day);
+          labelsBetween.push(`${monthList[date.getMonth()]}-${date.getDate()}`);
+        });
+        labelsBetween.reverse();
+        // Labels for after
+        const labelsFromAfter = getPastOrUpcomingNDays(
+          firstDataDate,
+          missingDataFromAfter,
+          true
+        );
+        labels = labelsFromBefore.concat(labelsBetween, labelsFromAfter);
+        maxValuesArray = fillMissingDataHoles(
+          missingDataFromBefore,
+          missingDataFromAfter,
+          maxValues,
+          dataDates,
+          lastDataDate,
+          firstDataDate
+        );
+        minValuesArray = fillMissingDataHoles(
+          missingDataFromBefore,
+          missingDataFromAfter,
+          minValues,
+          dataDates,
+          lastDataDate,
+          firstDataDate
+        );
+        avgValuesArray = fillMissingDataHoles(
+          missingDataFromBefore,
+          missingDataFromAfter,
+          avgValues,
+          dataDates,
+          lastDataDate,
+          firstDataDate
+        );
+      } else {
+        maxValuesArray = Array.from(maxValues.values());
+        minValuesArray = Array.from(minValues.values());
+        avgValuesArray = Array.from(avgValues.values());
       }
-      if (minValues.size < daysCount) {
-        const dataDates = Array.from(minValues.keys()).sort();
-        const lastDataDate = new Date(dataDates[0]);
-        const firstDataDate = new Date(dataDates[dataDates.length - 1]);
-        // Filling up holes before and after
-        const missingDataFromBefore = Math.floor(
-          (lastDataDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        const missingDataFromAfter = Math.floor(
-          (today.getTime() - lastDataDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        // Fill up holes before
-        for (let i = 0; i < missingDataFromBefore; i++) {
-          const valToPut = minValues.get(
-            lastDataDate.toISOString().split("T")[0]
-          );
-          minValuesArray.push(valToPut === undefined ? 0 : valToPut);
-        }
-        // Fill up with data
-        for (let i = 0; i < minValues.size; i++) {
-          const valToPut = minValues.get(dataDates[i]);
-          minValuesArray.push(valToPut === undefined ? 0 : valToPut);
-        }
-        // Fill up holes after
-        for (let i = 0; i < missingDataFromAfter; i++) {
-          const valToPut = minValues.get(
-            firstDataDate.toISOString().split("T")[0]
-          );
-          minValuesArray.push(valToPut === undefined ? 0 : valToPut);
-        }
-      }
-      if (avgValues.size < daysCount) {
-        const dataDates = Array.from(avgValues.keys()).sort();
-        const lastDataDate = new Date(dataDates[0]);
-        const firstDataDate = new Date(dataDates[dataDates.length - 1]);
-        // Filling up holes before and after
-        const missingDataFromBefore = Math.floor(
-          (lastDataDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        const missingDataFromAfter = Math.floor(
-          (today.getTime() - lastDataDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        // Fill up holes before
-        for (let i = 0; i < missingDataFromBefore; i++) {
-          const valToPut = avgValues.get(
-            lastDataDate.toISOString().split("T")[0]
-          );
-          avgValuesArray.push(valToPut === undefined ? 0 : valToPut);
-        }
-        // Fill up with data
-        for (let i = 0; i < avgValues.size; i++) {
-          const valToPut = avgValues.get(dataDates[i]);
-          avgValuesArray.push(valToPut === undefined ? 0 : valToPut);
-        }
-        // Fill up holes after
-        for (let i = 0; i < missingDataFromAfter; i++) {
-          const valToPut = avgValues.get(
-            firstDataDate.toISOString().split("T")[0]
-          );
-          avgValuesArray.push(valToPut === undefined ? 0 : valToPut);
-        }
-      }
-      console.log("Max values are: ", maxValuesArray);
       finalDataset.push({
         data: maxValuesArray,
         color: () => "red",
@@ -549,58 +483,54 @@ function StatisticsChartDisplayer(
       });
     }
 
-    return finalDataset;
+    setChartData({
+      labels: labels,
+      datasets: finalDataset,
+    });
   };
 
   /**
    * Handles the date range changes
-   * Changes the labels and the data of the chart (week and month views have 3 data sets [min-max-avg])
+   * Changes the labels and the data of the chart
    * @param index - The index of the dateRange choosen
    */
   const dateRangeChanger = (index: number) => {
     switch (index) {
       case 0:
-        setChartData({
-          labels: dayLabelsGenerator(),
-          datasets: dataGenerator(1),
-        });
+        dataGenerator(1);
         break;
       case 1:
-        setChartData({
-          labels: weekLabelsGenerator(),
-          datasets: dataGenerator(7),
-        });
+        dataGenerator(7);
         break;
       case 2:
-        setChartData({
-          labels: twoWeeksLabelsGenerator(),
-          datasets: dataGenerator(14),
-        });
+        dataGenerator(14);
         break;
       case 3:
-        setChartData({
-          labels: monthLabelsGenerator(),
-          datasets: dataGenerator(30),
-        });
+        dataGenerator(30);
     }
     setHighlighted(index);
   };
 
   // The selector for date ranges (day, week, month)
-  const dateRangeSelector = dataViewOptions.map((item, index) => (
-    <TouchableOpacity
-      key={index}
-      style={[
-        styles.dateRangeSelectorTouchable,
-        highlighted === index
-          ? styles.dateRangeSelectorTouchableHighlighted
-          : undefined,
-      ]}
-      onPress={() => dateRangeChanger(index)}
-    >
-      <Text style={styles.dateRangeSelectorText}>{item}</Text>
-    </TouchableOpacity>
-  ));
+  const dateRangeSelector = dataViewOptions.map((item, index) => {
+    if (barChartType && index > 0) {
+      return;
+    }
+    return (
+      <TouchableOpacity
+        key={index}
+        style={[
+          styles.dateRangeSelectorTouchable,
+          highlighted === index
+            ? styles.dateRangeSelectorTouchableHighlighted
+            : undefined,
+        ]}
+        onPress={() => dateRangeChanger(index)}
+      >
+        <Text style={styles.dateRangeSelectorText}>{item}</Text>
+      </TouchableOpacity>
+    );
+  });
 
   return (
     <View style={styles.container}>
@@ -610,7 +540,7 @@ function StatisticsChartDisplayer(
         </Text>
       </View>
       {!chartData && <LoadingAnimation />}
-      {chartData && (
+      {chartData && !barChartType && (
         <LineChart
           data={chartData}
           width={Dimensions.get("window").width - 10}
@@ -622,6 +552,19 @@ function StatisticsChartDisplayer(
           withShadow={highlighted === 0}
           style={styles.chart}
           bezier
+        />
+      )}
+      {chartData && barChartType && (
+        <BarChart
+          data={chartData}
+          width={Dimensions.get("window").width - 10}
+          height={260}
+          verticalLabelRotation={280}
+          yAxisSuffix={ySuffix}
+          yAxisLabel=""
+          xLabelsOffset={20}
+          chartConfig={chartConfig}
+          style={styles.chart}
         />
       )}
       <View style={styles.dateRangeSelectorContainer}>{dateRangeSelector}</View>
@@ -641,6 +584,7 @@ const chartConfig = {
     strokeWidth: "2",
     stroke: colors.secondary,
   },
+  barPercentage: 0.2,
 };
 
 const styles = StyleSheet.create({

@@ -67,6 +67,7 @@ function StatisticsScreen(props: StatisticsScreenProps) {
         <StatisticsChartDisplayer label={strings.temperature} data={samples} />
         <StatisticsChartDisplayer label={strings.ph} data={samples} />
         <StatisticsChartDisplayer label={strings.light} data={samples} />
+        <StatisticsChartDisplayer label={strings.waterLevel} data={samples} />
       </ScrollView>
     </Layout>
   );
