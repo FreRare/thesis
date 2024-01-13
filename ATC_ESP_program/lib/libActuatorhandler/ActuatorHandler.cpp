@@ -1,18 +1,5 @@
 #include <ActuatorHandler.h>
 
-/**
- * @brief Writes the given data to the shift register connected
- * The provided 8 bit data get's written to the shift register using Arduino's shiftOut() function
- * @param data - the data we want put to the shift register
- */
-void updateShiftRegister(uint8_t data)
-{
-    Serial.println("Updating shift register with data: " + String(data, BIN));
-    digitalWrite(SHIFT_REGISTER_LATCH_PIN, LOW);
-    shiftOut(SHIFT_REGISTER_DATA_PIN, SHIFT_REGISTER_CLK_PIN, MSBFIRST, data);
-    digitalWrite(SHIFT_REGISTER_LATCH_PIN, HIGH);
-}
-
 bool* ActuatorHandler::channelStates = new bool[CHANNEL_COUNT];
 
 ActuatorHandler::ActuatorHandler()
@@ -30,6 +17,7 @@ void ActuatorHandler::channelSwithcer(const uint8_t& channel, const bool& state)
 {
     if (channel > 3 || channel == 0) {
         Serial.println("Invalid channel!");
+        turnProblemLed(true);
         return;
     }
     // If the channel is already in the wanted state we have nothing to do

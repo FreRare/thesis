@@ -2,7 +2,7 @@
 
 ConfigData::ConfigData(const float& minT, const float& maxT, const float& minPh, const float& maxPh,
     const uint16_t& OL1On, const uint16_t& OL1Off, const uint16_t& OL2On, const uint16_t& OL2Off, const uint16_t& OL3On,
-    const uint16_t& OL3Off, const uint8_t& waterLvlAlert, const uint16_t& feedingTime, const uint8_t& foodPort,
+    const uint16_t& OL3Off, const uint16_t& feedingTime, const uint8_t& foodPort,
     const SamplePeriod& samplePer)
     : minTemp(minT)
     , maxTemp(maxT)
@@ -14,7 +14,6 @@ ConfigData::ConfigData(const float& minT, const float& maxT, const float& minPh,
     , outlet2Off(OL2Off)
     , outlet3On(OL3Off)
     , outlet3Off(OL3Off)
-    , waterLvlAlert(waterLvlAlert)
     , feedingTime(feedingTime)
     , feedingPortions(foodPort)
     , samplePeriod(samplePer)
@@ -97,14 +96,6 @@ void ConfigData::setOutlet3Off(uint16_t outlet3Off)
     }
 }
 
-void ConfigData::setWaterLvlAlert(uint8_t waterLvlAlert)
-{
-    if (waterLvlAlert <= MAX_WATER_LVL) {
-        waterLvlAlert = waterLvlAlert;
-    } else {
-        Serial.println("Inavlid water level! " + String(waterLvlAlert));
-    }
-}
 
 void ConfigData::setFeedingTime(uint16_t feedingTime)
 {
@@ -124,7 +115,7 @@ bool ConfigData::equals(const ConfigData* c)
     return this->minTemp == c->minTemp && this->maxTemp == c->maxTemp && this->minPh == c->minPh
         && this->maxPh == c->maxPh && this->outlet1On == c->outlet1On && this->outlet1Off == c->outlet1Off
         && this->outlet2On == c->outlet2On && this->outlet2Off == c->outlet2Off && this->outlet3On == c->outlet3On
-        && this->outlet3Off == c->outlet3Off && this->waterLvlAlert == c->waterLvlAlert
+        && this->outlet3Off == c->outlet3Off
         && this->feedingTime == c->feedingTime && this->feedingPortions == c->feedingPortions
         && this->samplePeriod == c->samplePeriod;
 }

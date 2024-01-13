@@ -2,6 +2,13 @@
 #define deviceInit_h
 #include <Arduino.h>
 
+/**
+ * @brief This file has all the definitions of the used pins, regiter values and peripherial actions
+ * Here lies all the pin definitions, the function that initializes all the pins 
+ * and the functions that can be used to use the shift register
+ * and the function that can be used to select a MUX channel
+ */
+
 // PIN DEFINITIONS (Relays and feeder will be controlled trough shift register)
 // ! D1 & D2 are used by the LCD
 //-------------------------
@@ -19,5 +26,20 @@
  * Sets all pins to the right mode
  */
 void pinSetup();
+
+
+/**
+ * @brief Writes the given data to the shift register connected
+ * The provided 8 bit data get's written to the shift register using Arduino's shiftOut() function
+ * @param data - the data we want put to the shift register
+ */
+void updateShiftRegister(uint8_t data);
+
+
+/**
+ * @brief Selects the given channel (0-3) on the multiplexer
+ * @param channel - the channel we want to select (0-3)
+ */
+void selectMux(uint8_t channel);
 
 #endif //! deviceInit.h

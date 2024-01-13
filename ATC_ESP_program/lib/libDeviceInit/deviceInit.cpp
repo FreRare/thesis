@@ -12,3 +12,36 @@ void pinSetup()
     pinMode(SHIFT_REGISTER_LATCH_PIN, OUTPUT);
     pinMode(SHIFT_REGISTER_DATA_PIN, OUTPUT);
 }
+
+void updateShiftRegister(uint8_t data)
+{
+    Serial.println("Updating shift register with data: " + String(data, BIN));
+    digitalWrite(SHIFT_REGISTER_LATCH_PIN, LOW);
+    shiftOut(SHIFT_REGISTER_DATA_PIN, SHIFT_REGISTER_CLK_PIN, MSBFIRST, data);
+    digitalWrite(SHIFT_REGISTER_LATCH_PIN, HIGH);
+}
+
+void selectMux(uint8_t channel)
+{
+    switch (channel) {
+    case 0:
+        digitalWrite(MUX_SELECT_A, LOW);
+        digitalWrite(MUX_SELECT_B, LOW);
+        return;
+    case 1:
+        digitalWrite(MUX_SELECT_A, HIGH);
+        digitalWrite(MUX_SELECT_B, LOW);
+        return;
+    case 2:
+        digitalWrite(MUX_SELECT_A, LOW);
+        digitalWrite(MUX_SELECT_B, HIGH);
+        return;
+    case 3:
+        digitalWrite(MUX_SELECT_A, HIGH);
+        digitalWrite(MUX_SELECT_B, HIGH);
+        return;
+    default:
+        digitalWrite(MUX_SELECT_A, LOW);
+        digitalWrite(MUX_SELECT_B, LOW);
+    }
+}
