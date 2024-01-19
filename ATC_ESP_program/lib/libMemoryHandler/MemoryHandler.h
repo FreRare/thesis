@@ -9,8 +9,8 @@
 // It is a Singleton, preventing any problems occuring from same time memory actions
 //////////////////////////////////////////////////////////////////////////////////
 
-#define EEPROM_SIZE 512
-#define EEPROM_ADDRESS_DIFF 40
+#define EEPROM_SIZE 512U
+#define EEPROM_ADDRESS_DIFF 40U
 
 class MemoryHandler {
 private:

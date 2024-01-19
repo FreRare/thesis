@@ -16,6 +16,7 @@ ActuatorHandler* g_actuatorHandler;
 ConfigHandler* g_configHandler;
 SensorHandler* g_sensorHandler;
 bool gb_statusCheckFlag = true;
+bool gb_screenUpdateFlag = true;
 uint16_t g_statusCheckLastMinute = 0;
 
 void updateConfig()
@@ -43,7 +44,7 @@ void updateConfig()
  */
 bool takeSensorSample()
 {
-    return true; // TODO: delete this row
+    //! return true; // TODO: delete this row
     g_sensorHandler->readSensors();
     const SensorData* sample = g_sensorHandler->getLastSamples();
     return g_server->postSensorData(sample);
@@ -59,8 +60,11 @@ void statusHandler()
 {
     SensorData* lastSamples = g_sensorHandler->getLastSamples();
     ConfigStatus actualStatus = g_configHandler->checkFullfillmentStatus(lastSamples);
-    Serial.print("Status is: ");
-    Serial.println(actualStatus);
+    char* log = new char[256];
+    sprintf(log, "System status: %d", actualStatus);
+    g_server->ATCLog(log);
+    delete log;
+    
     switch (actualStatus) {
     case ConfigStatus::LOW_TEMP: // TODO: send notification
         break;
@@ -74,36 +78,45 @@ void statusHandler()
         break;
     case ConfigStatus::OUTLET_1_ON:
         g_actuatorHandler->channelSwithcer(1, true);
+        //g_server->ATCLog("Relay channel 1 ON");
         break;
     case ConfigStatus::OUTLET_1_OFF:
         g_actuatorHandler->channelSwithcer(1, false);
+        //g_server->ATCLog("Relay channel 1 OFF");
         break;
     case ConfigStatus::OUTLET_2_ON:
         g_actuatorHandler->channelSwithcer(2, true);
+        // g_server->ATCLog("Relay channel 2 ON");
         break;
     case ConfigStatus::OUTLET_2_OFF:
         g_actuatorHandler->channelSwithcer(2, false);
+        // g_server->ATCLog("Relay channel 2 OFF");
         break;
     case ConfigStatus::OUTLET_3_ON:
         g_actuatorHandler->channelSwithcer(3, true);
+        // g_server->ATCLog("Relay channel 3 ON");
         break;
     case ConfigStatus::OUTLET_3_OFF:
         g_actuatorHandler->channelSwithcer(3, false);
+        // g_server->ATCLog("Relay channel 3 OFF");
         break;
     case ConfigStatus::SAMPLE_TIME:
         if (!takeSensorSample()) {
             // TODO: send error
+           // g_server->ATCLog("Couldn't post sensor data!");
         }
         break;
     case ConfigStatus::FEEDING_TIME:
         g_actuatorHandler->feed(g_configHandler->getConfiguration()->getFeedingPortions());
+        // g_server->ATCLog("Feeder feeding");
         break;
     case ConfigStatus::BROKEN_LIGHT: // TODO: send notification
         break;
     case ConfigStatus::ERROR: // TODO: send error
+        // g_server->ATCLog("!!!!!!ERROR: Status ended up in Error!!!!");
         break;
     case ConfigStatus::OK_STATUS:
-        Serial.println("Everything is OK!");
+        // g_server->ATCLog("Everything is OK!");
         break;
     default:
         break;
@@ -137,17 +150,20 @@ void loop()
     const uint16_t minutesSinceMidnight = h * 60 + min;
     if (h == 0 && min == 0 && sec < 10 && sec > 0) { // At midnight sync time (10 sec interval)
         g_server->syncNTPTime();
+        // g_server->ATCLog("NTP time sysnced!");
         // We can reset last minute storage here
         g_statusCheckLastMinute = 0;
     }
     // Config updating with interval
     if (min % UPDATE_INTERVAL_MIN == 0 && sec < 10 && sec > 0) {
         updateConfig();
+        // g_server->ATCLog("Config data updated!");
     }
     // Make sure status check is only performed once every minute
     if (g_statusCheckLastMinute < minutesSinceMidnight) {
         g_statusCheckLastMinute = minutesSinceMidnight;
         gb_statusCheckFlag = true;
+        gb_screenUpdateFlag = true;
     }
 
     // Status checking and acting
@@ -155,9 +171,13 @@ void loop()
         statusHandler();
         gb_statusCheckFlag = false;
     }
-    if (g_sensorHandler->getLastSamples() != nullptr) {
+    if(gb_screenUpdateFlag){
+        if (g_sensorHandler->getLastSamples() != nullptr) {
         UIHandler::writeBasicInfo(
             g_sensorHandler->getLastSamples()->getPh(), g_sensorHandler->getLastSamples()->getTemperature());
+        }else{
+            UIHandler::writeBasicInfo(0.0F, 0.0F);
+        }
+        gb_screenUpdateFlag = false;
     }
-    delay(5000);
 }

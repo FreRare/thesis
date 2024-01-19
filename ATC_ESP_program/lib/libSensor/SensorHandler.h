@@ -6,18 +6,21 @@
 #include <OneWire.h>
 #include <TimeLib.h>
 
-#define PHOTORES_DARK_LIMIT 176
-#define PHOTORES_SHADY_LIMIT 282
-#define PHOTORES_MEDIUM_LIMIT 388
-#define PHOTORES_LIGHT_LIMIT 494
-#define SENSOR_BUF_SIZE 10
-#define SENSOR_AVG_TIME_DIFF_MS 20
+//############################### // Light intensity edges
+#define PHOTORES_DARK_LIMIT 176U 
+#define PHOTORES_SHADY_LIMIT 282U
+#define PHOTORES_MEDIUM_LIMIT 388U
+#define PHOTORES_LIGHT_LIMIT 494U
+//################################
+#define SENSOR_BUF_SIZE 10U // How many samples should be collected !!Shouldn't be higher than 256
+#define SENSOR_DAT_ARRAY_AVG_WINDOW_DIFF SENSOR_BUF_SIZE/5U
+#define SENSOR_AVG_TIME_DIFF_MS 20U
 // The ph sensor is using 5 V, but it's devided down to 3.3V level so this is what the analog port will reference to
 #define REFERECNCE_VOLTAGE 3.3f
 #define ADC_RESOLUTION 1024.0f
-#define LIGHT_SENSOR_CH 2
-#define WATER_SENSOR_CH 0
-#define PH_SENSOR_CH 1
+#define LIGHT_SENSOR_CH 2U
+#define WATER_SENSOR_CH 0U
+#define PH_SENSOR_CH 1U
 
 /**
  * This class is handling the different sensors and is able to read their data

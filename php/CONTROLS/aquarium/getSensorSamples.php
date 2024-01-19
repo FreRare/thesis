@@ -19,19 +19,21 @@ if (isset($_POST["id"]) && isset($_POST["forHome"])) {
             }
         } else {
             $result["error"] = "No data found in database!";
+            error_log("No data found: " . count($samples));
         }
     } else {
         // We can get all samples for a month back
         $endDate = new DateTime();
         $startDate = clone $endDate;
         $startDate->modify("-30 days");
-        $samples = $DAO->selectSensorSamplesInDateRange($id, $startDate, $endDate);
+        $samples = $DAO->selectSensorSamplesForAquarium($id, false);
         if (count($samples) > 0) {
             foreach ($samples as $sample) {
                 $result[] = $sample->toJSON();
             }
         } else {
             $result["error"] = "No data found in database!";
+            error_log("No data found: " . count($samples));
         }
     }
 } else {

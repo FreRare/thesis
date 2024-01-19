@@ -1,5 +1,5 @@
 <?php
-echo ('Server welcome!');
+echo ("Server welcome!" . "</br>");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // ONLY UNCOMMENT IF YOU WANT TO RE-INITIALIZE DATABASE, IT DROPS ALL TABLES
 // 
@@ -11,5 +11,8 @@ $DAO = AQDAO::getInstance();
 // $userRes = $DAO->createAquarium(new Aquarium(0, "My first aquarium", 60, 30, 30, 12));
 // $config = $DAO->createAQConfig(new AquariumConfig(1));
 $user = $DAO->selectSensorSamplesForAquarium(1, false);
-var_dump($user);
+foreach ($user as $u) {
+    echo ($u->toJSON());
+    echo ("</br>");
+}
 ?>

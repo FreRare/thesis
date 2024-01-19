@@ -1,5 +1,13 @@
 #include "ServerConnector.h"
 
+bool isWiFiConnected(){
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("Sensor data posting: Network not connected!");
+        return false;
+    }
+    return true;
+}
+
 const char* ServerConnector::connectionCheckPath = "http://atc.takacsnet.hu/CONTROLS/aquarium/connectionCheck.php";
 const char* ServerConnector::sensorDataUploadPath = "http://atc.takacsnet.hu/CONTROLS/aquarium/sensorDataUpload.php";
 const char* ServerConnector::notificationPath = "http://atc.takacsnet.hu/CONTROLS/notification/notification.php";
@@ -136,8 +144,7 @@ ConfigData* ServerConnector::updateConfigData()
 
 bool ServerConnector::postSensorData(const SensorData* data)
 {
-    if (WiFi.status() != WL_CONNECTED) {
-        Serial.println("Sensor data posting: Network not connected!");
+    if(!isWiFiConnected()){
         return false;
     }
     char* sensorDataJson = new char[SESNOR_DATA_POST_LENGTH];
@@ -154,6 +161,25 @@ bool ServerConnector::postSensorData(const SensorData* data)
     }
     Serial.println("Sensor data posted successfully!");
     return true;
+}
+
+void ServerConnector::ATCLog(char* str){
+    if(!isWiFiConnected()){
+        return;
+    }
+    uint16_t msgLength = 0U;
+    while(str[msgLength] != '\0'){
+        msgLength++;
+    }
+
+    char* logData = new char[msgLength + 6];
+    sprintf(logData, "{\"log\":\"%s\"}", str);
+
+    this->httpClient.begin(this->client, "http://atc.takacsnet.hu/LOG/Logger.php");
+    uint16_t response = this->httpClient.POST(logData);
+    if(response != HTTP_CODE_OK){
+        Serial.println("Cannot post LOG!");
+    }
 }
 
 void ServerConnector::disconnect() { WiFi.disconnect(); }

@@ -294,13 +294,14 @@ function StatisticsChartDisplayer(
     let today = new Date();
     let lastDate = new Date(today);
     lastDate.setDate(lastDate.getDate() - daysCount);
-
+    console.log(`All samples count: ${props.data.length}`);
     // Getting samples in date range
     let samplesInDateRange = props.data
       .filter((s) => {
-        return s.sampleTime <= today && s.sampleTime > lastDate;
+        return s.sampleTime.getTime() <= today.getTime() && s.sampleTime.getTime() > lastDate.getTime();
       })
       .sort(sortSamplesByTimeAscending);
+      console.log(`Number of samples for stats: ${samplesInDateRange.length}`);
     // Check if we have samples for that time
     if (samplesInDateRange.length <= 0) {
       // If we dont go to the last ones

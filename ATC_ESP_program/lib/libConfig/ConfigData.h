@@ -6,7 +6,7 @@
 #include <Arduino.h>
 #include <ctype.h>
 
-#define MAX_TIMING_VAL 1440 // the maximum value the timings can have (24*60)
+#define MAX_TIMING_VAL 1440U // the maximum value the timings can have (24*60)
 // 1 is 0:01 and 1440 is 0:00, 0 means no timing -> this is handled in the confighandler
 
 #define MIN_PH 0.0F

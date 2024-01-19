@@ -6,7 +6,7 @@ SensorHandler::SensorHandler()
     , lastSamples(nullptr)
 {
     this->sensors.begin(); // Begin the onewire transmission for sensors
-    this->phCalibration = 0.8f;
+    this->phCalibration = 0.8f; //TODO: Recalibrate
 }
 
 float SensorHandler::readTempSensor()
@@ -32,8 +32,8 @@ float SensorHandler::readTempSensor()
 
     float sum = 0.0f;
      // Calculating average in the range of given below (in case of 10 samples, the middle 6)
-    uint8_t startValue = (uint8_t) SENSOR_BUF_SIZE / (SENSOR_BUF_SIZE / 2);
-    uint8_t endValue = (uint8_t) SENSOR_BUF_SIZE - (SENSOR_BUF_SIZE / 5);
+    uint8_t startValue = (uint8_t) SENSOR_DAT_ARRAY_AVG_WINDOW_DIFF;
+    uint8_t endValue = SENSOR_BUF_SIZE - startValue;
     for (uint8_t i = startValue; i < endValue; i++) {
         sum += tempBuffer[i];
     }

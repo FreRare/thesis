@@ -57,6 +57,7 @@ public:
      */
     void syncNTPTime();
     void disconnect();
+    void ATCLog(char* str);
     NTPClient* getTimeClient() const;
     /**
      * Fetches the config data form the database

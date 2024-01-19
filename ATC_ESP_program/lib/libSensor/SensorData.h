@@ -7,7 +7,7 @@
 // The length of the char array to represent the data as string with the :: separator
 // 4(temp) + 4(ph) + 1(light) + 3(waterlvl) + 10(timestamp, unix) + 4*2(:: separator) + 6(additional for decimal points
 // worst case etc.)
-#define CHAR_ARRAY_LENGTH 36
+#define CHAR_ARRAY_LENGTH 36U
 
 /**
  * Represents a set of data retrieved from different sensors

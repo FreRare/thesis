@@ -112,9 +112,27 @@ void UIHandler::writeBasicInfo(const float& ph, const float& temp)
     char phStr[10]; // Ph: (2.2)+\0 = 10
     sprintf(phStr, "Ph: %2.2f", ph);
     UIHandler::writeLine(phStr, 2);
-    char tempStr[20]; // Temperature: (3) °C+\0 = 20
-    sprintf(tempStr, "Temperature: %2.1f %cC", temp, (char)223);
-    UIHandler::writeLine(tempStr, 3);
+    char tempStr[14]; // Temp: (3) °C+\0 = 20
+    
+
+    const char thermometerSymbol[8] = {
+   B00100,
+   B01010,
+   B01010,
+   B01010,
+   B01110,
+   B11111,
+   B11111,
+   B01110
+};
+
+UIHandler::display.createChar(1, thermometerSymbol);
+UIHandler::display.setCursor(0, 2);
+UIHandler::display.write((uint8_t)1);  // Display the thermometer symbol
+
+    sprintf(tempStr, "Temp: %2.1f %cC", temp, (char)223);
+    tempStr[13] = '\0';
+    UIHandler::writeLine(tempStr, 3, 2);
 }
 
 void UIHandler::clear() { UIHandler::display.clear(); }
