@@ -19,7 +19,7 @@ if (isset($_POST["id"]) && isset($_POST["forHome"])) {
             }
         } else {
             $result["error"] = "No data found in database!";
-            error_log("No data found: " . count($samples));
+            error_log("No data found: (forHome)" . count($samples));
         }
     } else {
         // We can get all samples for a month back
@@ -33,7 +33,7 @@ if (isset($_POST["id"]) && isset($_POST["forHome"])) {
             }
         } else {
             $result["error"] = "No data found in database!";
-            error_log("No data found: " . count($samples));
+            error_log("No data found: (All)" . count($samples));
         }
     }
 } else {

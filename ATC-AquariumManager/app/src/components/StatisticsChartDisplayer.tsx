@@ -38,7 +38,6 @@ function StatisticsChartDisplayer(
   const [ySuffix, setYSuffix] = React.useState<string>(""); // The suffix for Y axis
   const [chartData, setChartData] = React.useState<LineChartData>(); // The data for the line chart (contains the displayable data and the labels)
   const [highlighted, setHighlighted] = React.useState<number>(0);
-  const [chartLabels, setChartLabels] = React.useState<Array<string>>([]);
   const barChartType =
     props.label === strings.light || props.label === strings.waterLevel;
   const monthList = [
@@ -87,16 +86,6 @@ function StatisticsChartDisplayer(
     strings.STATS.twoWeeksDataRangeText,
     strings.STATS.monthDataRangeText,
   ];
-
-  /**
-   * Returns how many days are there in the provided month in the given year
-   * @param year - the year
-   * @param month - the month
-   * @returns The number of days
-   */
-  const getDaysOfTheMonth = (year: number, month: number): number => {
-    return new Date(year, month, 0).getDate();
-  };
 
   /**
    * Generates the upcoming or past N days as an array of strings
@@ -293,15 +282,21 @@ function StatisticsChartDisplayer(
     // Getting the date of today and the day 7 days before
     let today = new Date();
     let lastDate = new Date(today);
-    lastDate.setDate(lastDate.getDate() - daysCount);
-    console.log(`All samples count: ${props.data.length}`);
+    if(daysCount == 1){
+      today.setHours(23, 59, 59, 999);
+      lastDate.setHours(0, 0, 0, 0);
+    }else{
+      lastDate.setDate(lastDate.getDate() - daysCount);
+    }
     // Getting samples in date range
     let samplesInDateRange = props.data
       .filter((s) => {
         return s.sampleTime.getTime() <= today.getTime() && s.sampleTime.getTime() > lastDate.getTime();
       })
       .sort(sortSamplesByTimeAscending);
-      console.log(`Number of samples for stats: ${samplesInDateRange.length}`);
+      for(const s of samplesInDateRange){
+        console.log(`Sample times for stats: ${s.sampleTime}`);
+      }
     // Check if we have samples for that time
     if (samplesInDateRange.length <= 0) {
       // If we dont go to the last ones
@@ -325,7 +320,7 @@ function StatisticsChartDisplayer(
       // Making sure we have some data to display
       if (samplesInDateRange.length <= 0) {
         alert(
-          `Not ${props.label} samples found so there are no statistics to display!`
+          `No ${props.label} samples found so there are no statistics to display!`
         );
         return [
           {
@@ -387,6 +382,7 @@ function StatisticsChartDisplayer(
           valuesToWorkWith.push(valuesToWorkWith[valuesToWorkWith.length - 1]);
         }
       }
+      // Convert to num array
       const values: number[] = [];
       valuesToWorkWith.forEach((s) => {
         values.push(s.value);
@@ -394,6 +390,7 @@ function StatisticsChartDisplayer(
       finalDataset.push({
         data: values,
       });
+      console.log(props.label, "Displayable values are: ", values);
       for (let i = 0; i < 24; i++) {
         labels.push(`${i < 10 ? "0" + i : i}:00`);
       }
@@ -433,13 +430,13 @@ function StatisticsChartDisplayer(
           const date = new Date(day);
           labelsBetween.push(`${monthList[date.getMonth()]}-${date.getDate()}`);
         });
-        labelsBetween.reverse();
         // Labels for after
         const labelsFromAfter = getPastOrUpcomingNDays(
           firstDataDate,
           missingDataFromAfter,
           true
         );
+        console.log("Before labels: ", labelsFromBefore, " Between labels: ", labelsBetween, " After Labels: ", labelsFromAfter);
         labels = labelsFromBefore.concat(labelsBetween, labelsFromAfter);
         maxValuesArray = fillMissingDataHoles(
           missingDataFromBefore,
@@ -483,7 +480,6 @@ function StatisticsChartDisplayer(
         color: () => "blue",
       });
     }
-
     setChartData({
       labels: labels,
       datasets: finalDataset,

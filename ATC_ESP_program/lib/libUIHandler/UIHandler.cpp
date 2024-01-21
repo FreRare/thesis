@@ -108,31 +108,28 @@ void UIHandler::writeBasicInfo(const float& ph, const float& temp)
     int min = minute();
     char clockStr[6]; // (2):(2)+\0 = 6
     coorigateDigits(h, min, clockStr);
-    UIHandler::writeLine(clockStr, 1, 3);
+    UIHandler::writeLine(clockStr, 1, 6);
     char phStr[10]; // Ph: (2.2)+\0 = 10
     sprintf(phStr, "Ph: %2.2f", ph);
-    UIHandler::writeLine(phStr, 2);
+    UIHandler::writeLine(phStr, 3, 2);
     char tempStr[14]; // Temp: (3) °C+\0 = 20
-    
 
-    const char thermometerSymbol[8] = {
-   B00100,
-   B01010,
-   B01010,
-   B01010,
-   B01110,
-   B11111,
-   B11111,
-   B01110
-};
+    // Bitmap LCD symbols
+    // This two is for the thermometer
+    // B00000, B01110, B01110, B01110, B01110, B11111, B11111, B00000 - B00100, B01010, B01010, B01010, B01110, B11111, B11111, B01110
+    const char thermometerSymbol[8] = { B00100, B01010, B01010, B01010, B01110, B11111, B11111, B01110}; 
+    const char phSymbol[8] = { B00000, B00100, B01010, B10001, B01010, B00100, B00000, B11111 };
 
-UIHandler::display.createChar(1, thermometerSymbol);
-UIHandler::display.setCursor(0, 2);
-UIHandler::display.write((uint8_t)1);  // Display the thermometer symbol
+    UIHandler::display.createChar(1, thermometerSymbol);
+    UIHandler::display.setCursor(0, 1);
+    UIHandler::display.write((uint8_t)1); // Display the thermometer symbol
+    UIHandler::display.createChar(2, phSymbol);
+    UIHandler::display.setCursor(0, 2);
+    UIHandler::display.write((uint8_t)2); // Display Ph symbol
 
     sprintf(tempStr, "Temp: %2.1f %cC", temp, (char)223);
     tempStr[13] = '\0';
-    UIHandler::writeLine(tempStr, 3, 2);
+    UIHandler::writeLine(tempStr, 2, 2);
 }
 
 void UIHandler::clear() { UIHandler::display.clear(); }

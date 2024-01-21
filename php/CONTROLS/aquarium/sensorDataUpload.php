@@ -18,7 +18,9 @@ if (!$error) {
     $light = $_POST["light"];
     $water = $_POST["water"];
     $timestamp = $_POST["timestamp"];
-    $dateStamp = new DateTime(date("Y-m-d H:i:s", strval($timestamp)));
+    date_default_timezone_set("Europe/Budapest");
+    $dateStamp = new DateTime(date("Y-m-d H:i:s", strval($timestamp)), new DateTimeZone("Europe/Budapest"));
+    $dateStamp->modify("-1 hour"); // IDK why but it's running 1h
 
     $sample = new SensorSample($id, $dateStamp, $temp, $ph, $water, $light);
 
@@ -27,4 +29,5 @@ if (!$error) {
         error_log("UPLOAD SAMPLE: Error while creating sample!");
     }
 }
-die();
+header("HTTP/1.1 200 OK");
+echo ("OK");

@@ -12,5 +12,4 @@ if (isset($_POST["email"]) && !filter_var($_POST["email"], FILTER_VALIDATE_EMAIL
     echo (json_encode($result));
     die();
 }
-
 header("Content-Type: application/json");

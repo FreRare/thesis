@@ -21,6 +21,7 @@ function StatisticsScreen(props: StatisticsScreenProps) {
   );
   const [samples, setSamples] = React.useState<Array<SensorSample>>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
+  let refreshKey = 0;
 
   React.useEffect(() => {
     if (samples.length <= 0) {
@@ -47,6 +48,7 @@ function StatisticsScreen(props: StatisticsScreenProps) {
     if (typeof samples === "string") {
       alert(samples);
     } else {
+      refreshKey++;
       setSamples(samples);
     }
     setLoading(false);
@@ -64,10 +66,10 @@ function StatisticsScreen(props: StatisticsScreenProps) {
           <RefreshControl refreshing={loading} onRefresh={refreshCallback} />
         }
       >
-        <StatisticsChartDisplayer label={strings.temperature} data={samples} />
-        <StatisticsChartDisplayer label={strings.ph} data={samples} />
-        <StatisticsChartDisplayer label={strings.light} data={samples} />
-        <StatisticsChartDisplayer label={strings.waterLevel} data={samples} />
+        <StatisticsChartDisplayer key={refreshKey} label={strings.temperature} data={samples} />
+        <StatisticsChartDisplayer key={refreshKey+1} label={strings.ph} data={samples} />
+        <StatisticsChartDisplayer key={refreshKey+2} label={strings.light} data={samples} />
+        <StatisticsChartDisplayer key={refreshKey+3} label={strings.waterLevel} data={samples} />
       </ScrollView>
     </Layout>
   );

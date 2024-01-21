@@ -164,6 +164,8 @@ bool ServerConnector::postSensorData(const SensorData* data)
 }
 
 void ServerConnector::ATCLog(char* str){
+    //!
+    return;
     if(!isWiFiConnected()){
         return;
     }
@@ -178,7 +180,8 @@ void ServerConnector::ATCLog(char* str){
     this->httpClient.begin(this->client, "http://atc.takacsnet.hu/LOG/Logger.php");
     uint16_t response = this->httpClient.POST(logData);
     if(response != HTTP_CODE_OK){
-        Serial.println("Cannot post LOG!");
+        Serial.print("Cannot post LOG! ");
+        Serial.println(response);
     }
 }
 

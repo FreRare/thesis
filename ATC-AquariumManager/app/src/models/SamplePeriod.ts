@@ -7,10 +7,9 @@ const ENUM_LENGTH = 9;
  * The values of different sample periods (ex. 15 minutes, 3 hours)
  */
 enum SamplePeriod {
-  SAMPLE_15_MIN = 0,
-  SAMPLE_30_MIN = 1,
-  SAMPLE_1_HOUR = 2,
-  SAMPLE_1_HOUR_30_MIN = 3,
+  SAMPLE_15_MIN = 1,
+  SAMPLE_30_MIN = 2,
+  SAMPLE_1_HOUR = 3,
   SAMPLE_2_HOUR = 4,
   SAMPLE_3_HOUR = 5,
   SAMPLE_6_HOUR = 6,
@@ -32,8 +31,6 @@ const getStringValue = (val: number): string => {
       return strings.sample30Min;
     case SamplePeriod.SAMPLE_1_HOUR:
       return strings.sample1Hour;
-    case SamplePeriod.SAMPLE_1_HOUR_30_MIN:
-      return strings.sample1Hour30Min;
     case SamplePeriod.SAMPLE_2_HOUR:
       return strings.sample2Hour;
     case SamplePeriod.SAMPLE_3_HOUR:

@@ -2,8 +2,7 @@
 
 ConfigData::ConfigData(const float& minT, const float& maxT, const float& minPh, const float& maxPh,
     const uint16_t& OL1On, const uint16_t& OL1Off, const uint16_t& OL2On, const uint16_t& OL2Off, const uint16_t& OL3On,
-    const uint16_t& OL3Off, const uint16_t& feedingTime, const uint8_t& foodPort,
-    const SamplePeriod& samplePer)
+    const uint16_t& OL3Off, const uint16_t& feedingTime, const uint8_t& foodPort, const SamplePeriod& samplePer)
     : minTemp(minT)
     , maxTemp(maxT)
     , minPh(minPh)
@@ -96,7 +95,6 @@ void ConfigData::setOutlet3Off(uint16_t outlet3Off)
     }
 }
 
-
 void ConfigData::setFeedingTime(uint16_t feedingTime)
 {
     if (feedingTime <= MAX_TIMING_VAL) {
@@ -115,12 +113,11 @@ bool ConfigData::equals(const ConfigData* c)
     return this->minTemp == c->minTemp && this->maxTemp == c->maxTemp && this->minPh == c->minPh
         && this->maxPh == c->maxPh && this->outlet1On == c->outlet1On && this->outlet1Off == c->outlet1Off
         && this->outlet2On == c->outlet2On && this->outlet2Off == c->outlet2Off && this->outlet3On == c->outlet3On
-        && this->outlet3Off == c->outlet3Off
-        && this->feedingTime == c->feedingTime && this->feedingPortions == c->feedingPortions
-        && this->samplePeriod == c->samplePeriod;
+        && this->outlet3Off == c->outlet3Off && this->feedingTime == c->feedingTime
+        && this->feedingPortions == c->feedingPortions && this->samplePeriod == c->samplePeriod;
 }
 
-void ConfigData::print()
+char* ConfigData::print()
 {
     Serial.println("CONFIG: ");
     Serial.print("Min Temp: ");
@@ -139,4 +136,18 @@ void ConfigData::print()
     Serial.println(this->feedingTime);
     Serial.print("Sample period: ");
     Serial.println(this->samplePeriod);
+
+    static char logPrint[512];
+    sprintf(logPrint,
+            "CONFIG: MinT: %f, MaxT: %f, MinPh: %f, MaxPh: %f,OL1N: %d, OL1F: %d, OL2N: %d, OL2F: %d, OL3N: %d, OL3F: %d, Feeding time: %d, Portions: %d, Sample period: %d ------",
+                this->minTemp,
+            this->maxTemp, this->minPh, this->maxPh, this->outlet1On, this->outlet1Off, this->outlet2On,
+            this->outlet2Off, this->outlet3On, this->outlet3Off, this->feedingTime, this->feedingPortions,
+            this->samplePeriod);
+    uint8_t logLen = 0U;
+    while(logPrint[logLen] != '-' && logPrint[logLen+1] != '-'){
+        logLen++;
+    }
+    logPrint[logLen+1] = '\0';
+    return logPrint;
 }

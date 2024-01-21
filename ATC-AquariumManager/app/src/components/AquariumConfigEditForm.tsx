@@ -120,9 +120,8 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         setData1(props.editableConfig.feedingTime);
         setData2(props.editableConfig.foodPortions);
         break;
-      case strings.samples: // Numeric + Dropdown
-        setData1(props.editableConfig.waterLvlAlert);
-        setData2(props.editableConfig.samplePeriod);
+      case strings.samples: // Dropdown
+        setData1(props.editableConfig.samplePeriod);
         break;
     }
   };
@@ -164,8 +163,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
         props.editableConfig.waterChange = dat2;
         return;
       case strings.samples:
-        props.editableConfig.waterLvlAlert = dat1;
-        props.editableConfig.samplePeriod = dat2;
+        props.editableConfig.samplePeriod = dat1;
     }
   };
 
@@ -340,7 +338,8 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
               data={sampleDropdownData}
               save="key"
               setSelected={(k: number) => {
-                setData2(k);
+                console.log("Setting Sample period to: ", k);
+                setData1(k);
               }}
               search={false}
             />

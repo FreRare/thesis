@@ -98,7 +98,12 @@ public:
      */
     bool equals(const ConfigData* c);
 
-    void print();
+    /**
+     * @brief Prints the data on the serial port and returns the data as a string
+     * 
+     * @return char*
+     */
+    char* print();
 };
 
 #endif

@@ -6,6 +6,7 @@
 #include "ConfigData.h"
 #include "MemoryHandler.h"
 #include <TimeLib.h>
+#include <vector>
 
 /**
  * This class is handling the configurations and it's staisfactory
@@ -31,7 +32,7 @@ public:
      * Check which of the ConfigStatus enum's value is assignable to the current state of the system (sensors)
      * @warning This function should be executed maximum once every minute bc all timings are minute accurate!
      */
-    ConfigStatus checkFullfillmentStatus(const SensorData* data);
+    std::vector<ConfigStatus> checkFullfillmentStatus(const SensorData* data);
 };
 
 #endif

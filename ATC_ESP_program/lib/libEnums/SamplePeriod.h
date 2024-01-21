@@ -5,9 +5,9 @@
 The enum to track how often samples should be taken
 ------------------------------------------*/
 enum SamplePeriod {
-    S_15_MIN = 1,
-    S_30_MIN = 2,
-    S_1_HOUR = 3,
+    S_15_MIN = 0,
+    S_30_MIN = 1,
+    S_1_HOUR = 2,
     S_2_HOUR = 4,
     S_3_HOUR = 5,
     S_6_HOUR = 6,
