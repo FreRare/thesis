@@ -25,7 +25,7 @@ function AquariumCard(props: AquariumCardProps) {
     <View style={styles.card}>
       <View style={commonStyles.horizontal}>
         <View style={styles.vertical}>
-          <Text style={{ marginRight: "20%", fontSize: 20 }}>
+          <Text style={{ marginRight: "20%", fontSize: 20, fontWeight: "500" }}>
             {props.item.name}
           </Text>
         </View>

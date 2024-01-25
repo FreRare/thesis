@@ -15,4 +15,6 @@ foreach ($user as $u) {
     echo ($u->toJSON());
     echo ("</br>");
 }
+/*$config = $DAO->selectAQConfigForAquarium(1);
+var_dump($config);*/
 ?>

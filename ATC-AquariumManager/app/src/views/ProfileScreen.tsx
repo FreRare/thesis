@@ -31,7 +31,7 @@ function ProfileScreen(props: ProfileScreenProps) {
     if (user === undefined) {
       return;
     }
-    // Edit user data
+    //TODO update profile
   };
 
   /**

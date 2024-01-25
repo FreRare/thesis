@@ -66,10 +66,30 @@ function StatisticsScreen(props: StatisticsScreenProps) {
           <RefreshControl refreshing={loading} onRefresh={refreshCallback} />
         }
       >
-        <StatisticsChartDisplayer key={refreshKey} label={strings.temperature} data={samples} />
-        <StatisticsChartDisplayer key={refreshKey+1} label={strings.ph} data={samples} />
-        <StatisticsChartDisplayer key={refreshKey+2} label={strings.light} data={samples} />
-        <StatisticsChartDisplayer key={refreshKey+3} label={strings.waterLevel} data={samples} />
+        {!loading && (
+          <>
+            <StatisticsChartDisplayer
+              key={refreshKey}
+              label={strings.temperature}
+              data={samples}
+            />
+            <StatisticsChartDisplayer
+              key={refreshKey + 1}
+              label={strings.ph}
+              data={samples}
+            />
+            <StatisticsChartDisplayer
+              key={refreshKey + 2}
+              label={strings.light}
+              data={samples}
+            />
+            <StatisticsChartDisplayer
+              key={refreshKey + 3}
+              label={strings.waterLevel}
+              data={samples}
+            />
+          </>
+        )}
       </ScrollView>
     </Layout>
   );

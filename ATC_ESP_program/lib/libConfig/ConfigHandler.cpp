@@ -58,22 +58,22 @@ std::vector<ConfigStatus> ConfigHandler::checkFullfillmentStatus(const SensorDat
         }
         break;
     case SamplePeriod::S_2_HOUR:
-        if (hours % 2 == 0) {
+        if (hours % 2 == 0 && minutes == 0) {
             statuses.push_back(ConfigStatus::SAMPLE_TIME);
         }
         break;
     case SamplePeriod::S_3_HOUR:
-        if (hours % 3 == 0) {
+        if (hours % 3 == 0 && minutes == 0) {
             statuses.push_back(ConfigStatus::SAMPLE_TIME);
         }
         break;
     case SamplePeriod::S_6_HOUR:
-        if (hours % 6 == 0) {
+        if (hours % 6 == 0 && minutes == 0) {
             statuses.push_back(ConfigStatus::SAMPLE_TIME);
         }
         break;
     case SamplePeriod::S_12_HOUR:
-        if (hours % 12 == 0) {
+        if (hours % 12 == 0 && minutes == 0) {
             statuses.push_back(ConfigStatus::SAMPLE_TIME);
         }
         break;

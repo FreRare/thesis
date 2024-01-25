@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 5,
     fontSize: 20,
+    fontWeight: "500"
   },
   dataText: {
     fontSize: 17,

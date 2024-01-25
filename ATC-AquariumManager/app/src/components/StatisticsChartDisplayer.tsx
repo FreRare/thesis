@@ -282,21 +282,21 @@ function StatisticsChartDisplayer(
     // Getting the date of today and the day 7 days before
     let today = new Date();
     let lastDate = new Date(today);
-    if(daysCount == 1){
+    if (daysCount == 1) {
       today.setHours(23, 59, 59, 999);
       lastDate.setHours(0, 0, 0, 0);
-    }else{
+    } else {
       lastDate.setDate(lastDate.getDate() - daysCount);
     }
     // Getting samples in date range
     let samplesInDateRange = props.data
       .filter((s) => {
-        return s.sampleTime.getTime() <= today.getTime() && s.sampleTime.getTime() > lastDate.getTime();
+        return (
+          s.sampleTime.getTime() <= today.getTime() &&
+          s.sampleTime.getTime() > lastDate.getTime()
+        );
       })
       .sort(sortSamplesByTimeAscending);
-      for(const s of samplesInDateRange){
-        console.log(`Sample times for stats: ${s.sampleTime}`);
-      }
     // Check if we have samples for that time
     if (samplesInDateRange.length <= 0) {
       // If we dont go to the last ones
@@ -404,8 +404,8 @@ function StatisticsChartDisplayer(
       let minValuesArray: number[] = [];
       let avgValuesArray: number[] = [];
       // Check if we need to fillout blanks
-      // ! All values should be missing the same number of data, so it's enough to check for one set
-      // Max values holes
+      // ! All values should be missing the same number of data, so it's enough to check on one set
+      // Fill out the holes if we have any
       if (maxValues.size < daysCount) {
         const dataDates = Array.from(maxValues.keys()).sort();
         const lastDataDate = new Date(dataDates[0]);
@@ -436,7 +436,14 @@ function StatisticsChartDisplayer(
           missingDataFromAfter,
           true
         );
-        console.log("Before labels: ", labelsFromBefore, " Between labels: ", labelsBetween, " After Labels: ", labelsFromAfter);
+        console.log(
+          "Before labels: ",
+          labelsFromBefore,
+          " Between labels: ",
+          labelsBetween,
+          " After Labels: ",
+          labelsFromAfter
+        );
         labels = labelsFromBefore.concat(labelsBetween, labelsFromAfter);
         maxValuesArray = fillMissingDataHoles(
           missingDataFromBefore,
@@ -463,6 +470,12 @@ function StatisticsChartDisplayer(
           firstDataDate
         );
       } else {
+        //Otherwise just set the labels and the values
+        labels = [];
+        maxValues.forEach((value, day) => {
+          const date = new Date(day);
+          labels.push(`${monthList[date.getMonth()]}-${date.getDate()}`);
+        });
         maxValuesArray = Array.from(maxValues.values());
         minValuesArray = Array.from(minValues.values());
         avgValuesArray = Array.from(avgValues.values());
@@ -530,42 +543,48 @@ function StatisticsChartDisplayer(
   });
 
   return (
-    <View style={styles.container}>
-      <View style={styles.title}>
-        <Text style={{ fontSize: 20, color: colors.textPrimary }}>
-          {props.label}
-        </Text>
-      </View>
+    <>
       {!chartData && <LoadingAnimation />}
-      {chartData && !barChartType && (
-        <LineChart
-          data={chartData}
-          width={Dimensions.get("window").width - 10}
-          height={260}
-          verticalLabelRotation={280}
-          yAxisSuffix={ySuffix}
-          xLabelsOffset={20}
-          chartConfig={chartConfig}
-          withShadow={highlighted === 0}
-          style={styles.chart}
-          bezier
-        />
+      {chartData && (
+        <View style={styles.container}>
+          <View style={styles.title}>
+            <Text style={{ fontSize: 20, color: colors.textPrimary }}>
+              {props.label}
+            </Text>
+          </View>
+          {!barChartType && (
+            <LineChart
+              data={chartData}
+              width={Dimensions.get("window").width - 10}
+              height={260}
+              verticalLabelRotation={280}
+              yAxisSuffix={ySuffix}
+              xLabelsOffset={20}
+              chartConfig={chartConfig}
+              withShadow={highlighted === 0}
+              style={styles.chart}
+              bezier
+            />
+          )}
+          {barChartType && (
+            <BarChart
+              data={chartData}
+              width={Dimensions.get("window").width - 10}
+              height={260}
+              verticalLabelRotation={280}
+              yAxisSuffix={ySuffix}
+              yAxisLabel=""
+              xLabelsOffset={20}
+              chartConfig={chartConfig}
+              style={styles.chart}
+            />
+          )}
+          <View style={styles.dateRangeSelectorContainer}>
+            {dateRangeSelector}
+          </View>
+        </View>
       )}
-      {chartData && barChartType && (
-        <BarChart
-          data={chartData}
-          width={Dimensions.get("window").width - 10}
-          height={260}
-          verticalLabelRotation={280}
-          yAxisSuffix={ySuffix}
-          yAxisLabel=""
-          xLabelsOffset={20}
-          chartConfig={chartConfig}
-          style={styles.chart}
-        />
-      )}
-      <View style={styles.dateRangeSelectorContainer}>{dateRangeSelector}</View>
-    </View>
+    </>
   );
 }
 
@@ -579,7 +598,7 @@ const chartConfig = {
   propsForDots: {
     r: "2",
     strokeWidth: "2",
-    stroke: colors.secondary,
+    stroke: colors.darkThird,
   },
   barPercentage: 0.2,
 };
@@ -590,8 +609,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   chart: {
-    borderRightWidth: 2,
-    borderLeftWidth: 2,
+    borderRightWidth: 3,
+    borderLeftWidth: 3,
     borderColor: colors.secondary,
   },
   title: {
@@ -601,9 +620,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    borderTopWidth: 2,
-    borderRightWidth: 2,
-    borderLeftWidth: 2,
+    borderTopWidth: 3,
+    borderRightWidth: 3,
+    borderLeftWidth: 3,
     borderColor: colors.secondary,
     backgroundColor: colors.third,
   },
@@ -617,9 +636,9 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    borderBottomWidth: 2,
-    borderRightWidth: 2,
-    borderLeftWidth: 2,
+    borderBottomWidth: 3,
+    borderRightWidth: 3,
+    borderLeftWidth: 3,
     borderColor: colors.secondary,
     backgroundColor: colors.third,
     paddingBottom: 2,

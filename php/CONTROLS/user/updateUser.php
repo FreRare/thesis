@@ -5,7 +5,7 @@ Expects user data as json trough $POST
 */
 require_once($_SERVER["DOCUMENT_ROOT"] . "CONTROLS/config/controlConfig.php");
 
-if (!empty($_POST["email"]) && !empty($_POST["newEmail"]) && !empty($_POST["fistName"]) && !empty($_POST["lastName"]) && !empty($_POST["deviceToken"])) {
+if (!empty($_POST["email"]) && !empty($_POST["newEmail"]) && !empty($_POST["fistName"]) && !empty($_POST["lastName"])) {
     $email = $_POST["email"];
     $newEmail = $_POST["newEmail"];
     $firstName = $_POST["firstName"];
@@ -18,7 +18,7 @@ if (!empty($_POST["email"]) && !empty($_POST["newEmail"]) && !empty($_POST["fist
     $authToken = $user->getAuthToken();
 
     $updatedUser = new User($newEmail, $password, $firstName, $lastName, $deviceToken, $authToken);
-    $res = $DAO->updateUser($updatedUser, $emial);
+    $res = $DAO->updateUser($updatedUser, $email);
     if (!$res) {
         $result["error"] = "Error while updating!";
     } else {

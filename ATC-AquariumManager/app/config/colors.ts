@@ -1,8 +1,8 @@
 export default {
   primary: "#496D96",
   darkPrimary: "#3D5169",
-  secondary: "#5598D8",
-  third: "#CCEEEE",
+  secondary: "#559898",
+  third: "#CCEEEF",
   darkThird: "#AACCEE",
   background: "#FFFFFA",
   diffColor: "#C5B78A",

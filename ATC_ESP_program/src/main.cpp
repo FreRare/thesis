@@ -46,7 +46,6 @@ void updateConfig()
  */
 bool takeSensorSample()
 {
-    //! return true; // TODO: delete this row
     g_sensorHandler->readSensors();
     const SensorData* sample = g_sensorHandler->getLastSamples();
     return g_server->postSensorData(sample);
@@ -62,10 +61,10 @@ void statusHandler()
 {
     SensorData* lastSamples = g_sensorHandler->getLastSamples();
     std::vector<ConfigStatus> actualStatuses = g_configHandler->checkFullfillmentStatus(lastSamples);
-    /*char* log = new char[256];
+    char* log = new char[256];
     sprintf(log, "System status: %d", actualStatus);
     g_server->ATCLog(log);
-    delete log;*/
+    delete log;
     for (size_t i = 0; i < actualStatuses.size(); i++) {
         Serial.print("Handling status code: ");
         Serial.println(actualStatuses[i]);
@@ -82,45 +81,35 @@ void statusHandler()
             break;
         case ConfigStatus::OUTLET_1_ON:
             g_actuatorHandler->channelSwithcer(1, true);
-            // g_server->ATCLog("Relay channel 1 ON");
             break;
         case ConfigStatus::OUTLET_1_OFF:
             g_actuatorHandler->channelSwithcer(1, false);
-            // g_server->ATCLog("Relay channel 1 OFF");
             break;
         case ConfigStatus::OUTLET_2_ON:
             g_actuatorHandler->channelSwithcer(2, true);
-            // g_server->ATCLog("Relay channel 2 ON");
             break;
         case ConfigStatus::OUTLET_2_OFF:
             g_actuatorHandler->channelSwithcer(2, false);
-            // g_server->ATCLog("Relay channel 2 OFF");
             break;
         case ConfigStatus::OUTLET_3_ON:
             g_actuatorHandler->channelSwithcer(3, true);
-            // g_server->ATCLog("Relay channel 3 ON");
             break;
         case ConfigStatus::OUTLET_3_OFF:
             g_actuatorHandler->channelSwithcer(3, false);
-            // g_server->ATCLog("Relay channel 3 OFF");
             break;
         case ConfigStatus::SAMPLE_TIME:
             if (!takeSensorSample()) {
                 // TODO: send error
-                // g_server->ATCLog("Couldn't post sensor data!");
             }
             break;
         case ConfigStatus::FEEDING_TIME:
             g_actuatorHandler->feed(g_configHandler->getConfiguration()->getFeedingPortions());
-            // g_server->ATCLog("Feeder feeding");
             break;
         case ConfigStatus::BROKEN_LIGHT: // TODO: send notification
             break;
         case ConfigStatus::ERROR: // TODO: send error
-            // g_server->ATCLog("!!!!!!ERROR: Status ended up in Error!!!!");
             break;
         case ConfigStatus::OK_STATUS:
-            // g_server->ATCLog("Everything is OK!");
             break;
         default:
             break;
@@ -155,16 +144,12 @@ void loop()
     const uint16_t minutesSinceMidnight = h * 60 + min;
     if (h == 0 && min == 0 && sec < 5 && sec > 0) { // At midnight sync time (10 sec interval)
         g_server->syncNTPTime();
-        // g_server->ATCLog("NTP time sysnced!");
         // We can reset last minute storage here
         g_statusCheckLastMinute = 0;
     }
     // Config updating with interval
     if (min % UPDATE_INTERVAL_MIN == 0 && sec < 5) {
         updateConfig();
-        // char log[512];
-        // sprintf(log, "Config data updated! Updated data is: \n%s", g_configHandler->getConfiguration()->print());
-        // g_server->ATCLog(log);
     }
     // Make sure status check is only performed once every minute
     if (g_statusCheckLastMinute < minutesSinceMidnight) {
