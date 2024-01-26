@@ -7,6 +7,7 @@ import colors from "../../config/colors";
 import strings from "../../config/strings";
 import ProfileEditForm from "../components/ProfileEditForm";
 import PasswordChangeForm from "../components/PasswordChangeForm";
+import { UserService } from "../services/UserService";
 
 interface ProfileScreenProps {
   navigation: any;
@@ -25,29 +26,35 @@ function ProfileScreen(props: ProfileScreenProps) {
   /**
    * Handles the edit profile form's submission or cancel
    * @param user The user given to the callback, undefined on cancel
+   * @param oldMail The old email address of the user so we can identify it
+   * @async
    */
-  const handleEditProfile = (user: User | undefined) => {
+  const handleEditProfile = async (
+    user: User | undefined,
+    oldMail?: string
+  ) => {
     setEditProfile(false);
-    if (user === undefined) {
+    if (user === undefined || oldMail === undefined) {
       return;
     }
-    //TODO update profile
+    const result = await UserService.updateData(oldMail, user);
+    alert(result);
   };
 
   /**
    * Handles the password changer form submit or cancel
    * @param newPass The new password, undefined on cancel
+   * @async
    */
-  const handleChangePassword = (
+  const handleChangePassword = async (
     oldPass: string | undefined,
     newPass?: string
   ) => {
     setChangePassword(false);
-    if (oldPass === undefined) {
+    if (oldPass === undefined || newPass === undefined) {
       return;
     }
-    // TODO Change password
-    console.log("Password changed");
+    alert(await UserService.changePassword(props.user.email, oldPass, newPass));
   };
 
   return (

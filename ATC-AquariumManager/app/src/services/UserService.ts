@@ -7,7 +7,8 @@ export class UserService {
    * Updates the provided user with the provided old email address
    * @param oldMail
    * @param updatedUser
-   * @returns
+   * @returns The promise what returns the result string
+   * @async
    */
   static updateData = async (
     oldMail: string,
@@ -43,5 +44,36 @@ export class UserService {
       .catch(CommonServiceCallback.catchCallback);
   };
 
-  static changePassword = (updatedUser: User) => {};
+  static changePassword = async (
+    email: string,
+    oldPass: string,
+    newPass: string
+  ): Promise<string> => {
+    const headers = {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    };
+    const data = JSON.stringify({
+      email: email,
+      oldPass: oldPass,
+      newPass: newPass,
+    });
+    return fetch(strings.PATHS.changePasswordApiUrl, {
+      method: "POST",
+      headers: headers,
+      body: data,
+    })
+      .then(CommonServiceCallback.fetchResponseCallback)
+      .then((responseData) => {
+        const data = responseData["data"];
+        if (data["error"]) {
+          return data["error"];
+        }
+        if (data["result"]) {
+          return data["result"];
+        }
+        return "No response data!";
+      })
+      .catch(CommonServiceCallback.catchCallback);
+  };
 }

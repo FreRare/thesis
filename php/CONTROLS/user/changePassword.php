@@ -22,6 +22,8 @@ if (!empty($_POST["email"]) && !empty($_POST["oldPass"]) && !empty($_POST["newPa
             } else {
                 $result["result"] = "Succesfully updated!";
             }
+        } else {
+            $result["error"] = "The provided old password is not valid!";
         }
     }
 

@@ -20,6 +20,8 @@ export default {
     getSensorSamplesApiUrl:
       "https://atc.takacsnet.hu/CONTROLS/aquarium/getSensorSamples.php",
     updateUserApiUrl: "https://atc.takacsnet.hu/CONTROLS/user/updateUser.php",
+    changePasswordApiUrl:
+      "https://atc.takacsnet.hu/CONTROLS/user/changePassword.php",
   },
   expoProjectId: "9d33dc99-5dc7-4cbf-9fa8-8b351cd1b878",
   projetName: "ATC - Aquarium Manager",
@@ -161,5 +163,13 @@ export default {
     weekDataRangeText: "1 week",
     twoWeeksDataRangeText: "2 weeks",
     monthDataRangeText: "1 month",
+  },
+  PROFILE: {
+    editFormTitle: "Edit profile",
+    changePasswordTitle: "Change password",
+    emptyInputMessage: "All fields are required!",
+    wrongEmailFormatMessage: "Incorrect email format!",
+    newPassCannotBeOldMessage:
+      "New password can't be the same as old password!",
   },
 };
