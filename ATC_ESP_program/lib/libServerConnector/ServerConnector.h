@@ -64,7 +64,7 @@ public:
      * Checks if we had update or no
      * @return the new config or null
      */
-    ConfigData* updateConfigData();
+    ConfigData* updateConfigData(ConfigData* config);
     /**
      * Posts the provided data to the database
      */

@@ -4,6 +4,7 @@
 #include <LiquidCrystal_I2C.h>
 #include <TimeLib.h>
 #include <stdio.h>
+#include "Debug.h"
 
 #define LCD_ADDRESS 0x27
 #define LCD_ROWS 4

@@ -1,8 +1,9 @@
 #include "ServerConnector.h"
 
-bool isWiFiConnected(){
+bool isWiFiConnected()
+{
     if (WiFi.status() != WL_CONNECTED) {
-        Serial.println("Sensor data posting: Network not connected!");
+        DEBUG_PRINTLN("Sensor data posting: Network not connected!");
         return false;
     }
     return true;
@@ -73,7 +74,7 @@ bool ServerConnector::connectToNetwork()
             return false;
         }
         delay(2000);
-        Serial.println("Connecting...");
+        DEBUG_PRINTLN("Connecting...");
         connectionTimeout++;
     }
 
@@ -87,29 +88,29 @@ bool ServerConnector::connectToNetwork()
                 DynamicJsonDocument doc(256);
                 DeserializationError error = deserializeJson(doc, payload);
                 if (error) {
-                    Serial.println("Json serialization failure!");
+                    DEBUG_PRINTLN("Json serialization failure!");
                     return false;
                 }
                 uint16_t newSystemID = doc["data"]["system_id"];
                 this->config->saveSystemID(newSystemID);
                 return true;
             } else {
-                Serial.print("HTTP error code: ");
-                Serial.println(String(httpCode));
+                DEBUG_PRINT("HTTP error code: ");
+                DEBUG_PRINTLN(String(httpCode));
                 return false;
             }
         } else {
-            Serial.println("Connection check failed!");
+            DEBUG_PRINTLN("Connection check failed!");
             return false;
         }
     }
     return true; // We have an ID and we could connect
 }
 
-ConfigData* ServerConnector::updateConfigData()
+ConfigData* ServerConnector::updateConfigData(ConfigData* config)
 {
     if (WiFi.status() != WL_CONNECTED) {
-        Serial.println("Wifi not connected!");
+        DEBUG_PRINTLN("Wifi not connected!");
         return NULL;
     }
     this->httpClient.begin(this->client, ServerConnector::configUpdatePath);
@@ -117,34 +118,34 @@ ConfigData* ServerConnector::updateConfigData()
     char* postData = new char[CONFIG_UPDATE_POST_DATA_LENGTH];
     sprintf(postData, "{\"id\":\"%d\"}", this->config->getSystemID());
     uint16_t responseCode = this->httpClient.POST(postData);
+    delete[] postData;
     if (responseCode == HTTP_CODE_OK) {
         String payload = this->httpClient.getString();
         DynamicJsonDocument configDoc(512);
         DeserializationError err = deserializeJson(configDoc, payload);
         if (err) {
-            Serial.println("JSON serialization failed!");
+            DEBUG_PRINTLN("JSON serialization failed!");
             return nullptr;
         }
         if (configDoc["data"]["error"]) {
-            Serial.println("Error from api!");
+            DEBUG_PRINTLN("Error from api!");
             return nullptr;
         }
-        ConfigData* freshConfig
-            = new ConfigData(configDoc["data"]["config"]["minTemp"], configDoc["data"]["config"]["maxTemp"],
-                configDoc["data"]["config"]["minPh"], configDoc["data"]["config"]["maxPh"],
-                configDoc["data"]["config"]["ol1On"], configDoc["data"]["config"]["ol1Off"],
-                configDoc["data"]["config"]["ol2On"], configDoc["data"]["config"]["ol2Off"],
-                configDoc["data"]["config"]["ol3On"], configDoc["data"]["config"]["ol3Off"],
-                configDoc["data"]["config"]["feedingTime"],
-                configDoc["data"]["config"]["foodPortions"], configDoc["data"]["config"]["samplePeriod"]);
-        return freshConfig;
+        config = new ConfigData(configDoc["data"]["config"]["minTemp"], configDoc["data"]["config"]["maxTemp"],
+            configDoc["data"]["config"]["minPh"], configDoc["data"]["config"]["maxPh"],
+            configDoc["data"]["config"]["ol1On"], configDoc["data"]["config"]["ol1Off"],
+            configDoc["data"]["config"]["ol2On"], configDoc["data"]["config"]["ol2Off"],
+            configDoc["data"]["config"]["ol3On"], configDoc["data"]["config"]["ol3Off"],
+            configDoc["data"]["config"]["feedingTime"], configDoc["data"]["config"]["foodPortions"],
+            configDoc["data"]["config"]["samplePeriod"]);
+        return config;
     }
     return nullptr;
 }
 
 bool ServerConnector::postSensorData(const SensorData* data)
 {
-    if(!isWiFiConnected()){
+    if (!isWiFiConnected()) {
         return false;
     }
     char* sensorDataJson = new char[SESNOR_DATA_POST_LENGTH];
@@ -154,35 +155,36 @@ bool ServerConnector::postSensorData(const SensorData* data)
         data->getTimeStamp());
     this->httpClient.begin(this->client, ServerConnector::sensorDataUploadPath);
     uint16_t responseCode = this->httpClient.POST(sensorDataJson);
+    delete[] sensorDataJson;
     if (responseCode != HTTP_CODE_OK) {
-        Serial.print("Sensor data posting: HTTP error: ");
-        Serial.println(responseCode);
+        DEBUG_PRINT("Sensor data posting: HTTP error: ");
+        DEBUG_PRINTLN(responseCode);
         return false;
     }
-    Serial.println("Sensor data posted successfully!");
+    DEBUG_PRINTLN("Sensor data posted successfully!");
     return true;
 }
 
-void ServerConnector::ATCLog(char* str){
-    //!
-    return;
-    if(!isWiFiConnected()){
+void ServerConnector::ATCLog(char* str)
+{
+    if (!isWiFiConnected()) {
+        DEBUG_PRINTLN("No WiFi connected, couldn't send log!");
         return;
     }
     uint16_t msgLength = 0U;
-    while(str[msgLength] != '\0'){
+    while (str[msgLength] != '\0') {
         msgLength++;
     }
 
     char* logData = new char[msgLength + 6];
     sprintf(logData, "{\"log\":\"%s\"}", str);
-
     this->httpClient.begin(this->client, "http://atc.takacsnet.hu/LOG/Logger.php");
     uint16_t response = this->httpClient.POST(logData);
-    if(response != HTTP_CODE_OK){
-        Serial.print("Cannot post LOG! ");
-        Serial.println(response);
+    if (response != HTTP_CODE_OK) {
+        DEBUG_PRINT("Cannot post LOG! ");
+        DEBUG_PRINTLN(response);
     }
+    delete[] logData;
 }
 
 void ServerConnector::disconnect() { WiFi.disconnect(); }

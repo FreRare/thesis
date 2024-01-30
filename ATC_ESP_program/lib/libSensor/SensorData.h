@@ -43,13 +43,6 @@ public:
     time_t getTimeStamp() const;
 
     void setTimeStamp(time_t timeStamp);
-
-    /**
-     * @public
-     * Creates a char array of the object's data separated by '::'
-     * @returns - The char array as mentioned
-     */
-    char* toCharArray();
 };
 
 #endif

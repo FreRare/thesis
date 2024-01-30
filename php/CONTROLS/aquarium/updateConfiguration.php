@@ -10,7 +10,7 @@ $keys = ["id", "minTemp", "maxTemp", "minPh", "maxPh", "OL1On", "OL1Off", "OL2On
 foreach ($keys as $key) {
     if (!isset($_POST[$key])) {
         $result["error"] = "Missing data!";
-        error_log("CONFIG UPDATE: Missing data with key: `${$key}`");
+        error_log("CONFIG UPDATE: Missing data with key: $key");
         break;
     }
 }

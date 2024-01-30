@@ -69,6 +69,14 @@ type ConfiguratorDataSegmentDisplayerProps = {
 function ConfiguratorDataSegmentDisplayer(
   props: ConfiguratorDataSegmentDisplayerProps
 ) {
+
+  const [dataLabels, setDataLabels] = React.useState<Array<string>>([]);
+  const [data1ToDisplay, setData1ToDisplay] = React.useState<string>(
+    String(props.data1)
+  );
+  const [data2ToDisplay, setData2ToDisplay] = React.useState<string>(
+    String(props.data2)
+  );
   // selects the label for the data segments based on the title of the segment
   useEffect(() => {
     if (dataLabels.length <= 0) {
@@ -105,13 +113,6 @@ function ConfiguratorDataSegmentDisplayer(
       setData1ToDisplay(getStringValue(props.data1));
     }
   });
-  const [dataLabels, setDataLabels] = React.useState<Array<string>>([]);
-  const [data1ToDisplay, setData1ToDisplay] = React.useState<string>(
-    String(props.data1)
-  );
-  const [data2ToDisplay, setData2ToDisplay] = React.useState<string>(
-    String(props.data2)
-  );
 
   return (
     <View style={styles.conatiner}>

@@ -119,35 +119,17 @@ bool ConfigData::equals(const ConfigData* c)
 
 char* ConfigData::print()
 {
-    Serial.println("CONFIG: ");
-    Serial.print("Min Temp: ");
-    Serial.println(this->minTemp);
-    Serial.print("Max Temp: ");
-    Serial.println(this->maxTemp);
-    Serial.print("Min Ph: ");
-    Serial.println(this->minPh);
-    Serial.print("Max Ph: ");
-    Serial.println(this->maxPh);
-    Serial.print("Ol 2 On: ");
-    Serial.println(this->outlet2On);
-    Serial.print("Ol 2 Off: ");
-    Serial.println(this->outlet2Off);
-    Serial.print("Feeding time: ");
-    Serial.println(this->feedingTime);
-    Serial.print("Sample period: ");
-    Serial.println(this->samplePeriod);
-
     static char logPrint[512];
     sprintf(logPrint,
-            "CONFIG: MinT: %f, MaxT: %f, MinPh: %f, MaxPh: %f,OL1N: %d, OL1F: %d, OL2N: %d, OL2F: %d, OL3N: %d, OL3F: %d, Feeding time: %d, Portions: %d, Sample period: %d ------",
-                this->minTemp,
-            this->maxTemp, this->minPh, this->maxPh, this->outlet1On, this->outlet1Off, this->outlet2On,
-            this->outlet2Off, this->outlet3On, this->outlet3Off, this->feedingTime, this->feedingPortions,
-            this->samplePeriod);
+        "CONFIG: MinT: %f, MaxT: %f, MinPh: %f, MaxPh: %f, OL1N: %d, OL1F: %d, OL2N: %d, OL2F: %d, OL3N: %d, OL3F: %d, "
+        "Feeding time: %d, Portions: %d, Sample period: %d ------",
+        this->minTemp, this->maxTemp, this->minPh, this->maxPh, this->outlet1On, this->outlet1Off, this->outlet2On,
+        this->outlet2Off, this->outlet3On, this->outlet3Off, this->feedingTime, this->feedingPortions,
+        this->samplePeriod);
     uint8_t logLen = 0U;
-    while(logPrint[logLen] != '-' && logPrint[logLen+1] != '-'){
+    while (logPrint[logLen] != '-' && logPrint[logLen + 1] != '-') {
         logLen++;
     }
-    logPrint[logLen+1] = '\0';
+    logPrint[logLen + 1] = '\0';
     return logPrint;
 }

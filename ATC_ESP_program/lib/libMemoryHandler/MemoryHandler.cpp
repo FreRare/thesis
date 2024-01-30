@@ -59,16 +59,14 @@ void MemoryHandler::writeConfigData(ConfigData* configData)
     this->actualAddress = this->configDataStartAddress;
     EEPROM.put(this->actualAddress, *configData);
     EEPROM.commit();
-    Serial.println("Wrote config data to memory: ");
+    DEBUG_PRINTLN("Wrote config data to memory: ");
     configData->print();
 }
 
-ConfigData* MemoryHandler::readConfigData()
+void MemoryHandler::readConfigData(ConfigData* config)
 {
     this->actualAddress = this->configDataStartAddress;
-    ConfigData* config = new ConfigData();
     EEPROM.get(this->actualAddress, *config);
-    return config;
 }
 
 // Clears the memory from 0 until length address
@@ -77,9 +75,9 @@ void MemoryHandler::clearMemory(const int& addr1, const int& addr2)
     this->actualAddress = addr1;
     for (; this->actualAddress < addr2; this->actualAddress++) {
         EEPROM.write(this->actualAddress, 0);
-        Serial.println("Deleting...");
+        DEBUG_PRINTLN("Deleting...");
     }
-    Serial.println("Memory cleared from " + String(addr1) + " - " + String(addr2) + "! (upper address not included)");
+    DEBUG_PRINTLN("Memory cleared from " + String(addr1) + " - " + String(addr2) + "! (upper address not included)");
     EEPROM.commit();
     delay(10);
 }

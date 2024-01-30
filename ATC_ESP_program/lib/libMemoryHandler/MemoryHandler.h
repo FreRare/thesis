@@ -39,7 +39,7 @@ public:
     void writeInt(const uint16_t& i);
     uint16_t readInt();
     void writeConfigData(ConfigData* data);
-    ConfigData* readConfigData();
+    void readConfigData(ConfigData* config);
     /**
      * Clears the memory (writes 0-s)
      * addr2 is the used EEPROM_SIZE by default

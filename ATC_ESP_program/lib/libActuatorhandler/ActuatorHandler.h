@@ -2,6 +2,7 @@
 #define ActuatorHandler_h
 #include "deviceInit.h"
 #include <Arduino.h>
+#include <Debug.h>
 
 #define CHANNEL_COUNT 3
 // On the shift register we don't use Q0 for easier pcb planning
@@ -14,13 +15,11 @@
 #define SR_OFF B00000000
 
 class ActuatorHandler {
-private:
-    uint8_t shiftRegisterState;
-
 public:
     ActuatorHandler();
     ~ActuatorHandler();
     static bool* channelStates;
+    uint8_t shiftRegisterState;
     /**
      * @brief Switches the provided channel to the given state
      * Switches the provided channel into the provided state if the channel isn't in that state already

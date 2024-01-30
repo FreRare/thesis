@@ -5,6 +5,7 @@
 #include <DallasTemperature.h>
 #include <OneWire.h>
 #include <TimeLib.h>
+#include "Debug.h"
 
 // ############################### // Light intensity edges
 #define PHOTORES_DARK_LIMIT 176U
@@ -65,7 +66,6 @@ public:
      * Each sensor sample builds up from the average of 10 samples taken with 20ms delays
      * So the total runtime of the function is: (num of sensors - 1) * 1000 + (delta sample time * num of sensors * 20)
      * [ms]
-     *
      */
     void readSensors();
     SensorData* getLastSamples() { return this->lastSamples; }

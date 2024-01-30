@@ -29,11 +29,3 @@ void SensorData::setPh(float ph) { ph = ph; }
 time_t SensorData::getTimeStamp() const { return timeStamp; }
 
 void SensorData::setTimeStamp(time_t timeStamp) { timeStamp = timeStamp; }
-
-char* SensorData::toCharArray()
-{
-    char* dataCharArray = new char[CHAR_ARRAY_LENGTH];
-    sprintf(dataCharArray, "%.2f::%.2f::%d::%d::%lld", this->temperature, this->ph, this->lightAmount, this->waterLvl,
-        this->timeStamp);
-    return dataCharArray;
-}

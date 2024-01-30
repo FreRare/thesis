@@ -172,25 +172,7 @@ export default class AquariumConfiguration {
   }
 
   public get lastModifiedDateString(): string {
-    return (
-      [
-        this._lastModifiedDate.getFullYear(),
-        this._lastModifiedDate.getMonth(),
-        this._lastModifiedDate.getDay(),
-      ].join("-") +
-      " " +
-      [
-        this._lastModifiedDate.getHours() > 9
-          ? this._lastModifiedDate.getHours()
-          : "0" + this._lastModifiedDate.getHours(),
-        this._lastModifiedDate.getMinutes() > 9
-          ? this._lastModifiedDate.getMinutes()
-          : "0" + this._lastModifiedDate.getMinutes(),
-        this._lastModifiedDate.getSeconds() > 9
-          ? this._lastModifiedDate.getSeconds()
-          : "0" + this._lastModifiedDate.getSeconds(),
-      ].join(":")
-    );
+    return this._lastModifiedDate.toLocaleDateString() + " " + this._lastModifiedDate.toLocaleTimeString();
   }
 
   /**

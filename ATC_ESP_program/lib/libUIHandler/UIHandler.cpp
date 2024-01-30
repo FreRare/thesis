@@ -9,6 +9,7 @@ UIHandler::UIHandler()
     UIHandler::display.init();
     UIHandler::display.backlight();
     UIHandler::display.clear();
+    delete this->instancePtr;
 }
 
 UIHandler::~UIHandler() { delete UIHandler::instancePtr; }
@@ -108,16 +109,19 @@ void UIHandler::writeBasicInfo(const float& ph, const float& temp)
     int min = minute();
     char clockStr[6]; // (2):(2)+\0 = 6
     coorigateDigits(h, min, clockStr);
+    clockStr[5] = '\0';
     UIHandler::writeLine(clockStr, 1, 6);
+    char tempStr[14]; // Temp: (3) °C+\0 =
+    sprintf(tempStr, "Temp: %2.1f %cC", temp, (char)223);
+    tempStr[13] = '\0';
+    UIHandler::writeLine(tempStr, 2, 2);
     char phStr[10]; // Ph: (2.2)+\0 = 10
     sprintf(phStr, "Ph: %2.2f", ph);
+    phStr[9] = '\0';
     UIHandler::writeLine(phStr, 3, 2);
-    char tempStr[14]; // Temp: (3) °C+\0 = 20
 
     // Bitmap LCD symbols
-    // This two is for the thermometer
-    // B00000, B01110, B01110, B01110, B01110, B11111, B11111, B00000 - B00100, B01010, B01010, B01010, B01110, B11111, B11111, B01110
-    const char thermometerSymbol[8] = { B00100, B01010, B01010, B01010, B01110, B11111, B11111, B01110}; 
+    const char thermometerSymbol[8] = { B00100, B01010, B01010, B01010, B01110, B11111, B11111, B01110 };
     const char phSymbol[8] = { B00000, B00100, B01010, B10001, B01010, B00100, B00000, B11111 };
 
     UIHandler::display.createChar(1, thermometerSymbol);
@@ -126,10 +130,7 @@ void UIHandler::writeBasicInfo(const float& ph, const float& temp)
     UIHandler::display.createChar(2, phSymbol);
     UIHandler::display.setCursor(0, 2);
     UIHandler::display.write((uint8_t)2); // Display Ph symbol
-
-    sprintf(tempStr, "Temp: %2.1f %cC", temp, (char)223);
-    tempStr[13] = '\0';
-    UIHandler::writeLine(tempStr, 2, 2);
+    Serial.println("Printed status info to LCD.");
 }
 
 void UIHandler::clear() { UIHandler::display.clear(); }
@@ -138,7 +139,7 @@ void UIHandler::clearLine(const uint8_t& line)
 {
     uint8_t lineNumber = line - 1;
     if (lineNumber > LCD_ROWS) {
-        Serial.println("Invalid row number! Defaulted to 0.");
+        DEBUG_PRINTLN("Invalid row number! Defaulted to 0.");
         lineNumber = 0;
     }
     UIHandler::display.setCursor(0, line - 1);

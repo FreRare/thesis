@@ -5,6 +5,7 @@ MemoryHandler* ConfigHandler::memHandler = MemoryHandler::getInstance();
 ConfigHandler::ConfigHandler()
     : configuration(nullptr)
 {
+    this->configuration = new ConfigData();
     this->loadConfigDataFromMemory();
 }
 
@@ -16,21 +17,19 @@ ConfigHandler::~ConfigHandler()
 
 void ConfigHandler::saveConfigData(ConfigData* data)
 {
-    this->configuration = data;
+    this->configuration = new ConfigData(data->getMinTemp(), data->getMaxTemp(), data->getMinPh(), data->getMaxPh(),
+        data->getOutlet1On(), data->getOutlet1Off(), data->getOutlet2On(), data->getOutlet2Off(), data->getOutlet3On(),
+        data->getOutlet3Off(), data->getFeedingTime(), data->getFeedingPortions(), data->getSamplePeriod());
     ConfigHandler::memHandler->writeConfigData(data);
 }
 
-void ConfigHandler::loadConfigDataFromMemory()
-{
-    ConfigData* loadedData = ConfigHandler::memHandler->readConfigData();
-    this->configuration = loadedData;
-}
+void ConfigHandler::loadConfigDataFromMemory() { ConfigHandler::memHandler->readConfigData(this->configuration); }
 
 std::vector<ConfigStatus> ConfigHandler::checkFullfillmentStatus(const SensorData* data)
 {
     std::vector<ConfigStatus> statuses;
     if (this->configuration == nullptr) {
-        Serial.println("ConfigHandler::Status handlig: Config is null!");
+        DEBUG_PRINTLN("ConfigHandler::Status handlig: Config is null!");
         statuses.push_back(ConfigStatus::ERROR);
     }
     // TODO: This function should only execute each action only once a minute maximum.
@@ -83,7 +82,7 @@ std::vector<ConfigStatus> ConfigHandler::checkFullfillmentStatus(const SensorDat
         }
         break;
     default:
-        Serial.println("ConfigHandler:: Status check: Sensor sample period is NONE of the predefined states!");
+        DEBUG_PRINTLN("ConfigHandler:: Status check: Sensor sample period is NONE of the predefined states!");
         statuses.push_back(ConfigStatus::ERROR);
     }
 

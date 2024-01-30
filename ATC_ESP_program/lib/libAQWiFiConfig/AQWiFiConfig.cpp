@@ -26,7 +26,7 @@ AQWiFiConfig::AQWiFiConfig()
     }
     // Wait until config is done
     while (!isConfigDoneFlag) {
-        Serial.println("Wifi config in progress...");
+        DEBUG_PRINTLN("Wifi config in progress...");
         AQWiFiConfig::configServer->handleClient();
         delay(1000);
     }
@@ -58,7 +58,7 @@ void AQWiFiConfig::saveCredentials()
     String newPassword = AQWiFiConfig::configServer->arg("password");
     // if we have credentials proceed
     if (newSSID.length() > 0 && newPassword.length() > 0) {
-        Serial.println("SSID: " + newSSID + " -- " + "Pass: " + newPassword);
+        DEBUG_PRINTLN("SSID: " + newSSID + " -- " + "Pass: " + newPassword);
         // Write them to memory
         AQWiFiConfig::memHandler->actualAddress = AQWiFiConfig::memHandler->wifiConfigDataStartAddress;
         AQWiFiConfig::memHandler->writeWord(newSSID);
@@ -66,7 +66,7 @@ void AQWiFiConfig::saveCredentials()
         // Sending confirm message to the server
         String html = "<html><body><h1>Settings saved. Restarting...</h1></body></html>";
         AQWiFiConfig::configServer->send(200, "text/html", html);
-        Serial.println("Wifi config is saved! Restarting...");
+        DEBUG_PRINTLN("Wifi config is saved! Restarting...");
         AQWiFiConfig::isConfigDoneFlag = true;
         // Restarting
         delay(100);
@@ -77,17 +77,17 @@ void AQWiFiConfig::saveCredentials()
 // Loads the credentials from the memory to the class members
 void AQWiFiConfig::loadCredentials()
 {
-    Serial.println("Loading configuration from the EEPROM...");
+    DEBUG_PRINTLN("Loading configuration from the EEPROM...");
     // reading data from memory
     AQWiFiConfig::memHandler->actualAddress = AQWiFiConfig::memHandler->wifiConfigDataStartAddress;
     this->WIFI_SSID = AQWiFiConfig::memHandler->readWord();
-    Serial.println("Read ssid: " + this->WIFI_SSID);
+    DEBUG_PRINTLN("Read ssid: " + this->WIFI_SSID);
     // Increment address with the length of str
     this->WIFI_PASS = AQWiFiConfig::memHandler->readWord();
-    Serial.println("Read pass: " + this->WIFI_PASS);
+    DEBUG_PRINTLN("Read pass: " + this->WIFI_PASS);
     AQWiFiConfig::memHandler->actualAddress = AQWiFiConfig::memHandler->systemIdentificationNumberAddress;
     this->systemID = AQWiFiConfig::memHandler->readInt(); // System ID is 0 if not saved before
-    Serial.println("SYSTEM ID: " + String(this->systemID));
+    DEBUG_PRINTLN("SYSTEM ID: " + String(this->systemID));
 }
 
 void AQWiFiConfig::initializeNetwork()
@@ -127,5 +127,5 @@ void AQWiFiConfig::forgetNetwork()
     AQWiFiConfig::memHandler->actualAddress = AQWiFiConfig::memHandler->wifiConfigDataStartAddress;
     AQWiFiConfig::memHandler->clearMemory(
         this->memHandler->wifiConfigDataStartAddress, this->memHandler->configDataStartAddress);
-    Serial.println("Network credentials deleted!");
+    DEBUG_PRINTLN("Network credentials deleted!");
 }

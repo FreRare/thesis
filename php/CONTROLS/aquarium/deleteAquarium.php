@@ -6,14 +6,13 @@ Handles the deletion of an aquarium
 Expects the aquarium's id as a parameter
 Also deletes the user of the aquarium, if this is the user's last one.
 */
-
 if (!empty($_POST["id"])) {
     $id = $_POST["id"];
 
     // Find the owner
     $owner = $DAO->selectUserForAquarium($id);
     if ($owner == null) {
-        error_log("Error: couldn't find user for aquarium, this should never happen!");
+        error_log("Error: couldn't find user for aquarium with id: $id.. This should never happen!");
         die();
     }
     // Get all his aquariums
@@ -40,4 +39,3 @@ if (!empty($_POST["id"])) {
 
 $jsonResponse = json_encode(["data" => $result]);
 echo ($jsonResponse);
-die();

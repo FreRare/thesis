@@ -38,8 +38,8 @@ float SensorHandler::readTempSensor()
         sum += tempBuffer[i];
     }
     float temperature = sum / (endValue - startValue);
-    Serial.print("Temperature measured: ");
-    Serial.println(temperature);
+    DEBUG_PRINT("Temperature measured: ");
+    DEBUG_PRINTLN(temperature);
     return temperature;
 }
 
@@ -70,8 +70,8 @@ LightIntensity SensorHandler::readLightSensor()
         avgSum += lightBuffer[i];
     }
     float value = avgSum / (endValue - startValue);
-    Serial.print("Light measured: ");
-    Serial.println(value);
+    DEBUG_PRINT("Light measured: ");
+    DEBUG_PRINTLN(value);
     // Return the enum value due to the measured value 
     if (value <= PHOTORES_DARK_LIMIT) {
         return LightIntensity::DARK;
@@ -89,8 +89,8 @@ LightIntensity SensorHandler::readLightSensor()
 uint8_t SensorHandler::readWaterSensor()
 {
     const uint16_t value = analogRead(ANALOG_SENSOR_PIN);
-    Serial.print("Water measured: ");
-    Serial.println(value);
+    DEBUG_PRINT("Water measured: ");
+    DEBUG_PRINTLN(value);
     // TODO: return valid percentage
     // TODO: Get a new water level sensor and see how it works
     return 100;
@@ -126,8 +126,8 @@ float SensorHandler::readPhSensor()
     // Calculate PH value from the avg
     float phValue = (float)avg * (REFERECNCE_VOLTAGE / ADC_RESOLUTION);
     float ph = (3.3f * phValue) + this->phCalibration; // Coorigate with calibration value
-    Serial.print("Ph measured: ");
-    Serial.println(ph);
+    DEBUG_PRINT("Ph measured: ");
+    DEBUG_PRINTLN(ph);
     return ph;
 }
 

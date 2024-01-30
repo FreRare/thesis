@@ -1,6 +1,7 @@
 #ifndef deviceInit_h
 #define deviceInit_h
 #include <Arduino.h>
+#include "Debug.h"
 
 /**
  * @brief This file has all the definitions of the used pins, regiter values and peripherial actions
