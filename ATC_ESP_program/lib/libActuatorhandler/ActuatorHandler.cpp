@@ -38,7 +38,7 @@ void ActuatorHandler::channelSwithcer(const uint8_t& channel, const bool& state)
     }
     // Set state to current
     ActuatorHandler::channelStates[channel - 1] = state;
-    // ! updateShiftRegister(this->shiftRegisterState);
+    //! updateShiftRegister(this->shiftRegisterState);
 }
 
 void ActuatorHandler::feed(const uint8_t& portions)

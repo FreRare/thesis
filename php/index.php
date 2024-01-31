@@ -3,7 +3,7 @@ echo ("Server welcome!" . "</br>");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // ONLY UNCOMMENT IF YOU WANT TO RE-INITIALIZE DATABASE, IT DROPS ALL TABLES
 // 
-// ! require_once($_SERVER["DOCUMENT_ROOT"] . '/DAO/Config/dbInit.php');
+//!require_once($_SERVER["DOCUMENT_ROOT"] . '/DAO/Config/dbInit.php');
 // 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 require_once($_SERVER["DOCUMENT_ROOT"] . "/DAO/DAO.php");
@@ -15,6 +15,5 @@ foreach ($user as $u) {
     echo ($u->toJSON());
     echo ("</br>");
 }
-/*$config = $DAO->selectAQConfigForAquarium(1);
-var_dump($config);*/
-?>
+$config = $DAO->selectAQConfigForAquarium(1);
+var_dump($config);

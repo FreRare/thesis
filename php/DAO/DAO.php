@@ -215,7 +215,7 @@ class AQDAO implements AQDAOI
         $stm = $this->connection->prepare(AQDAO::SELECT_CONFIG_FOR_AQUARIUM);
         $stm->bind_param("i", $id);
         $stm->execute();
-        $stm->bind_result($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $waterAlert, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDate);
+        $stm->bind_result($id, $minT, $maxT, $minP, $maxP, $liOn, $liOff, $filOn, $filOff, $airOn, $airOff, $feedT, $foodPort, $filC, $waterC, $samplePeriod, $lModDate);
         $stm->fetch();
         $stm->close();
         $lModDateAsDateTime = new DateTime($lModDate);

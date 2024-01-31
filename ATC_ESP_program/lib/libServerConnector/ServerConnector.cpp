@@ -176,8 +176,8 @@ void ServerConnector::ATCLog(char* str)
         msgLength++;
     }
 
-    char* logData = new char[msgLength + 6];
-    sprintf(logData, "{\"log\":\"%s\"}", str);
+    char* logData = new char[msgLength + 13];
+    sprintf(logData, "{\"id\":\"%3d\",\"log\":\"%s\"}", this->config->getSystemID(), str);
     this->httpClient.begin(this->client, "http://atc.takacsnet.hu/LOG/Logger.php");
     uint16_t response = this->httpClient.POST(logData);
     if (response != HTTP_CODE_OK) {

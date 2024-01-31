@@ -12,7 +12,6 @@ class AquariumConfig
     private $offOutlet2;
     private $onOutlet3;
     private $offOutlet3;
-    private $waterLvlAlert;
     private $feedingTime;
     private $foodPortions;
     private $filterClean;

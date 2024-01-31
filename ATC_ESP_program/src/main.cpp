@@ -132,11 +132,21 @@ void statusHandler()
         default:
             break;
         }
-        delay(20);
     }
-    // After all actions are done shift out the register
     updateShiftRegister(g_actuatorHandler->shiftRegisterState);
 }
+
+void resetLogger()
+{
+    rst_info* resetInfo = ESP.getResetInfoPtr();
+    if (resetInfo->reason == REASON_EXCEPTION_RST) {
+        char rstLog[35];
+        sprintf(rstLog, "Exception reset cause => %d", resetInfo->exccause);
+        rstLog[34] = '\0';
+        g_server->ATCLog(rstLog);
+    }
+}
+
 /*-----------------------------------
 Functions END
 ------------------------------------*/
@@ -152,18 +162,14 @@ void setup()
     pinSetup();
     // Global var initializations
     g_server = new ServerConnector();
-    Serial.println("Server connector initialized!");
     g_actuatorHandler = new ActuatorHandler();
-    Serial.println("Act handler initialized!");
     g_configHandler = new ConfigHandler();
-    Serial.println("Config handler initialized!");
     g_sensorHandler = new SensorHandler();
-    Serial.println("Sensor handler initialized!");
     updateConfig();
     Serial.println("Config updated!");
+    resetLogger();
     // Clean up LCD
     UIHandler::getInstance()->clear();
-
     // Watchdog timer
     ESP.wdtDisable();
     ESP.wdtEnable(WDT_TIMEOUT_MS);
@@ -219,9 +225,10 @@ void loop()
         }
         Serial.print("Free memory available: ");
         Serial.println(ESP.getFreeHeap());
-        gb_minuteIntervalFlag = false;
         Serial.print("Current action loop runtime was [ms]: ");
         Serial.println(millis() - startTimeMs);
+
+        gb_minuteIntervalFlag = false;
     }
     ESP.wdtFeed();
 }
