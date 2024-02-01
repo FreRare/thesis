@@ -12,7 +12,7 @@ Main defines and global vars START
 ------------------------------------*/
 // Debug option, uses Serial.print to log info set to 0 if no debugging is required //! not working
 #define DEBUG 1
-#define UPDATE_INTERVAL_MIN 10U // Configuration update interval in minutes
+#define UPDATE_INTERVAL_MIN 15U // Configuration update interval in minutes
 // Longest loop runtime measure is 10152ms so far...
 #define WDT_TIMEOUT_MS 12000U
 
@@ -36,10 +36,16 @@ Functions START
  */
 void updateConfig()
 {
+    Serial.print("Free stack before config update start: ");
+    Serial.println(ESP.getFreeContStack());
     // Update config from DB
     ConfigData* currentConfig = g_configHandler->getConfiguration();
     ConfigData* config = new ConfigData();
+    Serial.print("Free stack before config update from server: ");
+    Serial.println(ESP.getFreeContStack());
     config = g_server->updateConfigData(config);
+    Serial.print("Free stack after config update: ");
+    Serial.println(ESP.getFreeContStack());
     if (config == nullptr) {
         Serial.println("Downloaded config is NULL!");
         return;
@@ -52,6 +58,8 @@ void updateConfig()
         g_configHandler->saveConfigData(config);
     }
     delete config;
+    Serial.print("Free stack after config update in memory: ");
+    Serial.println(ESP.getFreeContStack());
 }
 
 /**
@@ -140,9 +148,10 @@ void resetLogger()
 {
     rst_info* resetInfo = ESP.getResetInfoPtr();
     if (resetInfo->reason == REASON_EXCEPTION_RST) {
-        char rstLog[35];
-        sprintf(rstLog, "Exception reset cause => %d", resetInfo->exccause);
-        rstLog[34] = '\0';
+        char rstLog[90];
+        sprintf(rstLog, "!!!!!! Exception reset cause => %d :: Stack space: %d, Heap space: %d", resetInfo->exccause,
+            ESP.getFreeContStack(), ESP.getFreeHeap());
+        rstLog[89] = '\0';
         g_server->ATCLog(rstLog);
     }
 }
@@ -204,6 +213,8 @@ void loop()
     Put all actions inside if to be called once every minute
     ----------------------*/
     if (gb_minuteIntervalFlag) {
+        gb_minuteIntervalFlag = false;
+        // Config updating with interval
         if (min % UPDATE_INTERVAL_MIN == 0) {
             updateConfig();
         }
@@ -214,7 +225,6 @@ void loop()
         Serial.print(":");
         Serial.println(sec);
         statusHandler(); //* Statushandler call
-        // Config updating with interval
         delay(500);
         // Screen info update every minute after all actions
         if (g_sensorHandler->getLastSamples() != nullptr) {
@@ -223,12 +233,33 @@ void loop()
         } else {
             UIHandler::writeBasicInfo(0.0F, 0.0F);
         }
-        Serial.print("Free memory available: ");
+        /*--------------------------------
+        Memory log and managment START
+        ---------------------------------*/
+        Serial.print("Free heap available: ");
         Serial.println(ESP.getFreeHeap());
+        Serial.print("Free stack available: ");
+        Serial.println(ESP.getFreeContStack());
         Serial.print("Current action loop runtime was [ms]: ");
         Serial.println(millis() - startTimeMs);
 
-        gb_minuteIntervalFlag = false;
+        // If running low on stack or heap reset the MCU and send log
+        char memoryLog[52];
+        if (ESP.getFreeContStack() < 300) {
+            sprintf(memoryLog, "!!!!!! STACK memory is running low RESETTING !!!!!!");
+            memoryLog[51] = '\0';
+            g_server->ATCLog(memoryLog);
+            ESP.restart();
+        }
+        if (ESP.getFreeHeap() < 1000) {
+            sprintf(memoryLog, "!!!!!! HEAP memory is running low RESETTING !!!!!!!");
+            memoryLog[51] = '\0';
+            g_server->ATCLog(memoryLog);
+            ESP.restart();
+        }
+        /*--------------------------------
+        Memory log and managment END
+        ---------------------------------*/
     }
     ESP.wdtFeed();
 }

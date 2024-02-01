@@ -53,5 +53,6 @@ void ActuatorHandler::feed(const uint8_t& portions)
 void ActuatorHandler::turnProblemLed(bool state)
 {
     state ? this->shiftRegisterState |= SR_PROBLEM_LED_ON : this->shiftRegisterState &= ~SR_PROBLEM_LED_ON;
+    Serial.println("Switching red LED");
     updateShiftRegister(this->shiftRegisterState);
 }

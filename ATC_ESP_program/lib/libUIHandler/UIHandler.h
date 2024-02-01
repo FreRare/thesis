@@ -1,10 +1,10 @@
 #ifndef UIHandler_h
 #define UIHandler_h
+#include "Debug.h"
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 #include <TimeLib.h>
 #include <stdio.h>
-#include "Debug.h"
 
 #define LCD_ADDRESS 0x27
 #define LCD_ROWS 4
@@ -14,9 +14,10 @@
 
 class UIHandler {
 private:
+    float lastPhValue;
+    float lastTempValue;
     static LiquidCrystal_I2C display;
     static UIHandler* instancePtr;
-    bool enableScrollingText;
     UIHandler();
 
 public:

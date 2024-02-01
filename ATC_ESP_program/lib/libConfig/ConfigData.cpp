@@ -11,7 +11,7 @@ ConfigData::ConfigData(const float& minT, const float& maxT, const float& minPh,
     , outlet1Off(OL1Off)
     , outlet2On(OL2On)
     , outlet2Off(OL2Off)
-    , outlet3On(OL3Off)
+    , outlet3On(OL3On)
     , outlet3Off(OL3Off)
     , feedingTime(feedingTime)
     , feedingPortions(foodPort)

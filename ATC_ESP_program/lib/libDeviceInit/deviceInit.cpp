@@ -21,13 +21,16 @@ void updateShiftRegister(uint8_t byteValue)
         (byteValue & 0x04) ? '1' : '0', (byteValue & 0x02) ? '1' : '0', (byteValue & 0x01) ? '1' : '0');
     binaryString[8] = '\0';
 
-    char* msg = new char[64];
+    char* msg = new char[34];
     sprintf(msg, "Updating shift register: %s", binaryString);
     Serial.println(msg);
     delete[] msg;
-    digitalWrite(SHIFT_REGISTER_LATCH_PIN, LOW);
-    shiftOut(SHIFT_REGISTER_DATA_PIN, SHIFT_REGISTER_CLK_PIN, MSBFIRST, byteValue);
-    digitalWrite(SHIFT_REGISTER_LATCH_PIN, HIGH);
+    for (uint8_t i = 0; i < 3; i++) {
+        digitalWrite(SHIFT_REGISTER_LATCH_PIN, LOW);
+        shiftOut(SHIFT_REGISTER_DATA_PIN, SHIFT_REGISTER_CLK_PIN, MSBFIRST, byteValue);
+        digitalWrite(SHIFT_REGISTER_LATCH_PIN, HIGH);
+        delay(20);
+    }
 }
 
 void selectMux(uint8_t channel)

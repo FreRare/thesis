@@ -124,11 +124,13 @@ ConfigData* ServerConnector::updateConfigData(ConfigData* config)
         DynamicJsonDocument configDoc(512);
         DeserializationError err = deserializeJson(configDoc, payload);
         if (err) {
-            DEBUG_PRINTLN("JSON serialization failed!");
+            Serial.println("JSON serialization failed!");
+            configDoc.clear();
             return nullptr;
         }
         if (configDoc["data"]["error"]) {
-            DEBUG_PRINTLN("Error from api!");
+            Serial.println("Error from api!");
+            configDoc.clear();
             return nullptr;
         }
         config = new ConfigData(configDoc["data"]["config"]["minTemp"], configDoc["data"]["config"]["maxTemp"],
@@ -138,6 +140,7 @@ ConfigData* ServerConnector::updateConfigData(ConfigData* config)
             configDoc["data"]["config"]["ol3On"], configDoc["data"]["config"]["ol3Off"],
             configDoc["data"]["config"]["feedingTime"], configDoc["data"]["config"]["foodPortions"],
             configDoc["data"]["config"]["samplePeriod"]);
+        configDoc.clear();
         return config;
     }
     return nullptr;
