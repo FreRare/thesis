@@ -7,7 +7,6 @@ import MenuBarButton from "../components/MenuBarButton";
 import { StyleSheet } from "react-native";
 import NavigationScreens from "./NavigationScreens";
 import User from "../models/User";
-import Aquarium from "../models/Aquarium";
 
 type NavigationProps = {
   user: User | undefined;

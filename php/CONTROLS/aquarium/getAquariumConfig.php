@@ -10,11 +10,7 @@ if (isset($_POST["id"])) {
         $result["error"] = "No config existing for given aquarium! This should never happen...";
     } else {
         // When requested form phone we add an extra flag
-        if (isset($_POST["phone"])) {
-            $result = $config->toPhoneJSON();
-        } else {
-            $result = $config->toEspJSON();
-        }
+        $result = $config->toJSON(isset($_POST["phone"]));
     }
 } else {
     $result["error"] = "Missing data!";

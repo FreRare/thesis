@@ -1,11 +1,11 @@
 #ifndef SensorHandler_h
 #define SensorHandler_h
+#include "Debug.h"
 #include "SensorData.h"
 #include "deviceInit.h"
 #include <DallasTemperature.h>
 #include <OneWire.h>
 #include <TimeLib.h>
-#include "Debug.h"
 
 // ############################### // Light intensity edges
 #define PHOTORES_DARK_LIMIT 176U
@@ -58,6 +58,7 @@ private:
 
 public:
     SensorHandler();
+    ~SensorHandler();
     /**
      * Reads all the sensors and makes a SensorData object out of it
      * @returns - The SensorData object created from the sensors' currently measured data

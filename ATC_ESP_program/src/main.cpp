@@ -12,7 +12,7 @@ Main defines and global vars START
 ------------------------------------*/
 // Debug option, uses Serial.print to log info set to 0 if no debugging is required //! not working
 #define DEBUG 1
-#define UPDATE_INTERVAL_MIN 15U // Configuration update interval in minutes
+#define UPDATE_INTERVAL_MIN 10U // Configuration update interval in minutes
 // Longest loop runtime measure is 10152ms so far...
 #define WDT_TIMEOUT_MS 12000U
 
@@ -22,6 +22,11 @@ ConfigHandler* g_configHandler;
 SensorHandler* g_sensorHandler;
 bool gb_minuteIntervalFlag = true; // Flag to indicate a minute has passed
 uint16_t g_statusCheckLastMinute = 0U; // Stores the last minute status has been checked
+uint32_t g_startTimeMs = 0U; // To measure runtime
+uint16_t g_h = 0U;
+uint16_t g_min = 0U;
+uint16_t g_sec = 0U;
+uint16_t g_minutesSinceMidnight = 0U;
 /*---------------------------------
 Main defines and global vars END
 ------------------------------------*/
@@ -89,11 +94,12 @@ void statusHandler()
     for (size_t i = 0; i < actualStatuses.size(); i++) {
         Serial.print("Handling status code: ");
         Serial.println(actualStatuses[i]);
-        char* log = new char[27];
-        sprintf(log, "Handling system status: %1d", actualStatuses[i]);
-        log[26] = '\0';
-        g_server->ATCLog(log);
-        delete[] log;
+        if (actualStatuses[i] != OK_STATUS) {
+            char log[29];
+            sprintf(log, "Handling system status: %3d", actualStatuses[i]);
+            log[28] = '\0';
+            g_server->ATCLog(log);
+        }
         switch (actualStatuses[i]) {
         case ConfigStatus::LOW_TEMP: // TODO: send notification
             break;
@@ -106,21 +112,31 @@ void statusHandler()
         case ConfigStatus::LOW_WATER: // TODO: send notification
             break;
         case ConfigStatus::OUTLET_1_ON:
+            g_actuatorHandler->channelStates[0] = true;
+            digitalWrite(SHIFT_REGISTER_DATA_PIN, HIGH);
+            break;
             g_actuatorHandler->channelSwithcer(1, true);
             break;
         case ConfigStatus::OUTLET_1_OFF:
+            g_actuatorHandler->channelStates[0] = false;
+            digitalWrite(SHIFT_REGISTER_DATA_PIN, LOW);
+            break;
             g_actuatorHandler->channelSwithcer(1, false);
             break;
         case ConfigStatus::OUTLET_2_ON:
+            break;
             g_actuatorHandler->channelSwithcer(2, true);
             break;
         case ConfigStatus::OUTLET_2_OFF:
+            break;
             g_actuatorHandler->channelSwithcer(2, false);
             break;
         case ConfigStatus::OUTLET_3_ON:
+            break;
             g_actuatorHandler->channelSwithcer(3, true);
             break;
         case ConfigStatus::OUTLET_3_OFF:
+            break;
             g_actuatorHandler->channelSwithcer(3, false);
             break;
         case ConfigStatus::SAMPLE_TIME:
@@ -141,17 +157,17 @@ void statusHandler()
             break;
         }
     }
-    updateShiftRegister(g_actuatorHandler->shiftRegisterState);
+    // updateShiftRegister(g_actuatorHandler->shiftRegisterState);
+    Serial.println("Leaving statushandler..");
 }
 
 void resetLogger()
 {
     rst_info* resetInfo = ESP.getResetInfoPtr();
     if (resetInfo->reason == REASON_EXCEPTION_RST) {
-        char rstLog[90];
-        sprintf(rstLog, "!!!!!! Exception reset cause => %d :: Stack space: %d, Heap space: %d", resetInfo->exccause,
-            ESP.getFreeContStack(), ESP.getFreeHeap());
-        rstLog[89] = '\0';
+        char rstLog[42];
+        sprintf(rstLog, "!!!!!! Exception reset cause => %d", resetInfo->exccause);
+        rstLog[41] = '\0';
         g_server->ATCLog(rstLog);
     }
 }
@@ -162,7 +178,7 @@ Functions END
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(9600);
     while (!Serial)
         ;
     //! MemoryHandler::getInstance()->clearMemory(0, 512);
@@ -189,19 +205,19 @@ void loop()
     /*---------------------
     Time variables and sync START
     ----------------------*/
-    uint32_t startTimeMs = millis(); // To measure runtime
-    uint16_t h = hour();
-    uint16_t min = minute();
-    uint16_t sec = second();
-    const uint16_t minutesSinceMidnight = h * 60 + min;
-    if (h == 0 && min == 0 && sec < 5 && sec > 0) { // At midnight sync time (5 sec interval)
+    g_startTimeMs = millis(); // To measure runtime
+    g_h = hour();
+    g_min = minute();
+    g_sec = second();
+    g_minutesSinceMidnight = g_h * 60 + g_min;
+    if (g_h == 0 && g_min == 0 && g_sec < 5 && g_sec > 0) { // At midnight sync time (5 sec interval)
         g_server->syncNTPTime();
         // We can reset last minute storage here
         g_statusCheckLastMinute = 0;
     }
     // Make sure status check is only performed once every minute
-    if (g_statusCheckLastMinute < minutesSinceMidnight) {
-        g_statusCheckLastMinute = minutesSinceMidnight;
+    if (g_statusCheckLastMinute < g_minutesSinceMidnight) {
+        g_statusCheckLastMinute = g_minutesSinceMidnight;
         gb_minuteIntervalFlag = true;
     }
     /*---------------------
@@ -215,15 +231,15 @@ void loop()
     if (gb_minuteIntervalFlag) {
         gb_minuteIntervalFlag = false;
         // Config updating with interval
-        if (min % UPDATE_INTERVAL_MIN == 0) {
+        if (g_min % UPDATE_INTERVAL_MIN == 0) {
             updateConfig();
         }
         Serial.print("StatusHandler call at: ");
-        Serial.print(h);
+        Serial.print(g_h);
         Serial.print(":");
-        Serial.print(min);
+        Serial.print(g_min);
         Serial.print(":");
-        Serial.println(sec);
+        Serial.println(g_sec);
         statusHandler(); //* Statushandler call
         delay(500);
         // Screen info update every minute after all actions
@@ -241,7 +257,7 @@ void loop()
         Serial.print("Free stack available: ");
         Serial.println(ESP.getFreeContStack());
         Serial.print("Current action loop runtime was [ms]: ");
-        Serial.println(millis() - startTimeMs);
+        Serial.println(millis() - g_startTimeMs);
 
         // If running low on stack or heap reset the MCU and send log
         char memoryLog[52];

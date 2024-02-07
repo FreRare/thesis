@@ -3,7 +3,7 @@
 bool isWiFiConnected()
 {
     if (WiFi.status() != WL_CONNECTED) {
-        DEBUG_PRINTLN("Sensor data posting: Network not connected!");
+        Serial.println("Sensor data posting: Network not connected!");
         return false;
     }
     return true;
@@ -51,8 +51,9 @@ ServerConnector::~ServerConnector()
 {
     WiFi.disconnect();
     delete this->config;
+    this->config = nullptr;
     delete this->timeClient;
-    delete this->config;
+    this->timeClient = nullptr;
 }
 
 NTPClient* ServerConnector::getTimeClient() const { return this->timeClient; }
@@ -74,7 +75,7 @@ bool ServerConnector::connectToNetwork()
             return false;
         }
         delay(2000);
-        DEBUG_PRINTLN("Connecting...");
+        Serial.println("Connecting...");
         connectionTimeout++;
     }
 
@@ -88,19 +89,19 @@ bool ServerConnector::connectToNetwork()
                 DynamicJsonDocument doc(256);
                 DeserializationError error = deserializeJson(doc, payload);
                 if (error) {
-                    DEBUG_PRINTLN("Json serialization failure!");
+                    Serial.println("Json serialization failure!");
                     return false;
                 }
                 uint16_t newSystemID = doc["data"]["system_id"];
                 this->config->saveSystemID(newSystemID);
                 return true;
             } else {
-                DEBUG_PRINT("HTTP error code: ");
-                DEBUG_PRINTLN(String(httpCode));
+                Serial.print("HTTP error code: ");
+                Serial.println(String(httpCode));
                 return false;
             }
         } else {
-            DEBUG_PRINTLN("Connection check failed!");
+            Serial.println("Connection check failed!");
             return false;
         }
     }
@@ -110,7 +111,7 @@ bool ServerConnector::connectToNetwork()
 ConfigData* ServerConnector::updateConfigData(ConfigData* config)
 {
     if (WiFi.status() != WL_CONNECTED) {
-        DEBUG_PRINTLN("Wifi not connected!");
+        Serial.println("Wifi not connected!");
         return NULL;
     }
     this->httpClient.begin(this->client, ServerConnector::configUpdatePath);
@@ -160,18 +161,18 @@ bool ServerConnector::postSensorData(const SensorData* data)
     uint16_t responseCode = this->httpClient.POST(sensorDataJson);
     delete[] sensorDataJson;
     if (responseCode != HTTP_CODE_OK) {
-        DEBUG_PRINT("Sensor data posting: HTTP error: ");
-        DEBUG_PRINTLN(responseCode);
+        Serial.print("Sensor data posting: HTTP error: ");
+        Serial.println(responseCode);
         return false;
     }
-    DEBUG_PRINTLN("Sensor data posted successfully!");
+    Serial.println("Sensor data posted successfully!");
     return true;
 }
 
 void ServerConnector::ATCLog(char* str)
 {
     if (!isWiFiConnected()) {
-        DEBUG_PRINTLN("No WiFi connected, couldn't send log!");
+        Serial.println("No WiFi connected, couldn't send log!");
         return;
     }
     uint16_t msgLength = 0U;
@@ -179,15 +180,14 @@ void ServerConnector::ATCLog(char* str)
         msgLength++;
     }
 
-    char* logData = new char[msgLength + 13];
+    char logData[msgLength + 13];
     sprintf(logData, "{\"id\":\"%3d\",\"log\":\"%s\"}", this->config->getSystemID(), str);
     this->httpClient.begin(this->client, "http://atc.takacsnet.hu/LOG/Logger.php");
     uint16_t response = this->httpClient.POST(logData);
     if (response != HTTP_CODE_OK) {
-        DEBUG_PRINT("Cannot post LOG! ");
-        DEBUG_PRINTLN(response);
+        Serial.print("Cannot post LOG! ");
+        Serial.println(response);
     }
-    delete[] logData;
 }
 
 void ServerConnector::disconnect() { WiFi.disconnect(); }

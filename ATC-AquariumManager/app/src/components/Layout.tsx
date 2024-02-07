@@ -4,8 +4,6 @@ import {
   StyleSheet,
   SafeAreaView,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
 } from "react-native";
 import MenuBar from "./MenuBar";
 import colors from "../../config/colors";

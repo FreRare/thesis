@@ -25,12 +25,11 @@ void updateShiftRegister(uint8_t byteValue)
     sprintf(msg, "Updating shift register: %s", binaryString);
     Serial.println(msg);
     delete[] msg;
-    for (uint8_t i = 0; i < 3; i++) {
-        digitalWrite(SHIFT_REGISTER_LATCH_PIN, LOW);
-        shiftOut(SHIFT_REGISTER_DATA_PIN, SHIFT_REGISTER_CLK_PIN, MSBFIRST, byteValue);
-        digitalWrite(SHIFT_REGISTER_LATCH_PIN, HIGH);
-        delay(20);
-    }
+    digitalWrite(SHIFT_REGISTER_LATCH_PIN, LOW);
+    shiftOut(SHIFT_REGISTER_DATA_PIN, SHIFT_REGISTER_CLK_PIN, MSBFIRST, byteValue);
+    Serial.println("Latching SR...");
+    delay(1000);
+    digitalWrite(SHIFT_REGISTER_LATCH_PIN, HIGH);
 }
 
 void selectMux(uint8_t channel)

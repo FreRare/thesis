@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "803042632191",
+    "project_id": "atc-aquarium-manager",
+    "storage_bucket": "atc-aquarium-manager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803042632191:android:aebc85742f93d9565e47ca",
+        "android_client_info": {
+          "package_name": "com.frerare.atcaquariummanager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvJg0O2z6l--yU0T_Ke3e62oAXuOlcQ_A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

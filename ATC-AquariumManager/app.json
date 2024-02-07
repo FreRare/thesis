@@ -23,7 +23,8 @@
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "package": "com.frerare.atcaquariummanager"
+      "package": "com.frerare.atcaquariummanager",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
@@ -33,6 +34,14 @@
         "projectId": "9d33dc99-5dc7-4cbf-9fa8-8b351cd1b878"
       }
     },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "color": "#ffffff"
+        }
+      ]
+    ],
     "owner": "frerare"
   }
 }

@@ -160,9 +160,9 @@ export default {
   STATS: {
     screenTitle: "Statistics",
     dayDataRangeText: "1 day",
-    weekDataRangeText: "1 week",
-    twoWeeksDataRangeText: "2 weeks",
-    monthDataRangeText: "1 month",
+    weekDataRangeText: "7 days",
+    twoWeeksDataRangeText: "14 days",
+    monthDataRangeText: "30 days",
   },
   PROFILE: {
     editFormTitle: "Edit profile",

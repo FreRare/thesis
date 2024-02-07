@@ -6,23 +6,28 @@ SensorHandler::SensorHandler()
     , lastSamples(nullptr)
 {
     this->sensors.begin(); // Begin the onewire transmission for sensors
-    this->phCalibration = 0.8f; //TODO: Recalibrate
+    this->phCalibration = 0.8f; // TODO: Recalibrate
+}
+SensorHandler::~SensorHandler()
+{
+    delete this->lastSamples;
+    this->lastSamples = nullptr;
 }
 
 float SensorHandler::readTempSensor()
 {
     float tempBuffer[SENSOR_BUF_SIZE];
     // Get samples
-    for(uint8_t i=0;i<SENSOR_BUF_SIZE;i++){
+    for (uint8_t i = 0; i < SENSOR_BUF_SIZE; i++) {
         this->sensors.requestTemperatures();
         tempBuffer[i] = sensors.getTempCByIndex(0);
         delay(SENSOR_AVG_TIME_DIFF_MS);
     }
-    // Sort array   
+    // Sort array
     float temp = 0.0f;
-    for(uint8_t i = 0; i<SENSOR_BUF_SIZE;i++){
-        for(uint8_t j = i+1; j<SENSOR_BUF_SIZE;j++){
-            if(tempBuffer[i] > tempBuffer[j]){
+    for (uint8_t i = 0; i < SENSOR_BUF_SIZE; i++) {
+        for (uint8_t j = i + 1; j < SENSOR_BUF_SIZE; j++) {
+            if (tempBuffer[i] > tempBuffer[j]) {
                 temp = tempBuffer[i];
                 tempBuffer[i] = tempBuffer[j];
                 tempBuffer[j] = temp;
@@ -31,15 +36,15 @@ float SensorHandler::readTempSensor()
     }
 
     float sum = 0.0f;
-     // Calculating average in the range of given below (in case of 10 samples, the middle 6)
-    uint8_t startValue = (uint8_t) SENSOR_DAT_ARRAY_AVG_WINDOW_DIFF;
+    // Calculating average in the range of given below (in case of 10 samples, the middle 6)
+    uint8_t startValue = (uint8_t)SENSOR_DAT_ARRAY_AVG_WINDOW_DIFF;
     uint8_t endValue = SENSOR_BUF_SIZE - startValue;
     for (uint8_t i = startValue; i < endValue; i++) {
         sum += tempBuffer[i];
     }
     float temperature = sum / (endValue - startValue);
-    DEBUG_PRINT("Temperature measured: ");
-    DEBUG_PRINTLN(temperature);
+    Serial.print("Temperature measured: ");
+    Serial.println(temperature);
     return temperature;
 }
 
@@ -47,15 +52,15 @@ LightIntensity SensorHandler::readLightSensor()
 {
     uint16_t lightBuffer[SENSOR_BUF_SIZE];
 
-    for(uint8_t i=0;i<SENSOR_BUF_SIZE;i++){
+    for (uint8_t i = 0; i < SENSOR_BUF_SIZE; i++) {
         lightBuffer[i] = analogRead(ANALOG_SENSOR_PIN);
         delay(SENSOR_AVG_TIME_DIFF_MS);
     }
 
     uint16_t temp = 0u;
-    for(uint8_t i = 0; i<SENSOR_BUF_SIZE;i++){
-        for(uint8_t j = i+1;j<SENSOR_BUF_SIZE;j++){
-            if(lightBuffer[i] > lightBuffer[j]){
+    for (uint8_t i = 0; i < SENSOR_BUF_SIZE; i++) {
+        for (uint8_t j = i + 1; j < SENSOR_BUF_SIZE; j++) {
+            if (lightBuffer[i] > lightBuffer[j]) {
                 temp = lightBuffer[i];
                 lightBuffer[i] = lightBuffer[j];
                 lightBuffer[j] = temp;
@@ -64,15 +69,15 @@ LightIntensity SensorHandler::readLightSensor()
     }
 
     uint16_t avgSum = 0u;
-    uint8_t startValue = (uint8_t) SENSOR_BUF_SIZE / (SENSOR_BUF_SIZE / 2);
-    uint8_t endValue = (uint8_t) SENSOR_BUF_SIZE - (SENSOR_BUF_SIZE / 5);
+    uint8_t startValue = (uint8_t)SENSOR_BUF_SIZE / (SENSOR_BUF_SIZE / 2);
+    uint8_t endValue = (uint8_t)SENSOR_BUF_SIZE - (SENSOR_BUF_SIZE / 5);
     for (uint8_t i = startValue; i < endValue; i++) {
         avgSum += lightBuffer[i];
     }
     float value = avgSum / (endValue - startValue);
-    DEBUG_PRINT("Light measured: ");
-    DEBUG_PRINTLN(value);
-    // Return the enum value due to the measured value 
+    Serial.print("Light measured: ");
+    Serial.println(value);
+    // Return the enum value due to the measured value
     if (value <= PHOTORES_DARK_LIMIT) {
         return LightIntensity::DARK;
     } else if (PHOTORES_DARK_LIMIT < value && value <= PHOTORES_SHADY_LIMIT) {
@@ -89,8 +94,8 @@ LightIntensity SensorHandler::readLightSensor()
 uint8_t SensorHandler::readWaterSensor()
 {
     const uint16_t value = analogRead(ANALOG_SENSOR_PIN);
-    DEBUG_PRINT("Water measured: ");
-    DEBUG_PRINTLN(value);
+    Serial.print("Water measured: ");
+    Serial.println(value);
     // TODO: return valid percentage
     // TODO: Get a new water level sensor and see how it works
     return 100;
@@ -117,8 +122,8 @@ float SensorHandler::readPhSensor()
     }
     // Calculating average in the range of given below (in case of 10 samples, the middle 6)
     uint16_t avgSum = 0u;
-    uint8_t startValue = (uint8_t) SENSOR_BUF_SIZE / (SENSOR_BUF_SIZE / 2);
-    uint8_t endValue = (uint8_t) SENSOR_BUF_SIZE - (SENSOR_BUF_SIZE / 5);
+    uint8_t startValue = (uint8_t)SENSOR_BUF_SIZE / (SENSOR_BUF_SIZE / 2);
+    uint8_t endValue = (uint8_t)SENSOR_BUF_SIZE - (SENSOR_BUF_SIZE / 5);
     for (uint8_t i = startValue; i < endValue; i++) {
         avgSum += phBuffer[i];
     }
@@ -126,8 +131,8 @@ float SensorHandler::readPhSensor()
     // Calculate PH value from the avg
     float phValue = (float)avg * (REFERECNCE_VOLTAGE / ADC_RESOLUTION);
     float ph = (3.3f * phValue) + this->phCalibration; // Coorigate with calibration value
-    DEBUG_PRINT("Ph measured: ");
-    DEBUG_PRINTLN(ph);
+    Serial.print("Ph measured: ");
+    Serial.println(ph);
     return ph;
 }
 

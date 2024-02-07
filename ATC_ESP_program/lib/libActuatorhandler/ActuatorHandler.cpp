@@ -11,7 +11,11 @@ ActuatorHandler::ActuatorHandler()
     updateShiftRegister(this->shiftRegisterState);
 }
 
-ActuatorHandler::~ActuatorHandler() { delete[] ActuatorHandler::channelStates; }
+ActuatorHandler::~ActuatorHandler()
+{
+    delete[] channelStates;
+    channelStates = nullptr;
+}
 
 void ActuatorHandler::channelSwithcer(const uint8_t& channel, const bool& state)
 {

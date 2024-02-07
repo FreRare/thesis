@@ -12,11 +12,15 @@ UIHandler::UIHandler()
     UIHandler::display.clear();
 }
 
-UIHandler::~UIHandler() { delete UIHandler::instancePtr; }
+UIHandler::~UIHandler()
+{
+    delete instancePtr;
+    instancePtr = nullptr;
+}
 
 UIHandler* UIHandler::getInstance()
 {
-    if (UIHandler::instancePtr == NULL) {
+    if (UIHandler::instancePtr == nullptr) {
         UIHandler::instancePtr = new UIHandler();
     }
     return UIHandler::instancePtr;
@@ -103,7 +107,8 @@ void coorigateDigits(int h, int min, char str[6])
 
 void UIHandler::writeBasicInfo(const float& ph, const float& temp)
 {
-    // * UIHandler::display.clear();
+    UIHandler::display.clear();
+    UIHandler::display.home();
     // Display clock data
     int h = hour();
     int min = minute();

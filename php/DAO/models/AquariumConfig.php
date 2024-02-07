@@ -213,30 +213,7 @@ class AquariumConfig
         $this->lastModifiedDate = $lastModifiedDate;
     }
 
-    public function toPhoneJSON()
-    {
-        $t = [];
-        $t["minTemp"] = $this->minTemp;
-        $t["maxTemp"] = $this->maxTemp;
-        $t["minPh"] = $this->minPh;
-        $t["maxPh"] = $this->maxPh;
-        $t["ol1On"] = $this->onOutlet1;
-        $t["ol2On"] = $this->onOutlet2;
-        $t["ol3On"] = $this->onOutlet3;
-        $t["ol1Off"] = $this->offOutlet1;
-        $t["ol2Off"] = $this->offOutlet2;
-        $t["ol3Off"] = $this->offOutlet3;
-        $t["feedingTime"] = $this->feedingTime;
-        $t["foodPortions"] = $this->foodPortions;
-        $t["filterClean"] = $this->filterClean;
-        $t["waterChange"] = $this->waterChange;
-        $t["samplePeroid"] = $this->samplePeriod;
-        $t["lastModifiedDate"] = $this->lastModifiedDate;
-
-        return (["config" => $t]);
-    }
-
-    public function toEspJSON()
+    public function toJSON(bool $toESPFlag)
     {
         $t = [];
         $t["minTemp"] = $this->minTemp;
@@ -252,7 +229,11 @@ class AquariumConfig
         $t["feedingTime"] = $this->feedingTime;
         $t["foodPortions"] = $this->foodPortions;
         $t["samplePeriod"] = $this->samplePeriod;
-
+        if ($toESPFlag) {
+            $t["lastModifiedDate"] = $this->lastModifiedDate;
+            $t["filterClean"] = $this->filterClean;
+            $t["waterChange"] = $this->waterChange;
+        }
         return (["config" => $t]);
     }
 }

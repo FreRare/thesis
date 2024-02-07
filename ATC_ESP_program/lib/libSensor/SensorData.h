@@ -21,6 +21,7 @@ private:
     time_t timeStamp;
 
 public:
+    SensorData() = default;
     SensorData(
         const float& temp, const float& ph, const LightIntensity& light, const uint8_t& waterLvl, const time_t& time);
 
