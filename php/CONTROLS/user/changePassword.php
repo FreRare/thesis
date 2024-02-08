@@ -7,8 +7,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
 if (!empty($_POST["email"]) && !empty($_POST["oldPass"]) && !empty($_POST["newPass"])) {
     $email = $_POST["email"];
-    $password = $_POST["oldPass"];
-    $newPassword = $_POST["newPass"];
+    $password = hash("sha256", $_POST["oldPass"]);
+    $newPassword = hash("sha256", $_POST["newPass"]);
 
     $user = $DAO->selectUserByEmail($email);
     if ($user === null) {

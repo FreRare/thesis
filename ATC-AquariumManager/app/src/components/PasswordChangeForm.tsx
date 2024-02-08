@@ -45,6 +45,8 @@ function PasswordChangeForm(props: ChangePasswordFormProps) {
         <TextInput
           style={commonStyles.input}
           onChangeText={(t: string) => setOldPass(t)}
+          autoCapitalize="none"
+          secureTextEntry={true}
         />
       </View>
       <View style={commonStyles.vertical}>
@@ -52,6 +54,8 @@ function PasswordChangeForm(props: ChangePasswordFormProps) {
         <TextInput
           style={commonStyles.input}
           onChangeText={(t: string) => setNewPass(t)}
+          autoCapitalize="none"
+          secureTextEntry={true}
         />
       </View>
       <View style={commonStyles.vertical}>
@@ -59,6 +63,8 @@ function PasswordChangeForm(props: ChangePasswordFormProps) {
         <TextInput
           style={commonStyles.input}
           onChangeText={(t: string) => setNewPassAgain(t)}
+          autoCapitalize="none"
+          secureTextEntry={true}
         />
       </View>
       <TouchableOpacity

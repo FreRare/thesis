@@ -27,6 +27,7 @@ if (!isset($result["error"])) {
         // IF we have a new token set
         if (isset($_POST["token"])) {
             $newToken = $_POST["token"];
+            error_log("Updating user's [$email] device token for: $newToken");
             $tryUser->setDeviceToken($newToken);
             $res = $DAO->updateUser($tryUser, $tryUser->getEmail());
             if (!$res) {

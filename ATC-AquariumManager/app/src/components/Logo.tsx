@@ -2,7 +2,7 @@ import React from "react";
 import { Image, StyleSheet } from "react-native";
 
 function Logo() {
-  const logoImg = require("../../assets/ATC_logo_8.png");
+  const logoImg = require("../../assets/ATC_logo.png");
   return <Image source={logoImg} style={styles.logo} />;
 }
 

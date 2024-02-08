@@ -3,9 +3,9 @@
 This file is responsble for updating user
 Expects user data as json trough $POST
 */
-require_once($_SERVER["DOCUMENT_ROOT"] . "CONTROLS/config/controlConfig.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
-if (!empty($_POST["email"]) && !empty($_POST["newEmail"]) && !empty($_POST["fistName"]) && !empty($_POST["lastName"])) {
+if (!empty($_POST["email"]) && !empty($_POST["newMail"]) && !empty($_POST["firstName"]) && !empty($_POST["lastName"])) {
     $email = $_POST["email"];
     $newEmail = $_POST["newEmail"];
     $firstName = $_POST["firstName"];

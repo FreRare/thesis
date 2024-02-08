@@ -39,15 +39,15 @@ if (!isset($_POST)) {
     $content .= " === " . $systemStats[$status];
 
     /*
-    Notification testing!!!
-    */
+    Notification testing!!! WORKS!!!
+    
     $user = $DAO->selectUserForAquarium($id);
     if ($user->getDeviceToken() == "NO_DEVICE_TOKEN") {
         error_log("For system user $id - Notifications are not permitted!");
     } else {
         $notificationCtrl = new NotificationControl($user->getDeviceToken());
         $notificationCtrl->send("Samples taken!");
-    }
+    }*/
 }
 // Dump log to file
 file_put_contents($filePath, $content . PHP_EOL, FILE_APPEND);

@@ -12,7 +12,7 @@ class NotificationControl
     public function send(string $notificationContent)
     {
         $payload = array(
-            'to' => "ExponentPushToken[$this->client]",
+            'to' => "$this->client",
             'sound' => "default",
             'body' => $notificationContent,
         );
