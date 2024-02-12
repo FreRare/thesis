@@ -48,7 +48,7 @@ class NotificationControl
         if ($err) {
             error_log("cURL Error #:" . $err);
         } else {
-            error_log($response);
+            error_log("Notification sent to user [$this->client] === " . $response);
         }
     }
 }

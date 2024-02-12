@@ -27,8 +27,9 @@ const INFO_DATA = [
     title: "Configurations",
     data: [
       "See all the configurations of your selected aquarium",
-      "Select which of your aquarium's configurations you want to see",
+      "Select which of your aquariums' configurations you want to see",
       "Edit the different configurations of your selected aquarium",
+      "Changes may take a few minutes to be applied!"
     ],
   },
   {
@@ -36,6 +37,7 @@ const INFO_DATA = [
     data: [
       "Select the aquarium which's statistics you want to see",
       "View the statistics of the selected aquarium including temperatue, Ph, light and water level",
+      "You can also set the time interval of the statistics"
     ],
   },
   {
@@ -63,21 +65,12 @@ function InfoScreen(props: InfoScreenProps) {
       <View style={styles.container}>
         <Text style={styles.title}>{strings.info}</Text>
         <Text style={styles.item}>
-          This application is made to connect you with your aquarium's ATC
-          system trough your phone. You can easily monitor your aquarium's
-          status and see statistics made of it. (Status can only be monitored if
-          your ATC system is set up properly) You can also configure the
-          parameters and timings to your preference and get notifications if any
-          of the measured values are out of your preferred range. You can also
-          get notifications about your scheduled cleaning times. You can keep
-          track of multiple aquariums at the same time if you have different ATC
-          systems for them. Below you can see what options you have to manage
-          your system(s) and how you can access them.
+          {strings.INFO.basicInformation}
         </Text>
         <SectionList
           sections={INFO_DATA}
           renderItem={({ item }) => (
-            <View style={styles.itemConteiner}>
+            <View style={styles.itemContainer}>
               <Icon
                 name={item.includes("!") ? "exclamation" : "check"}
                 size={20}
@@ -109,10 +102,11 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 5,
   },
-  itemConteiner: {
+  itemContainer: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
+    paddingRight: 30,
   },
   item: {
     fontStyle: "italic",

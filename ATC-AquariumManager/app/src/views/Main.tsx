@@ -24,9 +24,6 @@ function Main() {
     responseListener.current = Notification.addNotificationResponseReceivedListener(response => {
       console.log(response);
     });
-
-    
-  
     return () => {
       Notification.removeNotificationSubscription(notificationListener.current as Notification.Subscription);
       Notification.removeNotificationSubscription(responseListener.current as Notification.Subscription);

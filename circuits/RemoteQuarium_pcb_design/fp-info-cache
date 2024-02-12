@@ -1,4 +1,4 @@
-22212239503150660
+22215654351120908
 Arduino_NANO_mounting_holes
 Arduino_Nano_HEADER_SMD
 Arduino Nano, http://www.mouser.com/pdfdocs/Gravitech_Arduino_Nano3_0.pdf
@@ -64742,6 +64742,13 @@ Mounting 4.5mm 9774100982
 0
 8
 1
+NXW
+NXW-02P
+
+
+0
+2
+2
 NetTie
 NetTie-2_SMD_Pad0.5mm
 Net tie, 2 pin, 0.5mm square SMD pads
@@ -65876,6 +65883,13 @@ DIL DIP PDIP 2.54mm 7.62mm 300mil
 0
 4
 4
+PESD5V0S2BT
+SOT23
+
+
+0
+3
+3
 Package_BGA
 Analog_BGA-28_4.0x6.25mm_Layout4x7_P0.8mm_Ball0.45mm_Pad0.4
 Analog BGA-28 4.0mm x 6.25mm package, pitch 0.4mm pad, based on https://www.analog.com/media/en/technical-documentation/data-sheets/8063fa.pdf

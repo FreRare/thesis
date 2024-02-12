@@ -1,6 +1,6 @@
 import strings from "../../config/strings";
 
-const ENUM_LENGTH = 9;
+const ENUM_LENGTH = 8;
 
 /**
  * @enum {number}
@@ -41,9 +41,8 @@ const getStringValue = (val: number): string => {
       return strings.sample12Hour;
     case SamplePeriod.SAMPLE_DAILY:
       return strings.sampleDaily;
-    default:
-      return strings.choose;
   }
+  return "Wrong choice";
 };
 
 export { getStringValue, ENUM_LENGTH, SamplePeriod };

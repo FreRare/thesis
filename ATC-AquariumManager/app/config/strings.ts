@@ -145,7 +145,7 @@ export default {
   oldPasswordAgain: "Confirm old password:",
   newPasswordAgain: "Confirm new password:",
   newPassword: "New password:",
-  successfulUpdate: "Successfully updated!",
+  successfulUpdate: "Successfully updated! Changes may take a few minutes to apply.",
   ALERTS: {
     deleteAquariumAlertMessage:
       "Are you sure you want to delete this aquarium? By deleting it the ATC-system will set to factory reset and only be usable again after reboot.",
@@ -172,4 +172,7 @@ export default {
     newPassCannotBeOldMessage:
       "New password can't be the same as old password!",
   },
+  INFO:{
+    basicInformation: "This application is made to connect you with your aquarium's ATC system trough your phone. You can easily monitor your aquarium's status and see statistics made of it. (Status can only be monitored if your ATC system is set up properly) You can also configure the parameters and timings to your preference and get notifications if any of the measured values are out of your preferred range. You can also get notifications about your scheduled cleaning times. You can keep track of multiple aquariums at the same time if you have different ATC systems for them. Below you can see what options you have to manage your system(s) and how you can access them."
+  }
 };
