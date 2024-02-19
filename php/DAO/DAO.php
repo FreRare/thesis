@@ -40,6 +40,7 @@ class AQDAO implements AQDAOI
     private const SELECT_USER_BY_AQUARIUM_ID = "SELECT users.email, users.firstName, users.lastName, users.password, users.deviceToken, users.authToken FROM haveAquarium INNER JOIN users ON users.email = haveAquarium.email WHERE haveAquarium.id = ?  AND users.inactive IS NOT true";
     private const DELETE_HAVE_AQUARIUM_BY_ID = "DELETE FROM haveAquarium WHERE id = ?";
     private const DELETE_HAVE_AQUARIUM_BY_USER = "DELETE FROM haveAquarium WHERE email = ?";
+
     protected function __construct()
     {
         $this->config = new DBConfig();
@@ -48,7 +49,7 @@ class AQDAO implements AQDAOI
             $this->config->getUser("DAO"),
             $this->config->getPassword("DAO"),
             $this->config->getDatabase("DAO"),
-            $this->config->getPort("DAO")
+            $this->config->getPort("DAO") //TODO:  Gets too many connections sometimes
         );
         if (!$this->connection || mysqli_connect_error()) {
             die("Connection failed!!!" . mysqli_connect_error());
@@ -61,6 +62,11 @@ class AQDAO implements AQDAOI
                 error_log("Error while connecting => " . $this->connection->error);
             }
         }
+    }
+    protected function __destruct()
+    {
+        // TODO ?
+        // $this->connection->close();
     }
     public static function getInstance(): AQDAO
     {

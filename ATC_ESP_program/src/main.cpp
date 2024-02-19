@@ -94,6 +94,7 @@ void statusHandler()
     for (size_t i = 0; i < actualStatuses.size(); i++) {
         Serial.print("Handling status code: ");
         Serial.println(actualStatuses[i]);
+        Serial.println("========================");
         if (actualStatuses[i] != OK_STATUS) {
             char log[29];
             sprintf(log, "Handling system status: %3d", actualStatuses[i]);
@@ -101,15 +102,20 @@ void statusHandler()
             g_server->ATCLog(log);
         }
         switch (actualStatuses[i]) {
-        case ConfigStatus::LOW_TEMP: // TODO: send notification
+        case ConfigStatus::LOW_TEMP:
+            g_server->postErrorCode(ConfigStatus::LOW_TEMP);
             break;
-        case ConfigStatus::HIGH_TEMP: // TODO: send notification
+        case ConfigStatus::HIGH_TEMP:
+            g_server->postErrorCode(ConfigStatus::HIGH_TEMP);
             break;
-        case ConfigStatus::LOW_PH: // TODO: send notification
+        case ConfigStatus::LOW_PH:
+            g_server->postErrorCode(ConfigStatus::LOW_PH);
             break;
-        case ConfigStatus::HIGH_PH: // TODO: send notification
+        case ConfigStatus::HIGH_PH:
+            g_server->postErrorCode(ConfigStatus::HIGH_PH);
             break;
-        case ConfigStatus::LOW_WATER: // TODO: send notification
+        case ConfigStatus::LOW_WATER: 
+            g_server->postErrorCode(ConfigStatus::LOW_WATER);
             break;
         case ConfigStatus::OUTLET_1_ON:
             g_actuatorHandler->channelStates[0] = true;
@@ -141,15 +147,18 @@ void statusHandler()
             break;
         case ConfigStatus::SAMPLE_TIME:
             if (!takeSensorSample()) {
-                // TODO: send error
+                g_server->postErrorCode(ConfigStatus::SAMPLE_TIME);
             }
             break;
         case ConfigStatus::FEEDING_TIME:
+            break;
             g_actuatorHandler->feed(g_configHandler->getConfiguration()->getFeedingPortions());
             break;
-        case ConfigStatus::BROKEN_LIGHT: // TODO: send notification
+        case ConfigStatus::BROKEN_LIGHT:
+            g_server->postErrorCode(ConfigStatus::BROKEN_LIGHT);
             break;
-        case ConfigStatus::ERROR: // TODO: send error
+        case ConfigStatus::ERROR: 
+            g_server->postErrorCode(ConfigStatus::ERROR);
             break;
         case ConfigStatus::OK_STATUS:
             break;
@@ -157,6 +166,7 @@ void statusHandler()
             break;
         }
     }
+    g_server->postErrorCode(ConfigStatus::LOW_WATER);
     // updateShiftRegister(g_actuatorHandler->shiftRegisterState);
     Serial.println("Leaving statushandler..");
 }
@@ -164,12 +174,10 @@ void statusHandler()
 void resetLogger()
 {
     rst_info* resetInfo = ESP.getResetInfoPtr();
-    if (resetInfo->reason == REASON_EXCEPTION_RST) {
-        char rstLog[42];
-        sprintf(rstLog, "!!!!!! Exception reset cause => %d", resetInfo->exccause);
-        rstLog[41] = '\0';
-        g_server->ATCLog(rstLog);
-    }
+    char rstLog[42];
+    sprintf(rstLog, "!!!!!! Exception reset cause => %d", resetInfo->exccause);
+    rstLog[41] = '\0';
+    g_server->ATCLog(rstLog);
 }
 
 /*-----------------------------------
@@ -214,6 +222,8 @@ void loop()
         g_server->syncNTPTime();
         // We can reset last minute storage here
         g_statusCheckLastMinute = 0;
+        // Reset notification flags
+        g_server->resetNotificationFlags();
     }
     // Make sure status check is only performed once every minute
     if (g_statusCheckLastMinute < g_minutesSinceMidnight) {
@@ -240,6 +250,7 @@ void loop()
         Serial.print(g_min);
         Serial.print(":");
         Serial.println(g_sec);
+        Serial.println("========================");
         statusHandler(); //* Statushandler call
         delay(500);
         // Screen info update every minute after all actions
@@ -252,12 +263,14 @@ void loop()
         /*--------------------------------
         Memory log and managment START
         ---------------------------------*/
+        Serial.println("******************");
         Serial.print("Free heap available: ");
         Serial.println(ESP.getFreeHeap());
         Serial.print("Free stack available: ");
         Serial.println(ESP.getFreeContStack());
         Serial.print("Current action loop runtime was [ms]: ");
         Serial.println(millis() - g_startTimeMs);
+        Serial.println("******************");
 
         // If running low on stack or heap reset the MCU and send log
         char memoryLog[52];

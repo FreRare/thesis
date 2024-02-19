@@ -16,8 +16,9 @@
 #define CONN_TIMEOUT 60 // Connection timeout = timeout * 2 seconds
 // (2 min should be enough after power outage for the wifi to reboot)
 #define SYSTEMID_TEXT_LENGTH 20 // The length of the string to display system id
-#define CONFIG_UPDATE_POST_DATA_LENGTH 17 // The length of the str to send config update json
+#define CONFIG_UPDATE_POST_DATA_LENGTH 18 // The length of the str to send config update json
 #define SESNOR_DATA_POST_LENGTH 116 // The length of the str to post sensor data
+#define NOTIFICATION_DATA_LENGTH 36// Length of the notification data
 #define NTP_SERVER_ADDRESS "pool.ntp.org"
 
 /**
@@ -35,6 +36,13 @@ private:
     static const char* sensorDataUploadPath;
     static const char* notificationPath;
     static const char* configUpdatePath;
+
+    bool lowTempNotificationSent;
+    bool highTempNotificationSent;
+    bool lowPhNotificationSent;
+    bool highPhNotificationSent;
+    bool brokenLightNotificationSent;
+    bool lowWaterNotificationSent;
 
 public:
     /**
@@ -73,6 +81,11 @@ public:
      * Sends a config status code to the API when a problem occurs
      */
     void postErrorCode(const ConfigStatus& status);
+    /**
+     * @brief Resets the notification flags
+     * Some notifications should only be sent once a day so this function should be called along with NTP sync so it can reset the flags
+     */
+    void resetNotificationFlags();
     /**
      * Checks if the system's aquarium has been inactivated or no
      * If it is inactive resets the system to factory reset ->

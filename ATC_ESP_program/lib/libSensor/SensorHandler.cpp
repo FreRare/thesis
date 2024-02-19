@@ -45,6 +45,10 @@ float SensorHandler::readTempSensor()
     float temperature = sum / (endValue - startValue);
     Serial.print("Temperature measured: ");
     Serial.println(temperature);
+    if(temperature < 0){
+        Serial.println("Calling temperature sensor sampler again..");
+        temperature = this->readTempSensor();
+    }
     return temperature;
 }
 

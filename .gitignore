@@ -1,24 +1,10 @@
+# 
 ATC_ESP_program/.pio
+# VS code own
 ATC_ESP_program/.vscode
+
 # node modules
 **/node_modules/
 
 # Circuit backup files
-circuits/**/*-backups
-
-# android app ignores
-ATC_project/*.iml
-ATC_project/.gradle
-ATC_project/local.properties
-ATC_project/.idea/caches
-ATC_project/.idea/libraries
-ATC_project/.idea/modules.xml
-ATC_project/.idea/workspace.xml
-ATC_project/.idea/navEditor.xml
-ATC_project/.idea/assetWizardSettings.xml
-ATC_project/.DS_Store
-ATC_project/build
-ATC_project/captures
-ATC_project/.externalNativeBuild
-ATC_project/.cxx
-ATC_project/local.properties
+circuits/RemoteQuarium_pcb_design-backups/

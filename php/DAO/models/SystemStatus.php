@@ -1,0 +1,19 @@
+<?php
+$systemStats = [
+    "OK_STATUS",
+    "LOW_TEMP",
+    "HIGH_TEMP",
+    "LOW_PH",
+    "HIGH_PH",
+    "LOW_WATER",
+    "OUTLET_1_ON",
+    "OUTLET_1_OFF",
+    "OUTLET_2_ON",
+    "OUTLET_2_OFF",
+    "OUTLET_3_ON",
+    "OUTLET_3_OFF",
+    "SAMPLE_TIME",
+    "FEEDING_TIME",
+    "BROKEN_LIGHT",
+    "ERROR"
+];

@@ -11,10 +11,10 @@ bool isWiFiConnected()
 
 const char* ServerConnector::connectionCheckPath = "http://atc.takacsnet.hu/CONTROLS/aquarium/connectionCheck.php";
 const char* ServerConnector::sensorDataUploadPath = "http://atc.takacsnet.hu/CONTROLS/aquarium/sensorDataUpload.php";
-const char* ServerConnector::notificationPath = "http://atc.takacsnet.hu/CONTROLS/notification/notification.php";
+const char* ServerConnector::notificationPath = "http://atc.takacsnet.hu/CONTROLS/notification/notificationHandler.php";
 const char* ServerConnector::configUpdatePath = "http://atc.takacsnet.hu/CONTROLS/aquarium/getAquariumConfig.php";
 
-ServerConnector::ServerConnector()
+ServerConnector::ServerConnector(): lowTempNotificationSent(false), highTempNotificationSent(false), lowPhNotificationSent(false), highPhNotificationSent(false),  brokenLightNotificationSent(false), lowWaterNotificationSent(false)
 {
     this->timeClient = new NTPClient(this->ntpUDP, NTP_SERVER_ADDRESS);
     this->config = new AQWiFiConfig();
@@ -116,10 +116,10 @@ ConfigData* ServerConnector::updateConfigData(ConfigData* config)
     }
     this->httpClient.begin(this->client, ServerConnector::configUpdatePath);
     this->httpClient.addHeader("Content-Type", "application/json");
-    char* postData = new char[CONFIG_UPDATE_POST_DATA_LENGTH];
+    char postData[CONFIG_UPDATE_POST_DATA_LENGTH];
     sprintf(postData, "{\"id\":\"%d\"}", this->config->getSystemID());
+    postData[CONFIG_UPDATE_POST_DATA_LENGTH-1] = '\0';
     uint16_t responseCode = this->httpClient.POST(postData);
-    delete[] postData;
     if (responseCode == HTTP_CODE_OK) {
         String payload = this->httpClient.getString();
         DynamicJsonDocument configDoc(512);
@@ -152,14 +152,13 @@ bool ServerConnector::postSensorData(const SensorData* data)
     if (!isWiFiConnected()) {
         return false;
     }
-    char* sensorDataJson = new char[SESNOR_DATA_POST_LENGTH];
+    char sensorDataJson[SESNOR_DATA_POST_LENGTH];
     sprintf(sensorDataJson,
         "{\"id\":\"%d\",\"temp\":\"%2.2f\",\"ph\":\"%2.2f\",\"light\":\"%1d\",\"water\":\"%d\",\"timestamp\":\"%lld\"}",
         this->config->getSystemID(), data->getTemperature(), data->getPh(), data->getLightAmount(), data->getWaterLvl(),
         data->getTimeStamp());
     this->httpClient.begin(this->client, ServerConnector::sensorDataUploadPath);
     uint16_t responseCode = this->httpClient.POST(sensorDataJson);
-    delete[] sensorDataJson;
     if (responseCode != HTTP_CODE_OK) {
         Serial.print("Sensor data posting: HTTP error: ");
         Serial.println(responseCode);
@@ -167,6 +166,83 @@ bool ServerConnector::postSensorData(const SensorData* data)
     }
     Serial.println("Sensor data posted successfully!");
     return true;
+}
+
+void ServerConnector::resetNotificationFlags(){
+    this->lowTempNotificationSent = false;
+    this->highTempNotificationSent = false;
+    this->lowPhNotificationSent = false;
+    this->highPhNotificationSent = false;
+    this->lowWaterNotificationSent = false;
+    this->brokenLightNotificationSent = false;
+}
+
+void ServerConnector::postErrorCode(const ConfigStatus& status){
+    // Checking if we have to send notifications to the give status, these statuses only should be sent once a day
+    switch(status){
+        case ConfigStatus::LOW_TEMP:
+            if(!this->lowTempNotificationSent){
+                this->lowTempNotificationSent = true;
+            }else{
+                return;
+            }
+            break;
+        case ConfigStatus::HIGH_TEMP:
+            if(!this->highTempNotificationSent){
+                this->highTempNotificationSent = true;
+            }else{
+                return;
+            }
+            break;
+        case ConfigStatus::LOW_PH:
+            if(!this->lowPhNotificationSent){
+                this->lowPhNotificationSent = true;
+            }else{
+                return;
+            }
+            break;
+        case ConfigStatus::HIGH_PH:
+            if(!this->highPhNotificationSent){
+                this->highPhNotificationSent = true;
+            }else{
+                return;
+            }
+            break;
+        case ConfigStatus::LOW_WATER:
+            if(!this->lowWaterNotificationSent){
+                this->lowWaterNotificationSent = true;
+            }else{
+                return;
+            }
+            break;
+        case ConfigStatus::BROKEN_LIGHT:
+            if(!this->brokenLightNotificationSent){
+                this->brokenLightNotificationSent = true;
+            }else{
+                return;
+            }
+            break;
+        default:
+            return;
+    }
+    Serial.println("Sending notification to server...");
+    if (!isWiFiConnected()) {
+        Serial.println("No WiFi connected!");
+        return;
+    }
+    char notificationDataJSON[NOTIFICATION_DATA_LENGTH];
+    sprintf(notificationDataJSON, "{\"id\":\"%3d\",\"status\":\"%3d\"}", this->config->getSystemID(), status);
+    notificationDataJSON[NOTIFICATION_DATA_LENGTH-1] = '\0';
+    Serial.print("Sending notification body: ");
+    Serial.println(notificationDataJSON);
+    this->httpClient.begin(this->client, ServerConnector::notificationPath);
+    uint16_t responseCode = this->httpClient.POST(notificationDataJSON);
+    if(responseCode != HTTP_CODE_OK){
+        Serial.print("Sensor data posting: HTTP error: ");
+        Serial.println(responseCode);
+        return;
+    }
+    Serial.println("Successfully sent notification!");
 }
 
 void ServerConnector::ATCLog(char* str)
