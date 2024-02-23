@@ -17,7 +17,7 @@ const char* ServerConnector::configUpdatePath = "http://atc.takacsnet.hu/CONTROL
 ServerConnector::ServerConnector(): lowTempNotificationSent(false), highTempNotificationSent(false), lowPhNotificationSent(false), highPhNotificationSent(false),  brokenLightNotificationSent(false), lowWaterNotificationSent(false)
 {
     this->timeClient = new NTPClient(this->ntpUDP, NTP_SERVER_ADDRESS);
-    this->config = new AQWiFiConfig();
+    this->config = new WiFiConfig();
     if (this->connectToNetwork()) {
         UIHandler::getInstance()->clear();
         UIHandler::getInstance()->writeLine("Successful", 1);

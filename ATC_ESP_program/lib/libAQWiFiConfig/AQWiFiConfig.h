@@ -9,7 +9,7 @@
 // It performs the configuration of the nerwork
 // Also it automatically handles if it cannot connect to the give network
 //////////////////////////////////////////////////////////////////
-class AQWiFiConfig {
+class WiFiConfig {
 private:
     static bool isConfigDoneFlag;
     String WIFI_SSID;
@@ -22,8 +22,8 @@ private:
     static void saveCredentials();
 
 public:
-    AQWiFiConfig();
-    ~AQWiFiConfig();
+    WiFiConfig();
+    ~WiFiConfig();
     String getSSID();
     String getPassword();
     uint8_t getSystemID();

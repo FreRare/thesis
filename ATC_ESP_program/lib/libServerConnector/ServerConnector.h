@@ -31,7 +31,7 @@ private:
     HTTPClient httpClient;
     WiFiUDP ntpUDP;
     NTPClient* timeClient;
-    AQWiFiConfig* config;
+    WiFiConfig* config;
     static const char* connectionCheckPath;
     static const char* sensorDataUploadPath;
     static const char* notificationPath;

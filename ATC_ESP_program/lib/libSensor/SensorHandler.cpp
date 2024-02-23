@@ -76,8 +76,8 @@ uint8_t SensorHandler::readWaterSensor()
 
 float SensorHandler::readPhSensor()
 {
-    uint16_t buffer[SENSOR_BUF_SIZE];
-    float avg = this->getValidSensorValue<uint16_t>(buffer);
+    uint16_t phBuffer[SENSOR_BUF_SIZE];
+    float avg = this->getValidSensorValue<uint16_t>(phBuffer);
     // Calculate PH value from the avg
     float phValue = (float)avg * (REFERECNCE_VOLTAGE / ADC_RESOLUTION);
     float ph = (3.3f * phValue) + this->phCalibration; // Coorigate with calibration value
