@@ -51,10 +51,34 @@ private:
      * @private
      */
     float readTempSensor();
+    /**
+     * @brief Reads the light sensor
+     * @private
+     * @return LightIntensity 
+     */
     LightIntensity readLightSensor();
+    /**
+     * @brief Reads the water sensor
+     * @private
+     * @return uint8_t 
+     */
     uint8_t readWaterSensor();
+    /**
+     * @brief Reads the Ph sensor
+     * @private
+     * @return float 
+     */
     float readPhSensor();
-    float phCalibration;
+    float phCalibration; // The calibration value for the PH sensor
+
+    /**
+     * @brief Get the Valid Sensor value after making more measures and calculating averages
+     * @private
+     * @tparam T The type of the buffer
+     * @param buffer The buffer to read data to
+     * @return T Returns a float or uint16_t value due to the sensor type
+     */
+    template<typename T> float getValidSensorValue(T* buffer);
 
 public:
     SensorHandler();

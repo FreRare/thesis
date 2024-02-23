@@ -26,18 +26,27 @@ function StatisticsScreen(props: StatisticsScreenProps) {
   React.useEffect(() => {
     if (samples.length <= 0) {
       setLoading(true);
-      SensorSampleService.getSamples(selectedAquarium.id, false).then(
-        (samples) => {
-          if (typeof samples === "string") {
-            alert(samples);
-          } else {
-            setSamples(samples);
-          }
-          setLoading(false);
-        }
-      );
+      // TODO: Not sure if this is good
+      const intervalId = setInterval(loadData, 1000);
+      while(samples.length == 0){
+        continue;
+      }
+      clearInterval(intervalId);
+      setLoading(false);
     }
   });
+
+  const loadData = ()=>{
+    SensorSampleService.getSamples(selectedAquarium.id, false).then(
+      (samples) => {
+        if (typeof samples === "string") {
+          alert(samples);
+        } else {
+          setSamples(samples);
+        }
+      }
+    );
+  }
 
   const refreshCallback = React.useCallback(async () => {
     setLoading(true);
