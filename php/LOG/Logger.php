@@ -21,12 +21,15 @@ if (!isset($_POST)) {
         $logStr = $_POST["log"];
         $id = $_POST["id"];
         $content .= " <System $id> => $logStr";
-        // Select the status identifier
-        $status = intval(trim(explode(":", $logStr)[1]));
-        if ($status == 255) {
-            $status = 15;
+        if (strstr($logStr, ':')) {
+            // If the message includes : //! Only status messages should include ':' character
+            // Select the status identifier
+            $status = intval(trim(explode(":", $logStr)[1]));
+            if ($status == 255) {
+                $status = 15;
+            }
+            $content .= " === " . $systemStats[$status];
         }
-        $content .= " === " . $systemStats[$status];
     }
 
     /*

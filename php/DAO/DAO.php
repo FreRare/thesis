@@ -66,7 +66,7 @@ class AQDAO implements AQDAOI
     protected function __destruct()
     {
         // TODO ?
-        // $this->connection->close();
+        $this->connection->close();
     }
     public static function getInstance(): AQDAO
     {

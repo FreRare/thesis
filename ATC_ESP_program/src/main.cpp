@@ -173,10 +173,36 @@ void statusHandler()
 
 void resetLogger()
 {
-    rst_info* resetInfo = ESP.getResetInfoPtr();
-    char rstLog[42];
-    sprintf(rstLog, "!!!!!! Exception reset cause => %d", resetInfo->exccause);
-    rstLog[41] = '\0';
+    struct rst_info* reset_info = ESP.getResetInfoPtr();
+    char rstLog[64];
+    // Log reset cause
+  switch (reset_info->reason) {
+    case REASON_DEFAULT_RST:
+      sprintf(rstLog, "!!!!!! Reset cause => %s", "Normal reboot");
+      break;
+    case REASON_WDT_RST:
+      sprintf(rstLog, "!!!!!! Reset cause => %s", "Watchdog reset");
+      break;
+    case REASON_EXCEPTION_RST:
+      sprintf(rstLog, "!!!!!! EXCEPTION reset cause => %d", reset_info->exccause);
+      break;
+    case REASON_SOFT_WDT_RST:
+      sprintf(rstLog, "!!!!!! Reset cause => %s", "Software watchdog reset");
+      break;
+    case REASON_SOFT_RESTART:
+      sprintf(rstLog, "!!!!!! Reset cause => %s", "Software restart");
+      break;
+    case REASON_DEEP_SLEEP_AWAKE:
+      sprintf(rstLog, "!!!!!! Reset cause => %s", "Deep sleep wakeup");
+      break;
+    case REASON_EXT_SYS_RST:
+      sprintf(rstLog, "!!!!!! Reset cause => %s", "External system reset");
+      break;
+    default:
+      sprintf(rstLog, "!!!!!! Reset cause => %s", "Unknown reset cause");
+      break;
+  }
+    rstLog[63] = '\0';
     g_server->ATCLog(rstLog);
 }
 

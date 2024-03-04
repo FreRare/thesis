@@ -13,7 +13,7 @@
 #include <WiFiUdp.h>
 #include <stdio.h>
 
-#define CONN_TIMEOUT 60 // Connection timeout = timeout * 2 seconds
+#define CONN_TIMEOUT 150 // Connection timeout = timeout * 2 seconds
 // (2 min should be enough after power outage for the wifi to reboot)
 #define SYSTEMID_TEXT_LENGTH 20 // The length of the string to display system id
 #define CONFIG_UPDATE_POST_DATA_LENGTH 18 // The length of the str to send config update json
@@ -65,6 +65,11 @@ public:
      */
     void syncNTPTime();
     void disconnect();
+    /**
+     * @brief Logger function, the str parameter gets sent to the server's logger mechanism
+     * !IMPORTANT! only status messages should include the ':' character or else the logger will append an OK status to the end of the log 
+     * @param str The log message to be sent
+     */
     void ATCLog(char* str);
     NTPClient* getTimeClient() const;
     /**
