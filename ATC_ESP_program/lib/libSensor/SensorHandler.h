@@ -13,9 +13,9 @@
 #define PHOTORES_MEDIUM_LIMIT 388U
 #define PHOTORES_LIGHT_LIMIT 494U
 // ################################
-#define SENSOR_BUF_SIZE 10U // How many samples should be collected !!Shouldn't be higher than 256
+#define SENSOR_BUF_SIZE 50U // How many samples should be collected !!Shouldn't be higher than 256
 #define SENSOR_DAT_ARRAY_AVG_WINDOW_DIFF SENSOR_BUF_SIZE / 5U
-#define SENSOR_AVG_TIME_DIFF_MS 20U
+#define SENSOR_AVG_TIME_DIFF_MS 200U
 // The ph sensor is using 5 V, but it's devided down to 3.3V level so this is what the analog port will reference to
 #define REFERECNCE_VOLTAGE 3.3f
 #define ADC_RESOLUTION 1024.0f
@@ -89,7 +89,7 @@ public:
      * @public
      * There's a 1s delay between each sensor's measuring (switching time and adc cleanse)
      * Each sensor sample builds up from the average of 10 samples taken with 20ms delays
-     * So the total runtime of the function is: (num of sensors - 1) * 1000 + (delta sample time * num of sensors * 20)
+     * So the total runtime of the function is: (num of sensors - 1) * 1000 + (delta sample time * sample amount * num of sensors)
      * [ms]
      */
     void readSensors();

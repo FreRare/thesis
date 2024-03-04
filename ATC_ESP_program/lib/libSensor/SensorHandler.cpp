@@ -33,6 +33,11 @@ void SensorHandler::readSensors()
 float SensorHandler::readTempSensor()
 {
     float tempBuffer[SENSOR_BUF_SIZE];
+    for(uint8_t i=0;i<SENSOR_BUF_SIZE;i++){
+        this->sensors.requestTemperatures();
+        tempBuffer[i] = sensors.getTempCByIndex(0);
+        delay(SENSOR_AVG_TIME_DIFF_MS);
+    }
     float temperature = this->getValidSensorValue<float>(tempBuffer);
     Serial.print("Temperature measured: ");
     Serial.println(temperature);
@@ -46,6 +51,11 @@ float SensorHandler::readTempSensor()
 LightIntensity SensorHandler::readLightSensor()
 {
     uint16_t lightBuffer[SENSOR_BUF_SIZE];
+    // Get samples
+    for (uint8_t i = 0; i < SENSOR_BUF_SIZE; i++) {
+        lightBuffer[i] = analogRead(ANALOG_SENSOR_PIN);
+        delay(SENSOR_AVG_TIME_DIFF_MS);
+    }
     float value = this->getValidSensorValue<uint16_t>(lightBuffer);
     Serial.print("Light measured: ");
     Serial.println(value);
@@ -66,6 +76,11 @@ LightIntensity SensorHandler::readLightSensor()
 uint8_t SensorHandler::readWaterSensor()
 {
     uint16_t waterBuffer[SENSOR_BUF_SIZE];
+    // Get samples
+    for (uint8_t i = 0; i < SENSOR_BUF_SIZE; i++) {
+        waterBuffer[i] = analogRead(ANALOG_SENSOR_PIN);
+        delay(SENSOR_AVG_TIME_DIFF_MS);
+    }
     const float value = this->getValidSensorValue<uint16_t>(waterBuffer);
     Serial.print("Water measured: ");
     Serial.println(value);
@@ -77,6 +92,11 @@ uint8_t SensorHandler::readWaterSensor()
 float SensorHandler::readPhSensor()
 {
     uint16_t phBuffer[SENSOR_BUF_SIZE];
+    // Get samples
+    for (uint8_t i = 0; i < SENSOR_BUF_SIZE; i++) {
+        phBuffer[i] = analogRead(ANALOG_SENSOR_PIN);
+        delay(SENSOR_AVG_TIME_DIFF_MS);
+    }
     float avg = this->getValidSensorValue<uint16_t>(phBuffer);
     // Calculate PH value from the avg
     float phValue = (float)avg * (REFERECNCE_VOLTAGE / ADC_RESOLUTION);
@@ -87,11 +107,6 @@ float SensorHandler::readPhSensor()
 }
 
 template<typename T> float SensorHandler::getValidSensorValue(T* buffer){
-    // Get samples
-    for (uint8_t i = 0; i < SENSOR_BUF_SIZE; i++) {
-        buffer[i] = analogRead(ANALOG_SENSOR_PIN);
-        delay(SENSOR_AVG_TIME_DIFF_MS);
-    }
     // Sort the array so we can have the middle values
     uint16_t temp = 0u;
     for (uint8_t i = 0; i < SENSOR_BUF_SIZE - 1; i++) {

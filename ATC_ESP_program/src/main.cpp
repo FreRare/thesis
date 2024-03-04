@@ -14,7 +14,7 @@ Main defines and global vars START
 #define DEBUG 1
 #define UPDATE_INTERVAL_MIN 10U // Configuration update interval in minutes
 // Longest loop runtime measure is 10152ms so far...
-#define WDT_TIMEOUT_MS 12000U
+#define WDT_TIMEOUT_MS 55000U
 
 ServerConnector* g_server;
 ActuatorHandler* g_actuatorHandler;
@@ -166,7 +166,6 @@ void statusHandler()
             break;
         }
     }
-    g_server->postErrorCode(ConfigStatus::LOW_WATER);
     // updateShiftRegister(g_actuatorHandler->shiftRegisterState);
     Serial.println("Leaving statushandler..");
 }
