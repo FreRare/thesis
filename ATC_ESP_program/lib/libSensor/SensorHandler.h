@@ -72,7 +72,7 @@ private:
     float phCalibration; // The calibration value for the PH sensor
 
     /**
-     * @brief Get the Valid Sensor value after making more measures and calculating averages
+     * @brief Get the Valid Sensor value by calculating a median bypassing 10% of data on each sides after ordering it in ascending order
      * @private
      * @tparam T The type of the buffer
      * @param buffer The buffer to read data to
