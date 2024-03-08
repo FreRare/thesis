@@ -13,8 +13,8 @@ Main defines and global vars START
 // Debug option, uses Serial.print to log info set to 0 if no debugging is required //! not working
 #define DEBUG 1
 #define UPDATE_INTERVAL_MIN 10U // Configuration update interval in minutes
-// Longest loop runtime measure is 10152ms so far...
-#define WDT_TIMEOUT_MS 55000U
+// Longest loop runtime measure is 71954ms so far...
+#define WDT_TIMEOUT_MS 80000U //! Should be longer than sensor sampling cycle
 
 ServerConnector* g_server;
 ActuatorHandler* g_actuatorHandler;
@@ -229,7 +229,6 @@ void setup()
     // Clean up LCD
     UIHandler::getInstance()->clear();
     // Watchdog timer
-    ESP.wdtDisable();
     ESP.wdtEnable(WDT_TIMEOUT_MS);
 }
 

@@ -106,9 +106,9 @@ float SensorHandler::readPhSensor()
     return ph;
 }
 
-template<typename T> float SensorHandler::getValidSensorValue(T* buffer){
+template<typename SensorCalcT> float SensorHandler::getValidSensorValue(SensorCalcT* buffer){
     // Sort the array so we can have the middle values
-    uint16_t temp = 0u;
+    SensorCalcT temp = 0u;
     for (uint8_t i = 0; i < SENSOR_BUF_SIZE - 1; i++) {
         for (uint8_t j = i + 1; j < SENSOR_BUF_SIZE; j++) {
             if (buffer[i] > buffer[j]) {
@@ -119,7 +119,7 @@ template<typename T> float SensorHandler::getValidSensorValue(T* buffer){
         }
     }
     // Calculating average in the range of given below (in case of 10 samples, the middle 6)
-    uint16_t avgSum = 0u;
+    SensorCalcT avgSum = 0u;
     uint8_t startValue = (uint8_t)SENSOR_BUF_SIZE / 10;
     uint8_t endValue = (uint8_t)SENSOR_BUF_SIZE - startValue;
     for (uint8_t i = startValue; i < endValue; i++) {

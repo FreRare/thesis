@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/inputConfig.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/notification/NotificationControl.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/DAO/models/SystemStatus.php");
 
