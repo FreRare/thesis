@@ -107,7 +107,6 @@ void WiFiConfig::initializeNetwork()
     WiFiConfig::configServer->begin();
 }
 
-// Creates a simple login page
 void WiFiConfig::createSiteForWiFiLogin()
 {
     String html = "<html><body>";

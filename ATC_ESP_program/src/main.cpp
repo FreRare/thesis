@@ -266,6 +266,10 @@ void loop()
         gb_minuteIntervalFlag = false;
         // Config updating with interval
         if (g_min % UPDATE_INTERVAL_MIN == 0) {
+            bool res = server->checkForFactoryReset();
+            if(res){
+                // TODO: perform factory reset state
+            }
             updateConfig();
         }
         Serial.print("StatusHandler call at: ");

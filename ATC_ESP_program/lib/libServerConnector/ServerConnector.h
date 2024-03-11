@@ -21,6 +21,9 @@
 #define NOTIFICATION_DATA_LENGTH 36// Length of the notification data
 #define NTP_SERVER_ADDRESS "pool.ntp.org"
 
+#define URL_FACTORY_RESET_CHECK "https://atc.takacsnet.hu/CONTROLS/aquarium/factoryResetCheck.php"
+#define URL_POST_LOG "http://atc.takacsnet.hu/LOG/Logger.php" 
+
 /**
  * This class is responsible for server communication
  * Also handles Clock data from NTP server
@@ -95,7 +98,7 @@ public:
      * Checks if the system's aquarium has been inactivated or no
      * If it is inactive resets the system to factory reset ->
      * Deletes all data from EEPROM and stands by unitl repower
-     * @return TRUE if the reset was successful
+     * After that keeps the system in reset state until manually rebooted
      */
     bool checkForFactoryReset();
 };

@@ -258,11 +258,32 @@ void ServerConnector::ATCLog(char* str)
 
     char logData[msgLength + 13];
     sprintf(logData, "{\"id\":\"%3d\",\"log\":\"%s\"}", this->config->getSystemID(), str);
-    this->httpClient.begin(this->client, "http://atc.takacsnet.hu/LOG/Logger.php");
+    this->httpClient.begin(this->client, URL_POST_LOG);
     uint16_t response = this->httpClient.POST(logData);
     if (response != HTTP_CODE_OK) {
         Serial.print("Cannot post LOG!");
         Serial.println(response);
+    }
+}
+
+bool ServerConnector::checkForFactoryReset() { 
+    char requestMsg[13];
+    sprintf(requestMsg, "{\"id\":\"%3d\"}", this->config->getSystemID()); // Create the message
+    requesMsg[12] = '\0';
+
+    this->httpClient.begin(this->client, URL_FACTORY_RESET_CHECK);
+    uint16_t response = this->httpClient.POST(requestMsg);
+    if(response != HTTP_CODE_OK){
+        Serial.print("Cannot post LOG!");
+        Serial.println(response);
+    }else{
+        String payload = this->httpClient->getString();
+        Serial.println("Received response form server:");
+        Serial.println(payload);
+        if(payload == "Delete"){
+            Serial.println("Received delete response. Initializing factory reset...");
+            // TODO: Factory reset
+        }
     }
 }
 
