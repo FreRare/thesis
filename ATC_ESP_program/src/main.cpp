@@ -219,6 +219,7 @@ void performFactoryReset(){
     UIHandler::getInstance()->writeLine("successful!", 1, 5);
     UIHandler::getInstance()->writeLine("All memory cleared", 3);
     UIHandler::getInstance()->writeLine("Waiting for reboot..", 4);
+    while(true);
 }
 
 /*-----------------------------------

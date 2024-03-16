@@ -7,7 +7,9 @@ SensorHandler::SensorHandler()
 {
     this->sensors.begin(); // Begin the onewire transmission for sensors
     this->phCalibration = 0.8f; // TODO: Recalibrate
+    this->readSensors();
 }
+
 SensorHandler::~SensorHandler()
 {
     delete this->lastSamples;
