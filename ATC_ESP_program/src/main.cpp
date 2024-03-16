@@ -170,6 +170,9 @@ void statusHandler()
     Serial.println("Leaving statushandler..");
 }
 
+/**
+ * @brief Logs the previous reset cause to the server
+ */
 void resetLogger()
 {
     struct rst_info* reset_info = ESP.getResetInfoPtr();
@@ -203,6 +206,19 @@ void resetLogger()
   }
     rstLog[63] = '\0';
     g_server->ATCLog(rstLog);
+}
+
+/**
+ * @brief Performs a basic factory reset by cleaning all memory and setting the chip to idle state until reboot
+ */
+void performFactoryReset(){
+    g_server->disconnect();
+    MemoryHandler::getInstance()->clearMemory(0);
+    UIHandler::getInstance()->clear();
+    UIHandler::getInstance()->writeLine("Factory reset was", 1);
+    UIHandler::getInstance()->writeLine("successful!", 1, 5);
+    UIHandler::getInstance()->writeLine("All memory cleared", 3);
+    UIHandler::getInstance()->writeLine("Waiting for reboot..", 4);
 }
 
 /*-----------------------------------
@@ -266,9 +282,8 @@ void loop()
         gb_minuteIntervalFlag = false;
         // Config updating with interval
         if (g_min % UPDATE_INTERVAL_MIN == 0) {
-            bool res = server->checkForFactoryReset();
-            if(res){
-                // TODO: perform factory reset state
+            if(server->checkForFactoryReset()){
+                performFactoryReset();
             }
             updateConfig();
         }
