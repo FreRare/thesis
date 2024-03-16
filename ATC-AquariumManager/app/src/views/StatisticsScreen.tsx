@@ -21,18 +21,19 @@ function StatisticsScreen(props: StatisticsScreenProps) {
   );
   const [samples, setSamples] = React.useState<Array<SensorSample>>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [isAfterFirtsLoad, setIsAfetrFirstLoad] = React.useState<number>(0);
   let refreshKey = 0;
 
   React.useEffect(() => {
+    if(isAfterFirtsLoad > 3){
+      alert(strings.ALERTS.loadErrorAlert);
+      return;
+    }
     if (samples.length <= 0) {
       setLoading(true);
-      // TODO: Not sure if this is good
-      const intervalId = setInterval(loadData, 1000);
-      while(samples.length == 0){
-        continue;
-      }
-      clearInterval(intervalId);
+      loadData();
       setLoading(false);
+      setIsAfetrFirstLoad(isAfterFirtsLoad + 1);
     }
   });
 

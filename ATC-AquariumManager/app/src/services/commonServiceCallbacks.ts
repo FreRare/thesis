@@ -10,7 +10,7 @@ class CommonServiceCallback {
     if (e.message === strings.SERVICES.networkErrorDetect) {
       alert(strings.SERVICES.networkErrorMessage);
     } else {
-      alert("Error: " + e);
+      alert("Error: " + e.message);
     }
     return []
   };

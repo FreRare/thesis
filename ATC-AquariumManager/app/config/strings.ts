@@ -151,6 +151,7 @@ export default {
       "Are you sure you want to delete this aquarium? By deleting it the ATC-system will set to factory reset and only be usable again after reboot.",
     deleteAndFactoryResetAlertMessage:
       "Are you sure you want to delete your last aquarium? By deleting an aquarium which is connected to an ATC-system you accept that the system will go into factory reset mode and only can be used again if rebooted (switching it on and off). Also by removing your last aquarium from the list your account will be inactivated since you have no working ATC-systems. Press YES if you still want to continue.",
+    loadErrorAlert: "For some reason the loading of necessary data was unsuccessful, make sure you have proper internet connection and check in later.",
   },
   SERVICES: {
     networkErrorDetect: "Network request failed",
