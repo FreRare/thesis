@@ -21,7 +21,7 @@
 #define NOTIFICATION_DATA_LENGTH 36// Length of the notification data
 #define NTP_SERVER_ADDRESS "pool.ntp.org"
 
-#define URL_FACTORY_RESET_CHECK "https://atc.takacsnet.hu/CONTROLS/aquarium/factoryResetCheck.php"
+#define URL_FACTORY_RESET_CHECK "http://atc.takacsnet.hu/CONTROLS/aquarium/factoryResetCheck.php"
 #define URL_POST_LOG "http://atc.takacsnet.hu/LOG/Logger.php" 
 
 /**

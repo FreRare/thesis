@@ -1,6 +1,7 @@
 #ifndef ActuatorHandler_h
 #define ActuatorHandler_h
 #include "deviceInit.h"
+#include <Servo.h>
 #include <Arduino.h>
 #include <Debug.h>
 
@@ -10,16 +11,17 @@
 #define SR_RELAY2_ON B00000100
 #define SR_RELAY3_ON B00001000
 #define SR_RELAY4_ON B00010000
-#define SR_FEEDER_ON B00100000 // For the feeder motor
 #define SR_PROBLEM_LED_ON B01000000 // For the LED
 #define SR_OFF B00000000
 
 class ActuatorHandler {
+private:
+    uint8_t shiftRegisterState;
+    Servo feederServo;
 public:
     ActuatorHandler();
     ~ActuatorHandler();
     static bool* channelStates;
-    uint8_t shiftRegisterState;
     /**
      * @brief Switches the provided channel to the given state
      * Switches the provided channel into the provided state if the channel isn't in that state already

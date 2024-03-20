@@ -5,7 +5,7 @@ export default class SensorSample {
   private _waterLvl: number;
   private _lightAmount: number;
 
-  constructor(sTime = new Date(), temp = 0, ph = 0, water = 0, light = 0) {
+  constructor(sTime = new Date(), temp = 0, ph = 0, water = 0, light = 1) {
     this._sampleTime = sTime;
     this._temp = temp;
     this._ph = ph;

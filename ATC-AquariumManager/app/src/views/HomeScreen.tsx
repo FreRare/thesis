@@ -33,12 +33,18 @@ function HomeScreen(props: HomeScreenProps) {
   const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
+    if(!selectedAquarium){
+      alert("FATAL: No aquariums for user! This should never happen!");
+      return;
+    }
     setLoading(true);
     if (!lastSample) {
       SensorSampleService.getSamples(selectedAquarium.id, true).then(
         (samples) => {
           if (typeof samples === "string") {
             alert(samples);
+          } else if(samples.length <= 0){
+            setLastSample(new SensorSample());
           } else {
             setLastSample(samples[0]);
           }
@@ -78,7 +84,7 @@ function HomeScreen(props: HomeScreenProps) {
           <View style={styles.horizontalDataContainer}>
             <DataDisplayCircle
               title={strings.temperature}
-              data={String(Math.round(lastSample.temp * 10) / 10) + "°C"}
+              data={String(Math.round(lastSample.temp * 100) / 100) + "°C"}
             />
             <DataDisplayCircle
               title={strings.ph}

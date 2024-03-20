@@ -8,7 +8,8 @@ DROP TABLE IF EXISTS aquariums;
 
 
 CREATE TABLE IF NOT EXISTS users(
-    email VARCHAR(255) NOT NULL UNIQUE,
+    id BIGINT NOT NULL UNIQUE AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL,
     firstName VARCHAR(255) NOT NULL,
     lastName VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -16,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users(
     authToken VARCHAR(23) NOT NULL,
     inactive BOOLEAN,
 
-    PRIMARY KEY (email)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS aquariums(
@@ -32,16 +33,16 @@ CREATE TABLE IF NOT EXISTS aquariums(
 );
 
 CREATE TABLE IF NOT EXISTS haveAquarium(
-    email VARCHAR(255) NOT NULL,
-    id BIGINT NOT NULL,
+    userId BIGINT NOT NULL,
+    aquariumId BIGINT NOT NULL,
 
-    PRIMARY KEY (email, id),
+    PRIMARY KEY (userId, aquariumId),
 
-    FOREIGN KEY(email)
-    REFERENCES users(email)
+    FOREIGN KEY(userId)
+    REFERENCES users(id)
     ON DELETE CASCADE ON UPDATE CASCADE,
 
-    FOREIGN KEY(id)
+    FOREIGN KEY(aquariumId)
     REFERENCES aquariums(id)
     ON DELETE CASCADE ON UPDATE CASCADE
 );

@@ -9,6 +9,20 @@ ActuatorHandler::ActuatorHandler()
     }
     this->shiftRegisterState = SR_OFF;
     updateShiftRegister(this->shiftRegisterState);
+    /*this->feederServo.attach(FEEDER_SERVO_PIN);
+    this->feederServo.write(0);
+    Serial.println("TESTING SERVO...");
+    
+    for(int i = 0; i < 5;i++){
+        this->feederServo.write(0);
+        Serial.println("WROTE 0");
+        delay(1000);
+        this->feederServo.write(360);
+        Serial.println("WROTE 180");
+        delay(1000);
+    }
+    this->feederServo.write(0); 
+    */
 }
 
 ActuatorHandler::~ActuatorHandler()
@@ -42,16 +56,12 @@ void ActuatorHandler::channelSwithcer(const uint8_t& channel, const bool& state)
     }
     // Set state to current
     ActuatorHandler::channelStates[channel - 1] = state;
-    //! updateShiftRegister(this->shiftRegisterState);
+    updateShiftRegister(this->shiftRegisterState);
 }
 
 void ActuatorHandler::feed(const uint8_t& portions)
 {
-    this->shiftRegisterState |= SR_FEEDER_ON;
-    updateShiftRegister(this->shiftRegisterState);
-    delay(1000 * portions);
-    this->shiftRegisterState &= ~SR_FEEDER_ON;
-    updateShiftRegister(this->shiftRegisterState);
+    // TODO: FEED
 }
 
 void ActuatorHandler::turnProblemLed(bool state)

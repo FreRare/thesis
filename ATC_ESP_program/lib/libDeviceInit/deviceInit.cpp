@@ -11,6 +11,7 @@ void pinSetup()
     pinMode(SHIFT_REGISTER_CLK_PIN, OUTPUT);
     pinMode(SHIFT_REGISTER_LATCH_PIN, OUTPUT);
     pinMode(SHIFT_REGISTER_DATA_PIN, OUTPUT);
+    pinMode(FEEDER_SERVO_PIN, OUTPUT);
 }
 
 void updateShiftRegister(uint8_t byteValue)
@@ -27,8 +28,6 @@ void updateShiftRegister(uint8_t byteValue)
     delete[] msg;
     digitalWrite(SHIFT_REGISTER_LATCH_PIN, LOW);
     shiftOut(SHIFT_REGISTER_DATA_PIN, SHIFT_REGISTER_CLK_PIN, MSBFIRST, byteValue);
-    Serial.println("Latching SR...");
-    delay(1000);
     digitalWrite(SHIFT_REGISTER_LATCH_PIN, HIGH);
 }
 

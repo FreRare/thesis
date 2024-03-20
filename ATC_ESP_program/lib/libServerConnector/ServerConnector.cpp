@@ -143,6 +143,8 @@ ConfigData* ServerConnector::updateConfigData(ConfigData* config)
             configDoc["data"]["config"]["samplePeriod"]);
         configDoc.clear();
         return config;
+    }else{
+        Serial.println("Config update request failed!");
     }
     return nullptr;
 }
@@ -268,21 +270,25 @@ void ServerConnector::ATCLog(char* str)
 
 bool ServerConnector::checkForFactoryReset() { 
     char requestMsg[13];
-    sprintf(requestMsg, "{\"id\":\"%3d\"}", this->config->getSystemID()); // Create the message
-    requesMsg[12] = '\0';
+    sprintf(requestMsg, "{\"id\":\"%3d\"}", this->config->getSystemID());
+    requestMsg[12] = '\0';
 
     this->httpClient.begin(this->client, URL_FACTORY_RESET_CHECK);
     uint16_t response = this->httpClient.POST(requestMsg);
     if(response != HTTP_CODE_OK){
-        Serial.print("Cannot post LOG!");
+        Serial.println("Factory reset network request failed!");
+        Serial.print("Network code: ");
         Serial.println(response);
+        return false;
     }else{
-        String payload = this->httpClient->getString();
+        String payload = this->httpClient.getString();
         Serial.println("Received response form server:");
         Serial.println(payload);
         if(payload == "Delete"){
             Serial.println("Received delete response. Initializing factory reset...");
-            // TODO: Factory reset
+            return true;
+        }else{
+            return false;
         }
     }
 }

@@ -31,15 +31,15 @@ interface AQDAOI
     /**
      * Creates a user in the DB from the given Object
      * @param User $userToCreate
-     * @return bool True on success
+     * @return User | null The user on success null otherwise
      */
-    function createUser(User $user): bool;
+    function createUser(User $user);
     /**
      * Deletes th euser from the DB identified by the given object
-     * @param User $userToDelete
+     * @param int $id The id of the user to delete
      * @return bool True on success
      */
-    function deleteUser(string $email): bool;
+    function deleteUser(int $id): bool;
     /**
      * Updates the user with the given email address to the Object given
      * @param User $user

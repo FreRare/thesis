@@ -1,10 +1,10 @@
 <?php
 // This file is resposnible for returning the aquariums of a user
-require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
-if (!empty($_POST["email"])) {
+if (!empty ($_POST["email"])) {
     $email = $_POST["email"];
-    $user = new User($email);
+    $user = $DAO->selectUserByEmail($email);
     $aquariums = $DAO->selectUserAquariums($user);
     if (count($aquariums) <= 0) {
         $result["error"] = "No aquariums for user! This should never occur...";

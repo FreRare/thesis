@@ -2,6 +2,7 @@
 
 class User
 {
+    private $id;
     private $email;
     private $password; // will be hashed with sha256
     private $firstName;
@@ -10,8 +11,9 @@ class User
     private $authToken;
     private $inactive;
 
-    public function __construct(string $email = "", string $password = "", string $firtName = "", string $lastName = "", string $deviceToken = "", string $authToken = "", bool $inactive = false)
+    public function __construct(int $id = 0, string $email = "", string $password = "", string $firtName = "", string $lastName = "", string $deviceToken = "", string $authToken = "", bool $inactive = false)
     {
+        $this->id = $id;
         $this->email = $email;
         $this->password = $password;
         $this->firstName = $firtName;
@@ -19,6 +21,11 @@ class User
         $this->deviceToken = $deviceToken;
         $this->authToken = $authToken;
         $this->inactive = $inactive;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getEmail(): string

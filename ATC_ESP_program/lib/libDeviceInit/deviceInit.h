@@ -21,6 +21,7 @@
 #define DIGITAL_TEMP_SENSOR_PIN D9 // For the digital temp sensor (RX)
 #define MUX_SELECT_A D8 // MUX A selector
 #define MUX_SELECT_B D7 // MUX B selector
+#define FEEDER_SERVO_PIN D4
 
 //-----------------------------
 

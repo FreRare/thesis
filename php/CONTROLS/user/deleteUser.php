@@ -1,13 +1,18 @@
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
-if (isset($_POST["email"])) {
+if (isset ($_POST["email"])) {
     $email = $_POST["email"];
-    $res = $DAO->deleteUser($email);
-    if (!$res) {
-        $result["error"] = "Error while deleting user!";
+    $u = $DAO->selectUserByEmail($email);
+    if ($u == null) {
+        error_log("No user found to delete with email address: " . $email);
     } else {
-        $result["success"] = "Successfully deleted!";
+        $res = $DAO->deleteUser($u->getId());
+        if (!$res) {
+            $result["error"] = "Error while deleting user!";
+        } else {
+            $result["success"] = "Successfully deleted!";
+        }
     }
 } else {
     $result["error"] = "Missing data!";

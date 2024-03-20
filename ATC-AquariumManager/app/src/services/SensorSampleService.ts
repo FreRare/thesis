@@ -32,7 +32,7 @@ class SensorSampleService {
       .then((responseData) => {
         const data = responseData["data"];
         if (data["error"]) {
-          return data["error"];
+          throw new Error(data["error"]);
         }
         const sampleData = data;
         const samples = [];

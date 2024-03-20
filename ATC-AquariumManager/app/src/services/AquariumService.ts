@@ -204,6 +204,7 @@ export default class AquariumService {
           return data["error"];
         }
         if (data["result"]) {
+          alert(data["result"]);
           return "";
         }
       })

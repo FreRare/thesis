@@ -118,31 +118,21 @@ void statusHandler()
             g_server->postErrorCode(ConfigStatus::LOW_WATER);
             break;
         case ConfigStatus::OUTLET_1_ON:
-            g_actuatorHandler->channelStates[0] = true;
-            digitalWrite(SHIFT_REGISTER_DATA_PIN, HIGH);
-            break;
             g_actuatorHandler->channelSwithcer(1, true);
             break;
         case ConfigStatus::OUTLET_1_OFF:
-            g_actuatorHandler->channelStates[0] = false;
-            digitalWrite(SHIFT_REGISTER_DATA_PIN, LOW);
-            break;
             g_actuatorHandler->channelSwithcer(1, false);
             break;
         case ConfigStatus::OUTLET_2_ON:
-            break;
             g_actuatorHandler->channelSwithcer(2, true);
             break;
         case ConfigStatus::OUTLET_2_OFF:
-            break;
             g_actuatorHandler->channelSwithcer(2, false);
             break;
         case ConfigStatus::OUTLET_3_ON:
-            break;
             g_actuatorHandler->channelSwithcer(3, true);
             break;
         case ConfigStatus::OUTLET_3_OFF:
-            break;
             g_actuatorHandler->channelSwithcer(3, false);
             break;
         case ConfigStatus::SAMPLE_TIME:
@@ -165,9 +155,8 @@ void statusHandler()
         default:
             break;
         }
+        Serial.println("========================");
     }
-    // updateShiftRegister(g_actuatorHandler->shiftRegisterState);
-    Serial.println("Leaving statushandler..");
 }
 
 /**
@@ -211,15 +200,20 @@ void resetLogger()
 /**
  * @brief Performs a basic factory reset by cleaning all memory and setting the chip to idle state until reboot
  */
-void performFactoryReset(){
-    g_server->disconnect();
-    MemoryHandler::getInstance()->clearMemory(0);
-    UIHandler::getInstance()->clear();
-    UIHandler::getInstance()->writeLine("Factory reset was", 1);
-    UIHandler::getInstance()->writeLine("successful!", 1, 5);
-    UIHandler::getInstance()->writeLine("All memory cleared", 3);
-    UIHandler::getInstance()->writeLine("Waiting for reboot..", 4);
-    while(true);
+void performFactoryResetCheck(){
+    if(g_server->checkForFactoryReset()){
+        g_server->disconnect();
+        MemoryHandler::getInstance()->clearMemory(0);
+        UIHandler::getInstance()->clear();
+        UIHandler::getInstance()->writeLine("Factory reset was", 1);
+        UIHandler::getInstance()->writeLine("successful!", 1, 5);
+        UIHandler::getInstance()->writeLine("All memory cleared", 3);
+        UIHandler::getInstance()->writeLine("Waiting for reboot..", 4);
+        while(true){
+            Serial.println("Waiting for reboot...");
+            delay(10000);
+        }           
+    }
 }
 
 /*-----------------------------------
@@ -231,14 +225,17 @@ void setup()
     Serial.begin(9600);
     while (!Serial)
         ;
-    //! MemoryHandler::getInstance()->clearMemory(0, 512);
-
+    //! MemoryHandler::getInstance()->clearMemory(0);
     // Pin configurations
     pinSetup();
     // Global var initializations
-    g_server = new ServerConnector();
+    // Set up all things before wifi connection
     g_actuatorHandler = new ActuatorHandler();
+    // Set up wifi connection in constructor
+    g_server = new ServerConnector();
+    performFactoryResetCheck(); // See for factory reset
     g_configHandler = new ConfigHandler();
+    UIHandler::getInstance()->writeLine("Reading sensors..", 4);
     g_sensorHandler = new SensorHandler();
     updateConfig();
     Serial.println("Config updated!");
@@ -283,9 +280,7 @@ void loop()
         gb_minuteIntervalFlag = false;
         // Config updating with interval
         if (g_min % UPDATE_INTERVAL_MIN == 0) {
-            if(server->checkForFactoryReset()){
-                performFactoryReset();
-            }
+            performFactoryResetCheck();
             updateConfig();
         }
         Serial.print("StatusHandler call at: ");

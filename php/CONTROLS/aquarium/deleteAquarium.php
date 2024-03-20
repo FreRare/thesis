@@ -1,12 +1,12 @@
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
 /*
 Handles the deletion of an aquarium
 Expects the aquarium's id as a parameter
 Also deletes the user of the aquarium, if this is the user's last one.
 */
-if (!empty($_POST["id"])) {
+if (!empty ($_POST["id"])) {
     $id = $_POST["id"];
 
     // Find the owner
@@ -21,6 +21,7 @@ if (!empty($_POST["id"])) {
     if (count($ownerAquariums) === 1) {
         $res = $DAO->deleteUser($owner->getEmail());
         if (!$res) {
+            error_log("Error while deleting user!");
             $result["error"] = "Error while deleting user!";
         } else {
             $result["result"] = "User deleted successfully!";

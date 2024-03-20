@@ -25,7 +25,7 @@ function StatisticsScreen(props: StatisticsScreenProps) {
   let refreshKey = 0;
 
   React.useEffect(() => {
-    if(isAfterFirtsLoad > 3){
+    if(isAfterFirtsLoad > 3 && samples.length <= 0){
       alert(strings.ALERTS.loadErrorAlert);
       return;
     }
@@ -42,7 +42,11 @@ function StatisticsScreen(props: StatisticsScreenProps) {
       (samples) => {
         if (typeof samples === "string") {
           alert(samples);
+        } else if(samples.length <= 0){
+          alert("No samples available! Using one default!");
+          setSamples([new SensorSample()]);
         } else {
+          console.log("STATS: Data after load: ", samples);
           setSamples(samples);
         }
       }
@@ -51,16 +55,8 @@ function StatisticsScreen(props: StatisticsScreenProps) {
 
   const refreshCallback = React.useCallback(async () => {
     setLoading(true);
-    const samples = await SensorSampleService.getSamples(
-      selectedAquarium.id,
-      false
-    );
-    if (typeof samples === "string") {
-      alert(samples);
-    } else {
-      refreshKey++;
-      setSamples(samples);
-    }
+    loadData();
+    refreshKey++;
     setLoading(false);
   }, []);
 
@@ -82,21 +78,25 @@ function StatisticsScreen(props: StatisticsScreenProps) {
               key={refreshKey}
               label={strings.temperature}
               data={samples}
+              samplePeriod={selectedAquarium.config.samplePeriod}
             />
             <StatisticsChartDisplayer
               key={refreshKey + 1}
               label={strings.ph}
               data={samples}
+              samplePeriod={selectedAquarium.config.samplePeriod}
             />
             <StatisticsChartDisplayer
               key={refreshKey + 2}
               label={strings.light}
               data={samples}
+              samplePeriod={selectedAquarium.config.samplePeriod}
             />
             <StatisticsChartDisplayer
               key={refreshKey + 3}
               label={strings.waterLevel}
               data={samples}
+              samplePeriod={selectedAquarium.config.samplePeriod}
             />
           </>
         )}

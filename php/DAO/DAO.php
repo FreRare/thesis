@@ -1,10 +1,10 @@
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/DAO/DAOI.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . '/DAO/Config/DBConfig.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/User.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/Aquarium.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/SensorSample.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/AquariumConfig.php');
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/DAO/DAOI.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . '/DAO/Config/DBConfig.php');
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/User.php');
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/Aquarium.php');
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/SensorSample.php');
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/DAO/models/AquariumConfig.php');
 
 
 /**
@@ -17,10 +17,10 @@ class AQDAO implements AQDAOI
     private $connection = null;
     private $config = null;
     private const CREATE_USER = "INSERT INTO users (email, firstName, lastName, password, deviceToken, authToken, inactive) VALUES (?, ?, ?, ?, ?, ?, false)";
-    private const DELETE_USER = "UPDATE users SET inactive = true WHERE email = ?";
+    private const DELETE_USER = "UPDATE users SET inactive = true WHERE id = ?";
     private const SELECT_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ? AND inactive IS NOT true";
-    private const SELECT_USER_BY_TOKEN = "SELECT email, firstName, lastName, deviceToken, authToken FROM users WHERE authToken = ? AND inactive IS NOT true";
-    private const UPDATE_USER = "UPDATE users SET email = ?, password = ?, firstName = ?, lastName = ?, deviceToken = ? WHERE email = ?";
+    private const SELECT_USER_BY_TOKEN = "SELECT id, email, firstName, lastName, deviceToken, authToken FROM users WHERE authToken = ? AND inactive IS NOT true";
+    private const UPDATE_USER = "UPDATE users SET email = ?, password = ?, firstName = ?, lastName = ?, deviceToken = ? WHERE id = ?";
     private const SELECT_AQUARIUM = "SELECT * FROM aquariums WHERE id = ? AND inactive IS NOT true";
     private const CREATE_AQUARIUM = "INSERT INTO aquariums (name, length, height, depth, fishCount, inactive) VALUES (?, ?, ?, ?, ?, false)";
     private const DELETE_AQUARIUM = "UPDATE aquariums SET inactive = true WHERE id = ?";
@@ -35,9 +35,9 @@ class AQDAO implements AQDAOI
     private const CREATE_SENSOR_SAMPLE = "INSERT INTO sensorSamples (id, sampleTime, temp, ph, waterLvl, lightAmount) VALUES (?, ?, ?, ?, ?, ?)";
     private const DELETE_SENSOR_SAMPLE = "DELETE FROM sensorSamples WHERE id = ?";
     private const UPDATE_SENSOR_SAMPLE = "UPDATE sensorSamples SET sampleTime = ?, temp = ?, ph = ?, waterLvl = ?, lightAmount = ? WHERE id = ?";
-    private const CREATE_HAVE_AQUARIUM = "INSERT INTO haveAquarium (email, id) VALUES (?, ?)";
-    private const SELECT_USER_AQUARIUMS = "SELECT A.id, A.name, A.length, A.height, A.depth, A.fishCount, A.inactive FROM haveAquarium as HA INNER JOIN aquariums as A ON A.id = HA.id WHERE HA.email = ? AND A.inactive IS NOT true";
-    private const SELECT_USER_BY_AQUARIUM_ID = "SELECT users.email, users.firstName, users.lastName, users.password, users.deviceToken, users.authToken FROM haveAquarium INNER JOIN users ON users.email = haveAquarium.email WHERE haveAquarium.id = ?  AND users.inactive IS NOT true";
+    private const CREATE_HAVE_AQUARIUM = "INSERT INTO haveAquarium (userId, aquariumId) VALUES (?, ?)";
+    private const SELECT_USER_AQUARIUMS = "SELECT A.id, A.name, A.length, A.height, A.depth, A.fishCount, A.inactive FROM haveAquarium as HA INNER JOIN aquariums as A ON A.id = HA.aquariumId WHERE HA.userId = ? AND A.inactive IS NOT true";
+    private const SELECT_USER_BY_AQUARIUM_ID = "SELECT users.id, users.email, users.firstName, users.lastName, users.password, users.deviceToken, users.authToken FROM haveAquarium INNER JOIN users ON users.id = haveAquarium.userId WHERE haveAquarium.aquariumId = ?  AND users.inactive IS NOT true";
     private const DELETE_HAVE_AQUARIUM_BY_ID = "DELETE FROM haveAquarium WHERE id = ?";
     private const DELETE_HAVE_AQUARIUM_BY_USER = "DELETE FROM haveAquarium WHERE email = ?";
 
@@ -52,7 +52,7 @@ class AQDAO implements AQDAOI
             $this->config->getPort("DAO") //TODO:  Gets too many connections sometimes
         );
         if (!$this->connection || mysqli_connect_error()) {
-            die("Connection failed!!!" . mysqli_connect_error());
+            die ("Connection failed!!!" . mysqli_connect_error());
         } else {
             try {
                 if ($this->connection->query("USE " . $this->config->getDatabase("DAO"))) {
@@ -90,16 +90,20 @@ class AQDAO implements AQDAOI
     function selectUserByEmail(string $email)
     {
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_BY_EMAIL);
+        if (!$stm) {
+            error_log("Statement preparation failed! " . $this->connection->error);
+            return null;
+        }
         $stm->bind_param("s", $email);
         $stm->execute();
-        $stm->bind_result($mail, $fname, $lname, $pass, $token, $authToken, $inactive);
+        $stm->bind_result($id, $mail, $fname, $lname, $pass, $token, $authToken, $inactive);
         $stm->fetch();
         $stm->close();
-        if (!isset($mail) || !isset($pass) || !isset($fname) || !isset($lname) || !isset($token) || !isset($authToken)) {
-            error_log("Missing data after query!");
+        if (!isset ($mail) || !isset ($pass) || !isset ($fname) || !isset ($lname) || !isset ($token) || !isset ($authToken)) {
+            error_log("Select user -> Missing data after query!");
             return null;
         } else {
-            return new User($mail, $pass, $fname, $lname, $token, $authToken, $inactive);
+            return new User($id, $mail, $pass, $fname, $lname, $token, $authToken);
         }
     }
 
@@ -108,20 +112,20 @@ class AQDAO implements AQDAOI
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_BY_TOKEN);
         $stm->bind_param("s", $token);
         $stm->execute();
-        $stm->bind_result($user, $fname, $lname, $token, $authToken);
+        $stm->bind_result($id, $user, $fname, $lname, $token, $authToken);
         $stm->fetch();
         $stm->close();
-        if (!isset($user) || !isset($fname) || !isset($lname) || !isset($token) || !isset($authToken)) {
+        if (!isset ($user) || !isset ($fname) || !isset ($lname) || !isset ($token) || !isset ($authToken)) {
             return null;
         } else {
-            return new User($user, "", $fname, $lname, $token, $authToken);
+            return new User($id, $user, "", $fname, $lname, $token, $authToken);
         }
     }
 
-    function createUser(User $user): bool
+    function createUser(User $user)
     {
         if (!$user instanceof User) {
-            return false;
+            return null;
         }
         $statement = $this->connection->prepare(AQDAO::CREATE_USER);
         $email = $user->getEmail();
@@ -131,16 +135,22 @@ class AQDAO implements AQDAOI
         $token = $user->getDeviceToken();
         $authToken = $user->getAuthToken();
         $statement->bind_param("ssssss", $email, $fName, $lName, $pass, $token, $authToken);
-
         $success = $statement->execute();
-        error_log($this->connection->error);
+        $newId = $statement->insert_id;
+        if (!$success) {
+            error_log("Create user query error: " . $this->connection->error);
+        }
         $statement->close();
-        return $success;
+        if ($success) {
+            return new User($newId, $email, $fName, $lName, $pass, $token, $authToken);
+        } else {
+            return null;
+        }
     }
-    function deleteUser(string $email): bool
+    function deleteUser(int $id): bool
     {
         $stm = $this->connection->prepare(AQDAO::DELETE_USER);
-        $stm->bind_param("s", $email);
+        $stm->bind_param("s", $id);
         $success = $stm->execute();
         return $success;
     }
@@ -150,12 +160,13 @@ class AQDAO implements AQDAOI
             return false;
         }
         $stm = $this->connection->prepare(AQDAO::UPDATE_USER);
+        $id = $user->getId();
         $newMail = $user->getEmail();
         $newPass = $user->getPassword();
         $newFname = $user->getFirstName();
         $newLname = $user->getLastName();
         $newToken = $user->getDeviceToken();
-        $stm->bind_param("ssssss", $newMail, $newPass, $newFname, $newLname, $newToken, $email);
+        $stm->bind_param("ssssss", $newMail, $newPass, $newFname, $newLname, $newToken, $id);
         $success = $stm->execute();
         return $success;
     }
@@ -167,7 +178,7 @@ class AQDAO implements AQDAOI
         $stm->bind_result($id, $name, $length, $height, $width, $fishCount, $inactive);
         $stm->fetch();
         $stm->close();
-        if (empty($id) || empty($name) || empty($length) || empty($height) || empty($width) || empty($fishCount)) {
+        if (empty ($id) || empty ($name) || empty ($length) || empty ($height) || empty ($width) || empty ($fishCount)) {
             return null;
         } else {
             return new Aquarium($id, $name, $length, $height, $width, $fishCount);
@@ -366,24 +377,31 @@ class AQDAO implements AQDAOI
     function createAquariumConnection(User $user, Aquarium $aquarium): bool
     {
         if (!$user instanceof User || !$aquarium instanceof Aquarium) {
+            error_log("Create AQ: Passed params are invalid for this function!");
             return false;
         }
-
         $stm = $this->connection->prepare(AQDAO::CREATE_HAVE_AQUARIUM);
-        $email = $user->getEmail();
+        $uId = $user->getId();
         $id = $aquarium->getId();
-        $stm->bind_param("ss", $email, $id);
+        $stm->bind_param("ii", $uId, $id);
         $success = $stm->execute();
+        if (!$success) {
+            error_log("Error while connecting user to aquarium: " . $this->connection->error);
+        }
         $stm->close();
         return $success;
     }
     function selectUserAquariums(User $user): array
     {
-        if (!$user instanceof User || !isset($user))
+        if (!$user instanceof User || !isset ($user))
             return [];
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_AQUARIUMS);
-        $mail = $user->getEmail();
-        $stm->bind_param("s", $mail);
+        if (!$stm) {
+            error_log("Statement preparation failed! " . $this->connection->error);
+            return [];
+        }
+        $uid = $user->getId();
+        $stm->bind_param("s", $uid);
         $stm->execute();
         $stm->bind_result($id, $name, $length, $height, $width, $fishCount, $inactive);
         $resultAquariums = [];
@@ -399,18 +417,18 @@ class AQDAO implements AQDAOI
         error_log($this->connection->error);
         $stm->bind_param("i", $id);
         $stm->execute();
-        $stm->bind_result($email, $firstName, $lastName, $password, $deviceToken, $authToken);
+        $stm->bind_result($id, $email, $firstName, $lastName, $password, $deviceToken, $authToken);
         error_log($email . $firstName . $lastName . $password . $deviceToken);
         $stm->fetch();
         $stm->close();
-        if (empty($email) || empty($firstName) || empty($lastName) || empty($password) || empty($deviceToken) || empty($authToken) || empty($deviceToken) || empty($authToken)) {
+        if (empty ($id) || empty ($email) || empty ($firstName) || empty ($lastName) || empty ($password) || empty ($deviceToken) || empty ($authToken) || empty ($deviceToken) || empty ($authToken)) {
             return null;
         }
-        return new User($email, $password, $firstName, $lastName, $deviceToken, $authToken);
+        return new User($id, $email, $password, $firstName, $lastName, $deviceToken, $authToken);
     }
     function deleteAquariumConnectionByAquarium(Aquarium $aquarium): bool
     {
-        if (empty($id))
+        if (empty ($id))
             return false;
         $stm = $this->connection->prepare(AQDAO::DELETE_HAVE_AQUARIUM_BY_ID);
         $id = $aquarium->getId();
@@ -421,7 +439,7 @@ class AQDAO implements AQDAOI
     }
     function deleteAquariumConnectionByUser(User $user): bool
     {
-        if (empty($user) || !$user instanceof User)
+        if (empty ($user) || !$user instanceof User)
             return false;
         $stm = $this->connection->prepare(AQDAO::DELETE_HAVE_AQUARIUM_BY_USER);
         $email = $user->getEmail();
