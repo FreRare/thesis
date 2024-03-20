@@ -47,4 +47,8 @@ export default class SensorSample {
   public set lightAmount(value: number) {
     this._lightAmount = value;
   }
+
+  public get sampleTimeStr(): string{
+    return `${this._sampleTime.getFullYear()}/${this._sampleTime.getMonth()}/${this._sampleTime.getDate()} - ${((this._sampleTime.getHours() - 1) < 10 ? ("0" + (this._sampleTime.getHours() - 1)) : (this._sampleTime.getHours() - 1))}:${((this._sampleTime.getMinutes()) < 10 ? ("0" + (this._sampleTime.getMinutes())) : (this._sampleTime.getMinutes()))}`;
+  }
 }

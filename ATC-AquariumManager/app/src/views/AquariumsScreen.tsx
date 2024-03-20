@@ -95,6 +95,7 @@ function AquariumsScreen(props: AquariumsScreenProps) {
     setEditing(false);
     setLoading(true);
     const index = aquariums.indexOf(aq);
+    const userIndex = props.user.aquariums.indexOf(aq);
     if (index < 0) {
       // If we added a new aquarium
       const result = await AquariumService.createAquarium(aq, props.user.email);
@@ -103,7 +104,9 @@ function AquariumsScreen(props: AquariumsScreenProps) {
       } else {
         alert("Successfully added " + aq.name + "!");
       }
+      // Add it to both user and array here
       aquariums.push(aq);
+      props.user.aquariums.push(aq);
     } else {
       // Update aquarium
       const result = await AquariumService.updateAquarium(aq);
@@ -112,8 +115,10 @@ function AquariumsScreen(props: AquariumsScreenProps) {
       } else {
         alert(strings.successfulUpdate);
       }
+      aquariums[index] = aq;
+      props.user.aquariums[userIndex] = aq;
+      console.log("Updated aquarium with index ", index, " user index ", userIndex);
     }
-    aquariums[index] = aq;
     setLoading(false);
   };
 

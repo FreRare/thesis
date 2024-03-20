@@ -103,9 +103,7 @@ function HomeScreen(props: HomeScreenProps) {
           </View>
           <View style={styles.horizontalInfoContainer}>
             <Text>
-              {lastSample.sampleTime.toLocaleDateString() +
-                " " +
-                lastSample.sampleTime.toLocaleTimeString()}
+              {lastSample.sampleTimeStr}
             </Text>
           </View>
         </ScrollView>
