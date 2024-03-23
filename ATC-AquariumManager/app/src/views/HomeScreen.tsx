@@ -84,7 +84,7 @@ function HomeScreen(props: HomeScreenProps) {
           <View style={styles.horizontalDataContainer}>
             <DataDisplayCircle
               title={strings.temperature}
-              data={String(Math.round(lastSample.temp * 100) / 100) + "°C"}
+              data={String(Math.round(lastSample.temp * 10) / 10) + "°C"}
             />
             <DataDisplayCircle
               title={strings.ph}

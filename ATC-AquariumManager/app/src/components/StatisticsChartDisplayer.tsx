@@ -393,7 +393,7 @@ function StatisticsChartDisplayer(
       if (valuesToWorkWith[valuesToWorkWith.length - 1].time.getHours() + timeDiff < 24) {
         for (
           let i = valuesToWorkWith[valuesToWorkWith.length - 1].time.getHours() + timeDiff;
-          i < 24 - timeDiff;
+          i < 24;
           i+=timeDiff
         ) {
           valuesToWorkWith.push(valuesToWorkWith[valuesToWorkWith.length - 1]);

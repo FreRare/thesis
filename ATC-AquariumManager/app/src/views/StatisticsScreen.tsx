@@ -33,7 +33,7 @@ function StatisticsScreen(props: StatisticsScreenProps) {
       setLoading(true);
       loadData();
       setLoading(false);
-      setIsAfetrFirstLoad(isAfterFirtsLoad + 1);
+      setTimeout(()=>setIsAfetrFirstLoad(isAfterFirtsLoad + 1), 1000);
     }
   });
 
