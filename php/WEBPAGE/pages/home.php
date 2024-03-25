@@ -11,10 +11,10 @@
     <section>
         <form method='POST' action='/WEBPAGE/actions/login.php'>
             <label for='username'>
-                <input name='username' placeholder='Username' />
+                <input name='username' type="text" placeholder='Username' />
             </label>
             <label for='password'>
-                <input name='password' placeholder='Password' />
+                <input name='password' type="password" placeholder='Password' />
             </label>
             <button type='submit'>Log in</button>
         </form>

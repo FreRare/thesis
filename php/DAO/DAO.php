@@ -18,9 +18,11 @@ class AQDAO implements AQDAOI
     private $config = null;
     private const CREATE_USER = "INSERT INTO users (email, firstName, lastName, password, deviceToken, authToken, inactive) VALUES (?, ?, ?, ?, ?, ?, false)";
     private const DELETE_USER = "UPDATE users SET inactive = true WHERE id = ?";
+    private const SELECT_USERS = "SELECT * FROM users";
     private const SELECT_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ? AND inactive IS NOT true";
     private const SELECT_USER_BY_TOKEN = "SELECT id, email, firstName, lastName, deviceToken, authToken FROM users WHERE authToken = ? AND inactive IS NOT true";
     private const UPDATE_USER = "UPDATE users SET email = ?, password = ?, firstName = ?, lastName = ?, deviceToken = ? WHERE id = ?";
+    private const SELECT_AQUARIUMS = "SELECT * FROM aquariums";
     private const SELECT_AQUARIUM = "SELECT * FROM aquariums WHERE id = ? AND inactive IS NOT true";
     private const CREATE_AQUARIUM = "INSERT INTO aquariums (name, length, height, depth, fishCount, inactive) VALUES (?, ?, ?, ?, ?, false)";
     private const DELETE_AQUARIUM = "UPDATE aquariums SET inactive = true WHERE id = ?";
@@ -86,6 +88,23 @@ class AQDAO implements AQDAOI
         } else {
             return $res;
         }
+    }
+
+    function selectUsers(): array
+    {
+        $stm = $this->connection->prepare(AQDAO::SELECT_USERS);
+        if (!$stm) {
+            error_log("Statement failed to create! " . $this->connection->error);
+            return [];
+        }
+        $stm->execute();
+        $stm->bind_result($id, $email, $fName, $lName, $pass, $token, $authToken, $inactive);
+        $users = [];
+        while ($stm->fetch()) {
+            $users[] = new User($id, $email, $pass, $fName, $lName, $token, $authToken, $inactive);
+        }
+        $stm->close();
+        return $users;
     }
     function selectUserByEmail(string $email)
     {
@@ -169,6 +188,21 @@ class AQDAO implements AQDAOI
         $stm->bind_param("ssssss", $newMail, $newPass, $newFname, $newLname, $newToken, $id);
         $success = $stm->execute();
         return $success;
+    }
+    function selectAquariums(): array
+    {
+        $stm = $this->connection->prepare(AQDAO::SELECT_AQUARIUMS);
+        if (!$stm) {
+            error_log("Failed to create query! " . $this->connection->error);
+            return [];
+        }
+        $stm->bind_result($id, $name, $length, $height, $depth, $fcount, $inactive);
+        $stm->execute();
+        $aqs = [];
+        while ($stm->fetch()) {
+            $aqs[] = new Aquarium($id, $name, $length, $height, $depth, $fcount, $inactive);
+        }
+        return $aqs;
     }
     function selectAquariumById(int $id)
     {

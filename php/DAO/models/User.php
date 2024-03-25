@@ -65,6 +65,11 @@ class User
         $this->deviceToken = $token;
     }
 
+    public function isInactive(): bool
+    {
+        return $this->inactive;
+    }
+
     public function toJSON(): string
     {
         $t = [];

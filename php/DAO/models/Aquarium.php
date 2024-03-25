@@ -7,8 +7,9 @@ class Aquarium
     private $height;
     private $width;
     private $fishCount;
+    private $inactive;
 
-    public function __construct($id, $name, $length, $height, $width, $fishCount)
+    public function __construct($id, $name, $length, $height, $width, $fishCount, $inactive)
     {
         $this->id = $id;
         $this->name = $name;
@@ -16,6 +17,7 @@ class Aquarium
         $this->height = $height;
         $this->width = $width;
         $this->fishCount = $fishCount;
+        $this->inactive = $inactive;
     }
 
     public function getId()
@@ -45,6 +47,10 @@ class Aquarium
     public function getfishCount()
     {
         return $this->fishCount;
+    }
+    public function isInactive(): bool
+    {
+        return $this->inactive;
     }
     public function toString()
     {

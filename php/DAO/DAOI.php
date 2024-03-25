@@ -14,6 +14,13 @@ interface AQDAOI
      * @return mixed the result of the query
      */
     function __query(string $sql);
+
+    /**
+     * Selects all users from DB
+     * @return array[User]
+     */
+    function selectUsers(): array;
+
     /**
      * Selects all users with the given email from the DB (should be only one)
      * @param string $email
@@ -47,6 +54,11 @@ interface AQDAOI
      * @return bool True on success
      */
     function updateUser(User $user, string $email): bool;
+    /**
+     * Selects all aquariums
+     * @return array[Aquarium]
+     */
+    function selectAquariums(): array;
     /**
      * Finds the aquarium with the ID provided, and return it as an Aquarium object
      * @param int $id
