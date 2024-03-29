@@ -1,7 +1,7 @@
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/inputConfig.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/notification/NotificationControl.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/DAO/models/SystemStatus.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/inputConfig.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/notification/NotificationControl.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/DAO/models/SystemStatus.php");
 
 /**
  * Logs the incoming data from the system
@@ -12,14 +12,14 @@ $now = (new DateTime())->format("Y-m-d H:i:s.u");
 
 $content = "$now ATC/LOG";
 
-if (!isset($_POST)) {
+if (!isset ($_POST)) {
     $content .= " => ERROR: NO POSTED DATA";
 } else {
-    if (!isset($_POST["log"]) || !isset($_POST["id"])) {
+    if (!isset ($_POST["log"]) || !isset ($_POST["id"])) {
         $content .= " => ERROR: MISSING DATA!";
     } else {
         $logStr = $_POST["log"];
-        $id = $_POST["id"];
+        $id = trim($_POST["id"]);
         $content .= " <System $id> => $logStr";
         if (strstr($logStr, ':')) {
             // If the message includes : //! Only status messages should include ':' character
@@ -31,17 +31,13 @@ if (!isset($_POST)) {
             $content .= " === " . $systemStats[$status];
         }
     }
-
-    /*
-    Notification testing!!! WORKS!!!
-    
-    $user = $DAO->selectUserForAquarium($id);
-    if ($user->getDeviceToken() == "NO_DEVICE_TOKEN") {
-        error_log("For system user $id - Notifications are not permitted!");
-    } else {
-        $notificationCtrl = new NotificationControl($user->getDeviceToken());
-        $notificationCtrl->send("Samples taken!");
-    }*/
 }
 // Dump log to file
-file_put_contents($filePath, $content . PHP_EOL, FILE_APPEND);
+$FILE = fopen($filePath, 'a+');
+if (flock($FILE, LOCK_EX)) {
+    fwrite($FILE, $content . PHP_EOL);
+    flock($FILE, LOCK_UN);
+} else {
+    error_log("LOGGER => Unable to lock file!");
+}
+fclose($FILE);

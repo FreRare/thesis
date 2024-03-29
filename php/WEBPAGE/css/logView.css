@@ -1,0 +1,60 @@
+.action{
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    align-items: center;
+    justify-items: center;
+    margin-bottom: 20px;
+    padding: 5px;
+    border: 2px solid lightblue;
+    border-radius: 20px;
+}
+
+.action>p{
+    margin-right: 10px;
+}
+
+table{
+    flex: 1;
+}
+
+#logDiv{
+    flex: 1;
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+}
+
+th{
+    flex: 1;
+    padding: 10px;
+    margin-bottom: 30px;
+    border: 2px gray solid;
+}
+
+tr:hover{
+    background-color: aqua;
+    color: black;
+}
+
+.trEven{
+    flex: 1;
+    background-color: lightgrey;
+}
+
+.trOdd{
+    flex: 1;
+    background-color: lightcyan;
+}
+
+.trError{
+    flex: 1;
+    background-color: lightcoral;
+}
+
+td{
+    flex: 1;
+    text-align: center;
+    text-justify: center;
+    padding: 5px;
+}
