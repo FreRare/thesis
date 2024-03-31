@@ -14,8 +14,28 @@
     margin-right: 10px;
 }
 
-table{
-    flex: 1;
+#rowsForm{
+    margin: 0;
+}
+
+#rowsForm>select{
+    padding: 10px;
+    margin: 10px;
+    background-color: white;
+    border: 2px solid darkblue;
+    border-radius: 15px;
+}
+
+#rowsForm>button{
+    background-color: white;
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid darkblue;
+    border-radius: 15px;
+}
+
+#rowsForm>button:hover{
+    background-color: lightblue;
 }
 
 #logDiv{
@@ -23,38 +43,4 @@ table{
     width: 100%;
     align-content: center;
     justify-content: center;
-}
-
-th{
-    flex: 1;
-    padding: 10px;
-    margin-bottom: 30px;
-    border: 2px gray solid;
-}
-
-tr:hover{
-    background-color: aqua;
-    color: black;
-}
-
-.trEven{
-    flex: 1;
-    background-color: lightgrey;
-}
-
-.trOdd{
-    flex: 1;
-    background-color: lightcyan;
-}
-
-.trError{
-    flex: 1;
-    background-color: lightcoral;
-}
-
-td{
-    flex: 1;
-    text-align: center;
-    text-justify: center;
-    padding: 5px;
 }

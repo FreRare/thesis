@@ -1,0 +1,23 @@
+nav{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+}
+
+nav>li{
+    margin: 5px;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+    padding: 10px;
+    border: 1px solid darkturquoise;
+    border-radius: 10px;
+}
+
+a:hover{
+    background-color: lightblue;
+}

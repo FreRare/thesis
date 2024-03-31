@@ -1,0 +1,43 @@
+table{
+    flex: 1;
+}
+
+th{
+    flex: 1;
+    padding: 10px;
+    margin-bottom: 30px;
+    border: 2px gray solid;
+}
+
+tr{
+    flex: 1;
+    color: darkslategrey;
+    background-color: lightblue;
+}
+
+tr:hover{
+    background-color: aqua;
+    color: black;
+}
+
+.trEven{
+    flex: 1;
+    background-color: lightgrey;
+}
+
+.trOdd{
+    flex: 1;
+    background-color: lightcyan;
+}
+
+.trError{
+    flex: 1;
+    background-color: lightcoral;
+}
+
+td{
+    flex: 1;
+    text-align: center;
+    text-justify: center;
+    padding: 5px;
+}

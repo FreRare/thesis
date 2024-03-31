@@ -9,7 +9,7 @@ class Aquarium
     private $fishCount;
     private $inactive;
 
-    public function __construct($id, $name, $length, $height, $width, $fishCount, $inactive)
+    public function __construct($id, $name, $length, $height, $width, $fishCount, $inactive = false)
     {
         $this->id = $id;
         $this->name = $name;

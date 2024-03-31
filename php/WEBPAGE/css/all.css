@@ -1,0 +1,45 @@
+header{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    border-bottom: 3px solid lightseagreen;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    margin: 20px;
+    padding: 10px;
+}
+
+.container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center;
+}
+
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+}
+
+form>button{
+    color: black;
+    background-color: white;
+    border: 2px solid darkslateblue;
+    border-radius: 10px;
+    margin: 20px;
+    padding: 15px;   
+}
+
+form>button:hover{
+    background-color: lightblue;
+    border: 2px solid darkblue;
+}
