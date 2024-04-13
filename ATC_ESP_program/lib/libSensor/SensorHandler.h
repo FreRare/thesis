@@ -19,9 +19,10 @@
 // The ph sensor is using 5 V, but it's devided down to 3.3V level so this is what the analog port will reference to
 #define REFERECNCE_VOLTAGE 3.3f
 #define ADC_RESOLUTION 1024.0f
-#define LIGHT_SENSOR_CH 2U
 #define WATER_SENSOR_CH 0U
 #define PH_SENSOR_CH 1U
+#define LIGHT_SENSOR_CH 2U
+#define TEMP_RECURSE_LIMIT 10.0F // The limit under what temp the value is thrown away and measure again
 
 /**
  * This class is handling the different sensors and is able to read their data
@@ -60,9 +61,9 @@ private:
     /**
      * @brief Reads the water sensor
      * @private
-     * @return uint8_t 
+     * @return True if water is present near sensor
      */
-    uint8_t readWaterSensor();
+    bool readWaterSensor();
     /**
      * @brief Reads the Ph sensor
      * @private

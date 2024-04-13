@@ -12,7 +12,6 @@
 
 #define MIN_PH 0.0F
 #define MAX_PH 14.0F
-#define MAX_WATER_LVL 100U
 
 /**
  * This class represents the configuration of the whole system.

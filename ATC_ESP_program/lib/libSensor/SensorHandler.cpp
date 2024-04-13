@@ -25,7 +25,7 @@ void SensorHandler::readSensors()
     LightIntensity light = this->readLightSensor();
     selectMux(WATER_SENSOR_CH);
     delay(1000);
-    uint8_t water = this->readWaterSensor();
+    bool water = this->readWaterSensor();
     selectMux(PH_SENSOR_CH);
     delay(1000);
     float ph = this->readPhSensor();
@@ -43,7 +43,7 @@ float SensorHandler::readTempSensor()
     float temperature = this->getValidSensorValue<float>(tempBuffer);
     Serial.print("Temperature measured: ");
     Serial.println(temperature);
-    if(temperature < 0){
+    if(temperature < TEMP_RECURSE_LIMIT){
         Serial.println("Calling temperature sensor sampler again..");
         temperature = this->readTempSensor();
     }
@@ -58,7 +58,7 @@ LightIntensity SensorHandler::readLightSensor()
         lightBuffer[i] = analogRead(ANALOG_SENSOR_PIN);
         delay(SENSOR_AVG_TIME_DIFF_MS);
     }
-    float value = this->getValidSensorValue<uint16_t>(lightBuffer);
+    const float value = this->getValidSensorValue<uint16_t>(lightBuffer);
     Serial.print("Light measured: ");
     Serial.println(value);
     // Return the enum value due to the measured value
@@ -75,7 +75,7 @@ LightIntensity SensorHandler::readLightSensor()
     }
 }
 
-uint8_t SensorHandler::readWaterSensor()
+bool SensorHandler::readWaterSensor()
 {
     uint16_t waterBuffer[SENSOR_BUF_SIZE];
     // Get samples
@@ -83,12 +83,10 @@ uint8_t SensorHandler::readWaterSensor()
         waterBuffer[i] = analogRead(ANALOG_SENSOR_PIN);
         delay(SENSOR_AVG_TIME_DIFF_MS);
     }
-    const float value = this->getValidSensorValue<uint16_t>(waterBuffer);
+    const uint16_t value = this->getValidSensorValue<uint16_t>(waterBuffer);
     Serial.print("Water measured: ");
     Serial.println(value);
-    // TODO: return valid percentage
-    // TODO: Get a new water level sensor and see how it works
-    return 100;
+    return (value > 1000U);
 }
 
 float SensorHandler::readPhSensor()
@@ -99,10 +97,10 @@ float SensorHandler::readPhSensor()
         phBuffer[i] = analogRead(ANALOG_SENSOR_PIN);
         delay(SENSOR_AVG_TIME_DIFF_MS);
     }
-    float avg = this->getValidSensorValue<uint16_t>(phBuffer);
+    const float avg = this->getValidSensorValue<uint16_t>(phBuffer);
     // Calculate PH value from the avg
     float phValue = (float)avg * (REFERECNCE_VOLTAGE / ADC_RESOLUTION);
-    float ph = (3.3f * phValue) + this->phCalibration; // Coorigate with calibration value
+    float ph = (3.3f * phValue) + this->phCalibration; // TODO: Coorigate
     Serial.print("Ph measured: ");
     Serial.println(ph);
     return ph;

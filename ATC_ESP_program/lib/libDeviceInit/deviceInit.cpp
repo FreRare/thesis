@@ -16,16 +16,6 @@ void pinSetup()
 
 void updateShiftRegister(uint8_t byteValue)
 {
-    char binaryString[9];
-    sprintf(binaryString, "%c%c%c%c%c%c%c%c", (byteValue & 0x80) ? '1' : '0', (byteValue & 0x40) ? '1' : '0',
-        (byteValue & 0x20) ? '1' : '0', (byteValue & 0x10) ? '1' : '0', (byteValue & 0x08) ? '1' : '0',
-        (byteValue & 0x04) ? '1' : '0', (byteValue & 0x02) ? '1' : '0', (byteValue & 0x01) ? '1' : '0');
-    binaryString[8] = '\0';
-
-    char* msg = new char[34];
-    sprintf(msg, "Updating shift register: %s", binaryString);
-    Serial.println(msg);
-    delete[] msg;
     digitalWrite(SHIFT_REGISTER_LATCH_PIN, LOW);
     shiftOut(SHIFT_REGISTER_DATA_PIN, SHIFT_REGISTER_CLK_PIN, MSBFIRST, byteValue);
     digitalWrite(SHIFT_REGISTER_LATCH_PIN, HIGH);

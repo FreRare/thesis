@@ -10,7 +10,7 @@ def main():
 		for filename in files:
 			if('package' in str(filename)):
 				continue
-			if filename.endswith(".h") or filename.endswith(".cpp") or filename.endswith(".ts") or filename.endswith(".tsx")	:
+			if filename.endswith(".h") or filename.endswith(".cpp") or filename.endswith(".ts") or filename.endswith(".tsx") or filename.endswith(".php"):
 				filesNumber += 1
 				fileRows = 0
 				with open("./" + str(folder) + "/" + str(filename), 'r+') as file:
