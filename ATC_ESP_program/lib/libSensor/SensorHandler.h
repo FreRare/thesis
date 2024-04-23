@@ -14,6 +14,7 @@
 #define PHOTORES_LIGHT_LIMIT 494U
 // ################################
 #define SENSOR_BUF_SIZE 50U // How many samples should be collected !!Shouldn't be higher than 256
+#define SENSOR_MEAN_START_DIVIDER 10U // The number to use to divide the buf size and leave the values from the beggining and the end of the measured values 
 #define SENSOR_DAT_ARRAY_AVG_WINDOW_DIFF SENSOR_BUF_SIZE / 5U
 #define SENSOR_AVG_TIME_DIFF_MS 200U
 // The ph sensor is using 5 V, but it's devided down to 3.3V level so this is what the analog port will reference to
@@ -22,7 +23,8 @@
 #define WATER_SENSOR_CH 0U
 #define PH_SENSOR_CH 1U
 #define LIGHT_SENSOR_CH 2U
-#define TEMP_RECURSE_LIMIT 10.0F // The limit under what temp the value is thrown away and measure again
+// ############################ Measure recurse limits
+#define TEMP_RECURSE_LIMIT 10.0F
 
 /**
  * This class is handling the different sensors and is able to read their data
