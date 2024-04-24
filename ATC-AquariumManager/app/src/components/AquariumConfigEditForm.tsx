@@ -360,7 +360,7 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
    * - valid Ph (0-14)
    * - low temp and ph is lower than high value
    */
-  const formValidator = () => {
+  const formValidator = async () => {
     // If we had datas as string (float values) validate it, it should only happen on textinputs
     const parsedData1 = Number.parseFloat(data1 as string);
     const parsedData2 = Number.parseFloat(data2 as string);
@@ -371,28 +371,32 @@ function AquariumConfigEditForm(props: AquariumConfigEditFormProps) {
     // Make sure of valid portions input
     if (props.label === strings.feeding) {
       if (parsedData2 > 10) {
-        Alert.alert(
-          strings.confirmFoodPortions,
-          strings.confirmFoodPortionsMessage,
-          [
-            {
-              text: strings.no,
-            },
-            {
-              text: strings.yes,
-              onPress: () => handleSubmit(parsedData1, parsedData2),
-            },
-          ]
-        );
+        await new Promise((resolve, reject)=>{
+          Alert.alert(
+            strings.confirmFoodPortions,
+            strings.confirmFoodPortionsMessage,
+            [
+              {
+                text: strings.no,
+                onPress: () => resolve(false),
+              },
+              {
+                text: strings.yes,
+                onPress: () => {handleSubmit(parsedData1, parsedData2);resolve(true)},
+              },
+            ],
+            {cancelable: false}
+          );
+        })
       }
     }
     // Temperature between 0-100
     if (props.label.includes(strings.temperature)) {
       if (
         parsedData1 < 0 ||
-        parsedData1 >= 100 ||
+        parsedData1 > 100 ||
         parsedData2 < 0 ||
-        parsedData2 >= 100
+        parsedData2 > 100
       ) {
         setErrorMsg(strings.invalidTemp);
         return;
