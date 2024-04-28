@@ -55,5 +55,6 @@
     "streambuf": "cpp",
     "cinttypes": "cpp",
     "typeinfo": "cpp"
-  }
+  },
+  "cmake.sourceDirectory": "C:/Users/abelt/Documents/SZTE/szakdoga/ATC_ESP_program/.pio/libdeps/nodemcuv2/ArduinoJson"
 }

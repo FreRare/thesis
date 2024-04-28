@@ -104,18 +104,23 @@ void statusHandler()
         switch (actualStatuses[i]) {
         case ConfigStatus::LOW_TEMP:
             g_server->postErrorCode(ConfigStatus::LOW_TEMP);
+            g_actuatorHandler->turnProblemLed(true);
             break;
         case ConfigStatus::HIGH_TEMP:
             g_server->postErrorCode(ConfigStatus::HIGH_TEMP);
+            g_actuatorHandler->turnProblemLed(true);
             break;
         case ConfigStatus::LOW_PH:
             g_server->postErrorCode(ConfigStatus::LOW_PH);
+            g_actuatorHandler->turnProblemLed(true);
             break;
         case ConfigStatus::HIGH_PH:
             g_server->postErrorCode(ConfigStatus::HIGH_PH);
+            g_actuatorHandler->turnProblemLed(true);
             break;
         case ConfigStatus::LOW_WATER: 
             g_server->postErrorCode(ConfigStatus::LOW_WATER);
+            g_actuatorHandler->turnProblemLed(true);
             break;
         case ConfigStatus::OUTLET_1_ON:
             g_actuatorHandler->channelSwithcer(1, true);
@@ -138,19 +143,22 @@ void statusHandler()
         case ConfigStatus::SAMPLE_TIME:
             if (!takeSensorSample()) {
                 g_server->postErrorCode(ConfigStatus::SAMPLE_TIME);
+                g_actuatorHandler->turnProblemLed(true);
             }
             break;
         case ConfigStatus::FEEDING_TIME:
-            break;
             g_actuatorHandler->feed(g_configHandler->getConfiguration()->getFeedingPortions());
             break;
         case ConfigStatus::BROKEN_LIGHT:
             g_server->postErrorCode(ConfigStatus::BROKEN_LIGHT);
+            g_actuatorHandler->turnProblemLed(true);
             break;
         case ConfigStatus::ERROR: 
             g_server->postErrorCode(ConfigStatus::ERROR);
+            g_actuatorHandler->turnProblemLed(true);
             break;
         case ConfigStatus::OK_STATUS:
+            g_actuatorHandler->turnProblemLed(false);
             break;
         default:
             break;

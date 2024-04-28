@@ -25,6 +25,7 @@
 #define LIGHT_SENSOR_CH 2U
 // ############################ Measure recurse limits
 #define TEMP_RECURSE_LIMIT 10.0F
+#define PH_OFFSET 1.1F // The ph calibration value
 
 /**
  * This class is handling the different sensors and is able to read their data
@@ -72,7 +73,6 @@ private:
      * @return float 
      */
     float readPhSensor();
-    float phCalibration; // The calibration value for the PH sensor
 
     /**
      * @brief Get the Valid Sensor value by calculating a median bypassing 10% of data on each sides after ordering it in ascending order

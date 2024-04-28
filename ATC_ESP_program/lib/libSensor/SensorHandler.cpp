@@ -6,8 +6,6 @@ SensorHandler::SensorHandler()
     , lastSamples(nullptr)
 {
     this->sensors.begin(); // Begin the onewire transmission for sensors
-    this->phCalibration = 0.8f; // TODO: Recalibrate
-    // this->readSensors();
 }
 
 SensorHandler::~SensorHandler()
@@ -99,8 +97,8 @@ float SensorHandler::readPhSensor()
     }
     const float avg = this->getValidSensorValue<uint16_t>(phBuffer);
     // Calculate PH value from the avg
-    float phValue = (float)avg * (REFERECNCE_VOLTAGE / ADC_RESOLUTION);
-    float ph = (3.3f * phValue) + this->phCalibration; // TODO: Coorigate
+    float phVoltage = (float)avg * (REFERECNCE_VOLTAGE / ADC_RESOLUTION);
+    float ph = 14.0F - (((float)map(phVoltage, 0, 5000, 0, 1400) / 100.0F) + PH_OFFSET);
     Serial.print("Ph measured: ");
     Serial.println(ph);
     return ph;

@@ -46,7 +46,7 @@ void ActuatorHandler::channelSwithcer(const uint8_t& channel, const bool& state)
     // Set state to current
     ActuatorHandler::channelStates[channel - 1] = state;
     updateShiftRegister(this->shiftRegisterState);
-    delay(2000);
+    delay(100);
 }
 
 void ActuatorHandler::feed(const uint8_t& portions)
@@ -56,7 +56,11 @@ void ActuatorHandler::feed(const uint8_t& portions)
 
 void ActuatorHandler::turnProblemLed(bool state)
 {
-    state ? this->shiftRegisterState |= SR_PROBLEM_LED_ON : this->shiftRegisterState &= ~SR_PROBLEM_LED_ON;
-    Serial.println("Switching red LED");
+    if((state && ((this->shiftRegisterState & SR_PROBLEM_LED_ON) == 0)) || (!state && ((this->shiftRegisterState & SR_PROBLEM_LED_ON) == 1))){
+        return;
+    }
+    this->shiftRegisterState ^= SR_PROBLEM_LED_ON;
+    Serial.println("Switching red LED with binary");
+    Serial.println(this->shiftRegisterState, BIN);
     updateShiftRegister(this->shiftRegisterState);
 }

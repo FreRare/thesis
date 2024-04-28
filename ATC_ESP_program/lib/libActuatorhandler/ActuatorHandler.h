@@ -10,7 +10,6 @@
 #define SR_RELAY1_ON B00000010 // Values for shift register to control relays (only 3 used)
 #define SR_RELAY2_ON B00000100
 #define SR_RELAY3_ON B00001000
-#define SR_RELAY4_ON B00010000
 #define SR_PROBLEM_LED_ON B01000000 // For the LED
 #define SR_OFF B00000000
 
