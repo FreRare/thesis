@@ -7,4 +7,4 @@ ATC_ESP_program/.vscode
 **/node_modules/
 
 # Circuit backup files
-circuits/RemoteQuarium_pcb_design-backups/
+circuits/RemoteQuarium_pcb_design/RemoteQuarium_pcb_design-backups
