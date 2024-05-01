@@ -4,8 +4,6 @@ LiquidCrystal_I2C UIHandler::display = LiquidCrystal_I2C(LCD_ADDRESS, LCD_COLUMN
 UIHandler* UIHandler::instancePtr = new UIHandler();
 
 UIHandler::UIHandler()
-    : lastPhValue(0.0F)
-    , lastTempValue(0.0F)
 {
     UIHandler::display.init();
     UIHandler::display.backlight();
@@ -47,6 +45,12 @@ void UIHandler::makeWiFiConfigMessage(const char* ssid, const char* ip)
     char ipText[IP_TEXT_LENGTH + ipLength + 1];
     sprintf(ipText, "IP: %s", ip);
     UIHandler::writeLine(ipText, 4);
+}
+
+void UIHandler::writeStartupWelcome(){
+    UIHandler::writeLine("Hello there!", 1);
+    UIHandler::makeScrollingText("Welcome to the ATC system! Your personal aquarium manager is getting ready to work...", 3);
+    UIHandler::clear();
 }
 
 void UIHandler::writeLine(const char* msg, const uint8_t& line, const uint8_t& col)
@@ -116,6 +120,12 @@ void UIHandler::writeBasicInfo(const float& ph, const float& temp)
     coorigateDigits(h, min, clockStr);
     clockStr[5] = '\0';
     UIHandler::writeLine(clockStr, 1, 6);
+
+    // If we have no data to display
+    if(ph < 0 && temp < 0){
+        UIHandler::writeLine("No diplayable data :(", 3);
+        return;
+    }
 
     // Bitmap LCD symbols
     const char thermometerSymbol[8] = { B00100, B01010, B01010, B01010, B01010, B10001, B10001, B01110 };

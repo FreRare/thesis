@@ -9,8 +9,9 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
 #include <NTPClient.h>
-#include <TimeLib.h>
 #include <WiFiUdp.h>
+#include <TimeLib.h>
+#include <Timezone.h>
 #include <stdio.h>
 
 #define CONN_TIMEOUT 150 // Connection timeout = timeout * 2 seconds
@@ -19,8 +20,13 @@
 #define CONFIG_UPDATE_POST_DATA_LENGTH 18 // The length of the str to send config update json
 #define SESNOR_DATA_POST_LENGTH 116 // The length of the str to post sensor data
 #define NOTIFICATION_DATA_LENGTH 36// Length of the notification data
+
 #define NTP_SERVER_ADDRESS "pool.ntp.org"
 
+#define URL_CONNECTION_CHECK "http://atc.takacsnet.hu/CONTROLS/aquarium/connectionCheck.php"
+#define URL_SENSOR_DATA_UPLOAD "http://atc.takacsnet.hu/CONTROLS/aquarium/sensorDataUpload.php"
+#define URL_NOTIFICATION "http://atc.takacsnet.hu/CONTROLS/notification/notificationHandler.php"
+#define URL_CONFIG_UPDATE "http://atc.takacsnet.hu/CONTROLS/aquarium/getAquariumConfig.php"
 #define URL_FACTORY_RESET_CHECK "http://atc.takacsnet.hu/CONTROLS/aquarium/factoryResetCheck.php"
 #define URL_POST_LOG "http://atc.takacsnet.hu/LOG/Logger.php" 
 
@@ -32,13 +38,10 @@ class ServerConnector {
 private:
     WiFiClient client;
     HTTPClient httpClient;
-    WiFiUDP ntpUDP;
-    NTPClient* timeClient;
+    WiFiUDP udpClient;
+    NTPClient *timeClient;
     WiFiConfig* config;
-    static const char* connectionCheckPath;
-    static const char* sensorDataUploadPath;
-    static const char* notificationPath;
-    static const char* configUpdatePath;
+    Timezone* MYTZ;
 
     bool lowTempNotificationSent;
     bool highTempNotificationSent;
@@ -74,7 +77,6 @@ public:
      * @param str The log message to be sent
      */
     void ATCLog(char* str);
-    NTPClient* getTimeClient() const;
     /**
      * Fetches the config data form the database
      * Checks if we had update or no

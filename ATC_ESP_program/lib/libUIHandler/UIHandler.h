@@ -14,8 +14,6 @@
 
 class UIHandler {
 private:
-    float lastPhValue;
-    float lastTempValue;
     static LiquidCrystal_I2C display;
     static UIHandler* instancePtr;
     UIHandler();
@@ -24,6 +22,7 @@ public:
     ~UIHandler();
     UIHandler(const UIHandler& ui) = delete;
     static UIHandler* getInstance();
+    static void writeStartupWelcome();
     static void makeWiFiConfigMessage(const char* ssid, const char* ip);
     static void makeScrollingText(
         const char* msg, const uint8_t line, const uint16_t& delayTime = 400, const uint8_t& cycles = 1);

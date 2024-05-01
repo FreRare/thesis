@@ -9,15 +9,11 @@ bool isWiFiConnected()
     return true;
 }
 
-const char* ServerConnector::connectionCheckPath = "http://atc.takacsnet.hu/CONTROLS/aquarium/connectionCheck.php";
-const char* ServerConnector::sensorDataUploadPath = "http://atc.takacsnet.hu/CONTROLS/aquarium/sensorDataUpload.php";
-const char* ServerConnector::notificationPath = "http://atc.takacsnet.hu/CONTROLS/notification/notificationHandler.php";
-const char* ServerConnector::configUpdatePath = "http://atc.takacsnet.hu/CONTROLS/aquarium/getAquariumConfig.php";
-
 ServerConnector::ServerConnector(): lowTempNotificationSent(false), highTempNotificationSent(false), lowPhNotificationSent(false), highPhNotificationSent(false),  brokenLightNotificationSent(false), lowWaterNotificationSent(false)
 {
-    this->timeClient = new NTPClient(this->ntpUDP, NTP_SERVER_ADDRESS);
+    // Set up wifi config
     this->config = new WiFiConfig();
+    // COnnect to network
     if (this->connectToNetwork()) {
         UIHandler::getInstance()->clear();
         UIHandler::getInstance()->writeLine("Successful", 1);
@@ -25,7 +21,7 @@ ServerConnector::ServerConnector(): lowTempNotificationSent(false), highTempNoti
         char systemIdText[SYSTEMID_TEXT_LENGTH + 1];
         sprintf(systemIdText, "Your system ID: %d", this->config->getSystemID());
         UIHandler::getInstance()->writeLine(systemIdText, 3);
-        UIHandler::getInstance()->makeScrollingText("Use this ID for registration inside the app!", 4, 400, 1);
+        UIHandler::getInstance()->makeScrollingText("Use this ID for registration inside the app!", 4);
     } else {
         UIHandler::getInstance()->clear();
         UIHandler::getInstance()->writeLine("Connection failed!", 1);
@@ -35,8 +31,11 @@ ServerConnector::ServerConnector(): lowTempNotificationSent(false), highTempNoti
         this->config->forgetNetwork();
         ESP.restart();
     }
+    
+    // Set up NTP time
+    this->MYTZ = new Timezone((TimeChangeRule){"CEST", Last, Sun, Mar, 2, 120}, (TimeChangeRule){"CET", Last, Sun, Oct, 3, 60}); // Set up my time zone
+    this->timeClient = new NTPClient(this->udpClient, NTP_SERVER_ADDRESS);
     this->timeClient->begin();
-    this->timeClient->setTimeOffset(3600);
     this->syncNTPTime();
 }
 
@@ -44,22 +43,18 @@ void ServerConnector::syncNTPTime()
 {
     this->timeClient->update();
     time_t epochTime = this->timeClient->getEpochTime();
-    setTime(epochTime);
+    setTime(this->MYTZ->toLocal(epochTime));
     Serial.print("Synced time with server:");
-    Serial.println(epochTime);
-
+    Serial.println(now());
 }
 
 ServerConnector::~ServerConnector()
 {
     WiFi.disconnect();
     delete this->config;
-    this->config = nullptr;
     delete this->timeClient;
-    this->timeClient = nullptr;
+    delete this->MYTZ;
 }
-
-NTPClient* ServerConnector::getTimeClient() const { return this->timeClient; }
 
 bool ServerConnector::connectToNetwork()
 {
@@ -84,7 +79,7 @@ bool ServerConnector::connectToNetwork()
 
     // If connection is ok let's check the connection
     if (this->config->getSystemID() == 0) { // If we have no system ID than get one
-        this->httpClient.begin(this->client, ServerConnector::connectionCheckPath); // begin http connection
+        this->httpClient.begin(this->client, URL_CONNECTION_CHECK); // begin http connection
         int httpCode = this->httpClient.GET(); // Perform http POST
         if (httpCode > 0) {
             if (httpCode == HTTP_CODE_OK) { // response is ok
@@ -117,7 +112,7 @@ ConfigData* ServerConnector::updateConfigData(ConfigData* config)
         Serial.println("Wifi not connected!");
         return NULL;
     }
-    this->httpClient.begin(this->client, ServerConnector::configUpdatePath);
+    this->httpClient.begin(this->client, URL_CONFIG_UPDATE);
     this->httpClient.addHeader("Content-Type", "application/json");
     char postData[CONFIG_UPDATE_POST_DATA_LENGTH];
     sprintf(postData, "{\"id\":\"%d\"}", this->config->getSystemID());
@@ -162,7 +157,7 @@ bool ServerConnector::postSensorData(const SensorData* data)
         "{\"id\":\"%d\",\"temp\":\"%2.2f\",\"ph\":\"%2.2f\",\"light\":\"%1d\",\"water\":\"%d\",\"timestamp\":\"%lld\"}",
         this->config->getSystemID(), data->getTemperature(), data->getPh(), data->getLightAmount(), data->getWaterLvl(),
         data->getTimeStamp());
-    this->httpClient.begin(this->client, ServerConnector::sensorDataUploadPath);
+    this->httpClient.begin(this->client, URL_SENSOR_DATA_UPLOAD);
     uint16_t responseCode = this->httpClient.POST(sensorDataJson);
     if (responseCode != HTTP_CODE_OK) {
         Serial.print("Sensor data posting: HTTP error: ");
@@ -240,7 +235,7 @@ void ServerConnector::postErrorCode(const ConfigStatus& status){
     notificationDataJSON[NOTIFICATION_DATA_LENGTH-1] = '\0';
     Serial.print("Sending notification body: ");
     Serial.println(notificationDataJSON);
-    this->httpClient.begin(this->client, ServerConnector::notificationPath);
+    this->httpClient.begin(this->client, URL_NOTIFICATION);
     uint16_t responseCode = this->httpClient.POST(notificationDataJSON);
     if(responseCode != HTTP_CODE_OK){
         Serial.print("Sensor data posting: HTTP error: ");

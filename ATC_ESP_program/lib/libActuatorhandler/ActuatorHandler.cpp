@@ -7,10 +7,38 @@ ActuatorHandler::ActuatorHandler()
     for (uint8_t i = 0; i < CHANNEL_COUNT; i++) {
         ActuatorHandler::channelStates[i] = false;
     }
-    this->shiftRegisterState = SR_OFF;
-    updateShiftRegister(this->shiftRegisterState);
     this->feederServo.attach(FEEDER_SERVO_PIN, 500, 2400);
     this->feederServo.write(0);
+
+    #if MODE_TEST_ON == 1
+    Serial.println("Testing relays...");
+    this->channelSwithcer(1, true);
+    delay(2000);
+    this->channelSwithcer(2, true);
+    delay(2000);
+    this->channelSwithcer(3, true);
+    delay(2000);
+    this->channelSwithcer(1, false);
+    delay(2000);
+    this->channelSwithcer(2, false);
+    delay(2000);
+    this->channelSwithcer(3, false);
+    delay(2000);
+    Serial.println("Relay test finished!");
+
+    Serial.println("Testing servo...");
+    for(int i = 0;i<5;i++){
+        this->feederServo.write(180);
+        delay(1000);
+        this->feederServo.write(0);
+        delay(1000);
+    }
+    Serial.println("Servo test finished!");
+
+    #endif
+
+    this->shiftRegisterState = SR_OFF;
+    updateShiftRegister(this->shiftRegisterState);
 }
 
 ActuatorHandler::~ActuatorHandler()
@@ -60,7 +88,7 @@ void ActuatorHandler::turnProblemLed(bool state)
         return;
     }
     this->shiftRegisterState ^= SR_PROBLEM_LED_ON;
-    Serial.println("Switching red LED with binary");
+    Serial.print("Switching red LED with binary: ");
     Serial.println(this->shiftRegisterState, BIN);
     updateShiftRegister(this->shiftRegisterState);
 }

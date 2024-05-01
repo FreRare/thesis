@@ -10,8 +10,6 @@
 /*---------------------------------
 Main defines and global vars START
 ------------------------------------*/
-// Debug option, uses Serial.print to log info set to 0 if no debugging is required //! not working
-#define DEBUG 1
 #define UPDATE_INTERVAL_MIN 10U // Configuration update interval in minutes
 // Longest loop runtime measure is 71954ms so far...
 #define WDT_TIMEOUT_MS 80000U //! Should be longer than sensor sampling cycle
@@ -239,17 +237,15 @@ void setup()
     // Global var initializations
     // Set up all things before wifi connection
     g_actuatorHandler = new ActuatorHandler();
+    UIHandler::getInstance()->writeStartupWelcome();
     // Set up wifi connection in constructor
     g_server = new ServerConnector();
     performFactoryResetCheck(); // See for factory reset
     g_configHandler = new ConfigHandler();
-    UIHandler::getInstance()->writeLine("Reading sensors..", 4);
     g_sensorHandler = new SensorHandler();
     updateConfig();
     Serial.println("Config updated!");
     resetLogger();
-    // Clean up LCD
-    UIHandler::getInstance()->clear();
     // Watchdog timer
     ESP.wdtEnable(WDT_TIMEOUT_MS);
 }
@@ -291,6 +287,7 @@ void loop()
             performFactoryResetCheck();
             updateConfig();
         }
+
         Serial.print("StatusHandler call at: ");
         Serial.print(g_h);
         Serial.print(":");
@@ -298,14 +295,15 @@ void loop()
         Serial.print(":");
         Serial.println(g_sec);
         Serial.println("========================");
-        statusHandler(); //* Statushandler call
-        delay(500);
+
+        statusHandler(); // Statushandler call
+
         // Screen info update every minute after all actions
         if (g_sensorHandler->getLastSamples() != nullptr) {
-            UIHandler::writeBasicInfo(
+            UIHandler::getInstance()->writeBasicInfo(
                 g_sensorHandler->getLastSamples()->getPh(), g_sensorHandler->getLastSamples()->getTemperature());
         } else {
-            UIHandler::writeBasicInfo(0.0F, 0.0F);
+            UIHandler::getInstance()->writeBasicInfo(-1.0, -1.0);
         }
         /*--------------------------------
         Memory log and managment START

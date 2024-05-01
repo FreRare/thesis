@@ -16,12 +16,12 @@
 //-------------------------
 #define ANALOG_SENSOR_PIN A0 // MUX X (for sensors)
 #define SHIFT_REGISTER_DATA_PIN D0 // Shift register data (DS)
-#define SHIFT_REGISTER_CLK_PIN D5 // Shift register clock (SHCP)
-#define SHIFT_REGISTER_LATCH_PIN D6 // Shift register latch (STCP)
-#define DIGITAL_TEMP_SENSOR_PIN D9 // For the digital temp sensor (RX)
+#define SHIFT_REGISTER_CLK_PIN D3 // Shift register clock (SHCP)
+#define SHIFT_REGISTER_LATCH_PIN D4 // Shift register latch (STCP)
+#define DIGITAL_TEMP_SENSOR_PIN D5 // For the digital temp sensor
 #define MUX_SELECT_A D8 // MUX A selector
 #define MUX_SELECT_B D7 // MUX B selector
-#define FEEDER_SERVO_PIN D3
+#define FEEDER_SERVO_PIN D6
 
 //-----------------------------
 

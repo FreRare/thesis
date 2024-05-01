@@ -6,6 +6,8 @@ SensorHandler::SensorHandler()
     , lastSamples(nullptr)
 {
     this->sensors.begin(); // Begin the onewire transmission for sensors
+    UIHandler::getInstance()->writeLine("Reading sensors...", 3);
+    this->readSensors();
 }
 
 SensorHandler::~SensorHandler()
