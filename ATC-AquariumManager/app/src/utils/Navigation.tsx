@@ -11,6 +11,7 @@ import User from "../models/User";
 type NavigationProps = {
   user: User | undefined;
   setUser: (u: User | undefined | null) => void;
+  isUserLoaded: boolean;
 };
 
 const Tab = createBottomTabNavigator();
@@ -56,7 +57,11 @@ function Navigation(propsog: NavigationProps) {
             }}
           >
             {(props: any) => (
-              <WelcomeScreen {...props} setUser={propsog.setUser} />
+              <WelcomeScreen
+                {...props}
+                setUser={propsog.setUser}
+                isUserLoadFinished={propsog.isUserLoaded}
+              />
             )}
           </Tab.Screen>
         </>

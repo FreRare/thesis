@@ -74,7 +74,8 @@ const requestStoragePermissionsForAndroid = async (): Promise<boolean> => {
  */
 const useUser = (): [
   user: User | undefined,
-  (user: User | undefined | null, rememberMe?: boolean) => void
+  (user: User | undefined | null, rememberMe?: boolean) => void,
+  boolean
 ] => {
   // The original useState
   const [_user, _setUser] = React.useState<User | undefined>();
@@ -178,7 +179,7 @@ const useUser = (): [
       _setUser(undefined);
     }
   };
-  return [_user, setUser];
+  return [_user, setUser, loaded];
 };
 
 export default useUser;

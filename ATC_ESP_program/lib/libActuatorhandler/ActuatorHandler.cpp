@@ -11,6 +11,7 @@ ActuatorHandler::ActuatorHandler()
     this->feederServo.write(0);
 
     #if MODE_TEST_ON == 1
+    
     Serial.println("Testing relays...");
     this->channelSwithcer(1, true);
     delay(2000);
@@ -34,6 +35,15 @@ ActuatorHandler::ActuatorHandler()
         delay(1000);
     }
     Serial.println("Servo test finished!");
+
+    Serial.println("Testing problem LED");
+    for(int i = 0; i<5;i++){
+        this->turnProblemLed(true);
+        delay(3000);
+        this->turnProblemLed(false);
+        delay(3000);
+    }
+    Serial.println("LED test finished!");
 
     #endif
 

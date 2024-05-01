@@ -9,6 +9,7 @@ import User from "../models/User";
 type WelcomeScreenProps = {
   navigation: any;
   setUser: (u: User | undefined | null) => void;
+  isUserLoadFinished: boolean;
 };
 
 /**
@@ -28,6 +29,7 @@ function WelcomeScreen(props: WelcomeScreenProps) {
             navigation={props.navigation}
             setUser={props.setUser}
             setIsLogin={setIsLogin}
+            isUserLoading={!props.isUserLoadFinished}
           />
         )}
         {!isLogin && (

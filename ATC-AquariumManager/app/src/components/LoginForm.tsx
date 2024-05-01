@@ -21,6 +21,7 @@ interface LoginScreenProps {
   navigation: any;
   setIsLogin: (l: boolean) => void;
   setUser: (u: User | undefined | null, rememberMe?: boolean) => void;
+  isUserLoading: boolean;
 }
 
 /**
@@ -35,6 +36,21 @@ function LoginForm(props: LoginScreenProps): React.JSX.Element {
   const [isRememberMe, setIsRememberMe] = React.useState<boolean>(true);
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [userLoading, setUserLoading] = React.useState<boolean>(
+    props.isUserLoading
+  );
+
+  /**
+   * Necessary to maintain loading animation while loading user from memory
+   */
+  React.useEffect(() => {
+    if (userLoading !== props.isUserLoading) {
+      // Timeout is needed for smooth animation
+      setTimeout(() => {
+        setUserLoading(props.isUserLoading);
+      }, 2000);
+    }
+  });
 
   /**
    * Validates the fields of the form
@@ -91,10 +107,9 @@ function LoginForm(props: LoginScreenProps): React.JSX.Element {
         alert("Error while logging in: " + e);
       });
   };
-
   return (
     <View style={styles.container}>
-      {loading && <LoadingAnimation />}
+      {(loading || userLoading) && <LoadingAnimation />}
       <View style={styles.icon}>
         <Icon name="user-alt" size={40} />
       </View>

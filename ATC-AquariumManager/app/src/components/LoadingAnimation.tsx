@@ -5,7 +5,7 @@ import colors from "../../config/colors";
 /**
  * Displays a loading animation in the middle of the view over everything
  * @see {ActivityIndicator} - uses it for animation
- * @returns - the animation
+ * @returns The animation
  */
 function LoadingAnimation(): React.JSX.Element {
   return (
