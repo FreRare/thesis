@@ -302,14 +302,14 @@ function StatisticsChartDisplayer(
     // Check if we have samples for that time
     if (samplesInDateRange.length <= 0) {
       // If we dont go to the last ones
-      alert(
-        `No ${props.label} samples found for the past ${daysCount} day(s), showing last available samples!`
-      );
       // Recreating time window
       const lastSampleData = findLastSampleAndDates(props.data);
       today = lastSampleData.lastSample.sampleTime;
       lastDate = new Date(lastSampleData.lastSample.sampleTime);
       lastDate.setDate(lastDate.getDate() - daysCount);
+      alert(
+        `No ${props.label} samples found for the past ${daysCount} day(s), showing last available samples (${today})!`
+      );
 
       samplesInDateRange = props.data
         .filter((s) => {
