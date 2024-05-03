@@ -8,7 +8,7 @@ ActuatorHandler::ActuatorHandler()
         ActuatorHandler::channelStates[i] = false;
     }
     this->feederServo.attach(FEEDER_SERVO_PIN, 500, 2400);
-    this->feederServo.write(0);
+    this->feederServo.write(90);
 
     #if MODE_TEST_ON == 1
     
@@ -27,14 +27,9 @@ ActuatorHandler::ActuatorHandler()
     delay(2000);
     Serial.println("Relay test finished!");
 
-    Serial.println("Testing servo...");
-    for(int i = 0;i<5;i++){
-        this->feederServo.write(180);
-        delay(1000);
-        this->feederServo.write(0);
-        delay(1000);
-    }
-    Serial.println("Servo test finished!");
+    Serial.println("Testing feeder...");
+    this->feed(3);
+    Serial.println("Feeder test finished!");
 
     Serial.println("Testing problem LED");
     for(int i = 0; i<5;i++){
@@ -89,7 +84,24 @@ void ActuatorHandler::channelSwithcer(const uint8_t& channel, const bool& state)
 
 void ActuatorHandler::feed(const uint8_t& portions)
 {
-    // TODO: FEED
+    for(uint8_t r = 0; r < portions; r++){
+
+        for(uint8_t i = 90; i < 134; i++){
+            this->feederServo.write(i);
+            delay(10);
+        }
+
+        for(uint8_t i = 135; i > 0; i--){
+            this->feederServo.write(i);
+            delay(10);
+        }
+
+        for(uint8_t i = 0; i < 90; i++){
+            this->feederServo.write(i);
+            delay(10);
+        }
+        delay(1000);
+    }
 }
 
 void ActuatorHandler::turnProblemLed(bool state)

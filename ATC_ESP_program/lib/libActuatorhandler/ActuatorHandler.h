@@ -5,7 +5,7 @@
 #include <Arduino.h>
 #include <Debug.h>
 
-#define MODE_TEST_ON 0 // Test mode flag
+#define MODE_TEST_ON 1 // Test mode flag
 #define CHANNEL_COUNT 3
 // On the shift register we don't use Q0 for easier pcb planning
 #define SR_RELAY1_ON B00000010 // Values for shift register to control relays (only 3 used)
