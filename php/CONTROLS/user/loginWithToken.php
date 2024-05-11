@@ -2,7 +2,7 @@
 
 // Performs a login like action (get's user data based on token)
 // Used for auto login authorization
-require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
 if (empty($_POST["token"])) {
     $result["error"] = "LOGIN WITH TOKEN: Missing data!";

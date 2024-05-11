@@ -8,3 +8,9 @@ ATC_ESP_program/.vscode
 
 # Circuit backup files
 circuits/RemoteQuarium_pcb_design/RemoteQuarium_pcb_design-backups
+
+# config and passwords
+/php/DAO/Config/DBConfig.php
+
+# pics
+pics/*
