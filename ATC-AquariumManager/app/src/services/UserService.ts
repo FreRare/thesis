@@ -1,6 +1,7 @@
 import strings from "../../config/strings";
 import User from "../models/User";
 import CommonServiceCallback from "./commonServiceCallbacks";
+import { sha256 } from "js-sha256";
 
 export class UserService {
   /**
@@ -55,8 +56,8 @@ export class UserService {
     };
     const data = JSON.stringify({
       email: email,
-      oldPass: oldPass,
-      newPass: newPass,
+      oldPass: sha256(oldPass),
+      newPass: sha256(newPass),
     });
     return fetch(strings.PATHS.changePasswordApiUrl, {
       method: "POST",

@@ -94,6 +94,7 @@ function LoginForm(props: LoginScreenProps): React.JSX.Element {
     if (!token) {
       alert(strings.pushNotificationsDeniedAlertMessage);
     }
+    // Hash password here rather than backend
     AuthService.tryLogin(email, pass, token ? token : undefined)
       .then((loginData) => {
         if (loginData instanceof User) {

@@ -51,10 +51,10 @@ class AQDAO implements AQDAOI
             $this->config->getUser("DAO"),
             $this->config->getPassword("DAO"),
             $this->config->getDatabase("DAO"),
-            $this->config->getPort("DAO") //TODO:  Gets too many connections sometimes
+            $this->config->getPort("DAO")
         );
         if (!$this->connection || mysqli_connect_error()) {
-            die ("Connection failed!!!" . mysqli_connect_error());
+            die("Connection failed!!!" . mysqli_connect_error());
         } else {
             try {
                 if ($this->connection->query("USE " . $this->config->getDatabase("DAO"))) {
@@ -67,7 +67,6 @@ class AQDAO implements AQDAOI
     }
     protected function __destruct()
     {
-        // TODO ?
         $this->connection->close();
     }
     public static function getInstance(): AQDAO
@@ -118,7 +117,7 @@ class AQDAO implements AQDAOI
         $stm->bind_result($id, $mail, $fname, $lname, $pass, $token, $authToken, $inactive);
         $stm->fetch();
         $stm->close();
-        if (!isset ($mail) || !isset ($pass) || !isset ($fname) || !isset ($lname) || !isset ($token) || !isset ($authToken)) {
+        if (!isset($mail) || !isset($pass) || !isset($fname) || !isset($lname) || !isset($token) || !isset($authToken)) {
             error_log("Select user -> Missing data after query!");
             return null;
         } else {
@@ -134,7 +133,7 @@ class AQDAO implements AQDAOI
         $stm->bind_result($id, $user, $fname, $lname, $token, $authToken);
         $stm->fetch();
         $stm->close();
-        if (!isset ($user) || !isset ($fname) || !isset ($lname) || !isset ($token) || !isset ($authToken)) {
+        if (!isset($user) || !isset($fname) || !isset($lname) || !isset($token) || !isset($authToken)) {
             return null;
         } else {
             return new User($id, $user, "", $fname, $lname, $token, $authToken);
@@ -212,7 +211,7 @@ class AQDAO implements AQDAOI
         $stm->bind_result($id, $name, $length, $height, $width, $fishCount, $inactive);
         $stm->fetch();
         $stm->close();
-        if (empty ($id) || empty ($name) || empty ($length) || empty ($height) || empty ($width) || empty ($fishCount)) {
+        if (empty($id) || empty($name) || empty($length) || empty($height) || empty($width) || empty($fishCount)) {
             return null;
         } else {
             return new Aquarium($id, $name, $length, $height, $width, $fishCount);
@@ -427,7 +426,7 @@ class AQDAO implements AQDAOI
     }
     function selectUserAquariums(User $user): array
     {
-        if (!$user instanceof User || !isset ($user))
+        if (!$user instanceof User || !isset($user))
             return [];
         $stm = $this->connection->prepare(AQDAO::SELECT_USER_AQUARIUMS);
         if (!$stm) {
@@ -455,14 +454,14 @@ class AQDAO implements AQDAOI
         error_log($email . $firstName . $lastName . $password . $deviceToken);
         $stm->fetch();
         $stm->close();
-        if (empty ($id) || empty ($email) || empty ($firstName) || empty ($lastName) || empty ($password) || empty ($deviceToken) || empty ($authToken) || empty ($deviceToken) || empty ($authToken)) {
+        if (empty($id) || empty($email) || empty($firstName) || empty($lastName) || empty($password) || empty($deviceToken) || empty($authToken) || empty($deviceToken) || empty($authToken)) {
             return null;
         }
         return new User($id, $email, $password, $firstName, $lastName, $deviceToken, $authToken);
     }
     function deleteAquariumConnectionByAquarium(Aquarium $aquarium): bool
     {
-        if (empty ($id))
+        if (empty($id))
             return false;
         $stm = $this->connection->prepare(AQDAO::DELETE_HAVE_AQUARIUM_BY_ID);
         $id = $aquarium->getId();
@@ -473,7 +472,7 @@ class AQDAO implements AQDAOI
     }
     function deleteAquariumConnectionByUser(User $user): bool
     {
-        if (empty ($user) || !$user instanceof User)
+        if (empty($user) || !$user instanceof User)
             return false;
         $stm = $this->connection->prepare(AQDAO::DELETE_HAVE_AQUARIUM_BY_USER);
         $email = $user->getEmail();

@@ -86,20 +86,33 @@ void ActuatorHandler::feed(const uint8_t& portions)
 {
     for(uint8_t r = 0; r < portions; r++){
 
-        for(uint8_t i = 90; i < 134; i++){
+        this->feederServo.write(135);
+        delay(100);
+        this->feederServo.write(100);
+        for(uint8_t i = 100; i > 0; i--){
             this->feederServo.write(i);
-            delay(10);
+            delay(1);
+        }
+        delay(1000);
+        for(uint8_t i = 1; i <= 90; i++){
+            this->feederServo.write(i);
+            delay(1);
+        }
+
+        /*for(uint8_t i = 90; i < 134; i++){
+            this->feederServo.write(i);
+            delay(1);
         }
 
         for(uint8_t i = 135; i > 0; i--){
             this->feederServo.write(i);
-            delay(10);
+            delay(1);
         }
 
         for(uint8_t i = 0; i < 90; i++){
             this->feederServo.write(i);
-            delay(10);
-        }
+            delay(1);
+        }*/
         delay(1000);
     }
 }

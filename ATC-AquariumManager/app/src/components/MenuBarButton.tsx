@@ -1,5 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { TouchableOpacity, StyleSheet, View, Text } from "react-native";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Text,
+  ViewBase,
+} from "react-native";
 import colors from "../../config/colors";
 import Icon from "react-native-vector-icons/AntDesign";
 import * as Animatable from "react-native-animatable";
@@ -8,9 +14,9 @@ function MenuBarButton(props: any) {
   const { item, onPress, accessibilityState } = props;
   const { selected } = accessibilityState;
 
-  const viewRef = useRef(null);
-  const textRef = useRef(null);
-  const iconRef = useRef(null);
+  const viewRef: any = useRef();
+  const textRef: any = useRef();
+  const iconRef: any = useRef();
 
   const inSelectAnim = { 0: { scale: 0 }, 1: { scale: 1 } };
   const outSelectAnim = { 0: { scale: 1 }, 1: { scale: 0 } };

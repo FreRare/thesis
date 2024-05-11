@@ -2,19 +2,18 @@
 
 require_once ($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
-if (empty ($_POST)) {
+if (empty($_POST)) {
     $result["error"] = "No data posted!";
 }
 // The user have to give his data and the ID of the system he's using
-if (empty ($_POST["email"]) || empty ($_POST["password"]) || empty ($_POST["first_name"] || empty ($_POST["device_token"])) || empty ($_POST["last_name"]) || empty ($_POST["aquarium_id"])) {
+if (empty($_POST["email"]) || empty($_POST["password"]) || empty($_POST["first_name"] || empty($_POST["device_token"])) || empty($_POST["last_name"]) || empty($_POST["aquarium_id"])) {
     $result["error"] = "Missing data!";
 }
 
 // If all data is present
-if (!empty ($_POST["email"]) && !empty ($_POST["password"]) && !empty ($_POST["first_name"] && !empty ($_POST["device_token"])) && !empty ($_POST["last_name"]) && !empty ($_POST["aquarium_id"])) {
+if (!empty($_POST["email"]) && !empty($_POST["password"]) && !empty($_POST["first_name"] && !empty($_POST["device_token"])) && !empty($_POST["last_name"]) && !empty($_POST["aquarium_id"])) {
     $email = $_POST["email"];
     $password = $_POST["password"];
-    $hashPass = hash("sha256", $password); // Hashed password is stored in the DB
     $firstName = $_POST["first_name"];
     $lastName = $_POST["last_name"];
     $aquariumId = $_POST["aquarium_id"];
@@ -46,7 +45,7 @@ if (!empty ($_POST["email"]) && !empty ($_POST["password"]) && !empty ($_POST["f
         $result["error"] = "Invalid aquarium ID provided (System with given ID not exists)!";
     } else {
         // User created from data
-        $newUser = new User(0, $email, $hashPass, $firstName, $lastName, $deviceToken, $authToken);
+        $newUser = new User(0, $email, $password, $firstName, $lastName, $deviceToken, $authToken);
         // Upload to db
         $createdUser = $DAO->createUser($newUser); // The new user
         $res = $DAO->createAquariumConnection($createdUser, $foundAuarium); // Connect the user to an existing system

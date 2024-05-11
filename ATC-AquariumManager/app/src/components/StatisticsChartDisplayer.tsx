@@ -12,13 +12,14 @@ import strings from "../../config/strings";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
 import SensorSample from "../models/SensorSample";
 import LoadingAnimation from "./LoadingAnimation";
-import { Dataset } from "react-native-chart-kit/dist/HelperTypes";
 import { SamplePeriod } from "../models/SamplePeriod";
 
 /**
  * The properties of the component
+ * @type {StatisticsChartDisplayerProps}
  * @member label - the label of the chart displayed as Text
  * @member data - the whole data set we're using, we decide later which parts to use
+ * @member samplePeriod - The period of how often samples are taken
  */
 type StatisticsChartDisplayerProps = {
   label: string;
@@ -31,8 +32,8 @@ type StatisticsChartDisplayerProps = {
  * On long press we can choose what period of time we want to see
  * Defaults to last 24 hour's dataset
  * @param props - the label and the data to display
- * @see {StatisticsChartDisplayerProps} - to get an insight on props
- * @returns The touchable chart
+ * @property {StatisticsChartDisplayerProps} - to get an insight on props
+ * @returns - The working chart
  */
 function StatisticsChartDisplayer(
   props: StatisticsChartDisplayerProps
@@ -372,29 +373,56 @@ function StatisticsChartDisplayer(
     if (daysCount === 1) {
       // If we have less values than needed and fill out the holes based on the sample period
       let valueCount = 23;
-      switch(props.samplePeriod){
-        case SamplePeriod.SAMPLE_15_MIN: valueCount = 96; break;
-        case SamplePeriod.SAMPLE_30_MIN: valueCount = 48; break;
-        case SamplePeriod.SAMPLE_1_HOUR: valueCount = 24; break;
-        case SamplePeriod.SAMPLE_2_HOUR: valueCount = 12; break;
-        case SamplePeriod.SAMPLE_3_HOUR: valueCount = 8; break;
-        case SamplePeriod.SAMPLE_6_HOUR: valueCount = 4; break;
-        case SamplePeriod.SAMPLE_12_HOUR: valueCount = 2; break;
-        case SamplePeriod.SAMPLE_DAILY: valueCount = 1; break;
-        default: break;
+      switch (props.samplePeriod) {
+        case SamplePeriod.SAMPLE_15_MIN:
+          valueCount = 96;
+          break;
+        case SamplePeriod.SAMPLE_30_MIN:
+          valueCount = 48;
+          break;
+        case SamplePeriod.SAMPLE_1_HOUR:
+          valueCount = 24;
+          break;
+        case SamplePeriod.SAMPLE_2_HOUR:
+          valueCount = 12;
+          break;
+        case SamplePeriod.SAMPLE_3_HOUR:
+          valueCount = 8;
+          break;
+        case SamplePeriod.SAMPLE_6_HOUR:
+          valueCount = 4;
+          break;
+        case SamplePeriod.SAMPLE_12_HOUR:
+          valueCount = 2;
+          break;
+        case SamplePeriod.SAMPLE_DAILY:
+          valueCount = 1;
+          break;
+        default:
+          break;
       }
-      const timeDiff = (1/(valueCount/24));
+      const timeDiff = 1 / (valueCount / 24);
       // Missing values from before if first sample's hour is larger than 0
       if (valuesToWorkWith[0].time.getHours() - timeDiff > 0) {
-        for (let i = valuesToWorkWith[0].time.getHours() - timeDiff; i >= 0 + timeDiff; i-=timeDiff) {
+        for (
+          let i = valuesToWorkWith[0].time.getHours() - timeDiff;
+          i >= 0 + timeDiff;
+          i -= timeDiff
+        ) {
           valuesToWorkWith.unshift(valuesToWorkWith[0]);
         }
       }
-      if (valuesToWorkWith[valuesToWorkWith.length - 1].time.getHours() + timeDiff < 24) {
+      if (
+        valuesToWorkWith[valuesToWorkWith.length - 1].time.getHours() +
+          timeDiff <
+        24
+      ) {
         for (
-          let i = valuesToWorkWith[valuesToWorkWith.length - 1].time.getHours() + timeDiff;
+          let i =
+            valuesToWorkWith[valuesToWorkWith.length - 1].time.getHours() +
+            timeDiff;
           i < 24;
-          i+=timeDiff
+          i += timeDiff
         ) {
           valuesToWorkWith.push(valuesToWorkWith[valuesToWorkWith.length - 1]);
         }
@@ -407,7 +435,13 @@ function StatisticsChartDisplayer(
       finalDataset.push({
         data: values,
       });
-      console.log(props.label, "Displayable values are (", values.length, ") :", values);
+      console.log(
+        props.label,
+        "Displayable values are (",
+        values.length,
+        ") :",
+        values
+      );
       for (let i = 0; i < 24; i++) {
         labels.push(`${i < 10 ? "0" + i : i}:00`);
       }
@@ -498,7 +532,14 @@ function StatisticsChartDisplayer(
         avgValuesArray = Array.from(avgValues.values());
       }
       console.log("======[ Final data sets are ready ]=====");
-      console.log("Maxes: ", maxValuesArray, "Mins: ", minValuesArray, "Avgs: ", avgValuesArray);
+      console.log(
+        "Maxes: ",
+        maxValuesArray,
+        "Mins: ",
+        minValuesArray,
+        "Avgs: ",
+        avgValuesArray
+      );
       // Setting up final data set
       finalDataset.push({
         data: maxValuesArray,

@@ -3,12 +3,12 @@
 This is reponsible for updating password
 Expects the old and new password plus the user's email in $POST
 */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/CONTROLS/config/controlConfig.php");
 
 if (!empty($_POST["email"]) && !empty($_POST["oldPass"]) && !empty($_POST["newPass"])) {
     $email = $_POST["email"];
-    $password = hash("sha256", $_POST["oldPass"]);
-    $newPassword = hash("sha256", $_POST["newPass"]);
+    $password = $_POST["oldPass"];
+    $newPassword = $_POST["newPass"];
 
     $user = $DAO->selectUserByEmail($email);
     if ($user === null) {

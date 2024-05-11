@@ -16,7 +16,7 @@ type LayoutComponentProps = {
 };
 
 /**
- * This component gives a basic and
+ * This is the wrapper layout for all views available
  * @param {LayoutComponentProps} props - The properties to operate this object
  * @returns The children properties wrapped inside the layout
  */

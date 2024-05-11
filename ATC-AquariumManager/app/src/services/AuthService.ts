@@ -1,6 +1,7 @@
 import strings from "../../config/strings";
 import User from "../models/User";
 import CommonServiceCallback from "./commonServiceCallbacks";
+import { sha256 } from "js-sha256";
 
 export default class AuthService {
   /**
@@ -20,7 +21,7 @@ export default class AuthService {
     };
     const loginData = JSON.stringify({
       email: email,
-      password: password,
+      password: sha256(password),
       token: token,
     });
     return fetch(strings.PATHS.loginApiUrl, {
@@ -111,7 +112,7 @@ export default class AuthService {
     };
     const content = JSON.stringify({
       email: email,
-      password: password,
+      password: sha256(password),
       first_name: firstName,
       last_name: lastName,
       aquarium_id: aquariumID,
