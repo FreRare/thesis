@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS sensorSamples(
     sampleTime DATETIME NOT NULL,
     temp DECIMAL(4, 2) NOT NULL,
     ph DECIMAL(4, 2) NOT NULL,
-    waterLvl INT NOT NULL,
+    waterLvl TINYINT NOT NULL,
     lightAmount INT NOT NULL,
 
     PRIMARY KEY (id, sampleTime),

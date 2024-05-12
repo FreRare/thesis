@@ -1,7 +1,7 @@
 <?php
 require ("../components/authCheck.php");
 require_once ("../config/daoConfig.php");
-
+$result = null;
 if (isset($_POST["query_input"])) {
     $query = $_POST['query_input'];
     $result = $DAO->__query($query);
@@ -10,10 +10,10 @@ if (isset($_POST["query_input"])) {
 <html>
 <header>
     <style>
-    <?php require ("../css/all.css");
-    require ("../css/tables.css");
-    require ("../css/database.css");
-    ?>
+        <?php require ("../css/all.css");
+        require ("../css/tables.css");
+        require ("../css/database.css");
+        ?>
     </style>
     <h2>Database editor page</h2>
     <?php include ('../components/menubar.php'); ?>
