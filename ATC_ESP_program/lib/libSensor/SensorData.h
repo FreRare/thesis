@@ -17,13 +17,13 @@ private:
     float temperature;
     float ph;
     LightIntensity lightAmount;
-    bool waterLvl;
+    uint8_t waterLvl;
     time_t timeStamp;
 
 public:
     SensorData() = default;
     SensorData(
-        const float& temp, const float& ph, const LightIntensity& light, const bool& waterLvl, const time_t& time);
+        const float& temp, const float& ph, const LightIntensity& light, const uint8_t& waterLvl, const time_t& time);
 
     float getTemperature() const;
 
@@ -33,9 +33,9 @@ public:
 
     void setLightAmount(LightIntensity lightAmount);
 
-    bool getWaterLvl() const;
+    uint8_t getWaterLvl() const;
 
-    void setWaterLvl(bool waterLvl);
+    void setWaterLvl(uint8_t waterLvl);
 
     float getPh() const;
 

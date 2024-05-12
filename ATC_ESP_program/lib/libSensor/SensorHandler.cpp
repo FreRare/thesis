@@ -75,7 +75,7 @@ LightIntensity SensorHandler::readLightSensor()
     }
 }
 
-bool SensorHandler::readWaterSensor()
+uint8_t SensorHandler::readWaterSensor()
 {
     uint16_t waterBuffer[SENSOR_BUF_SIZE];
     // Get samples
@@ -85,8 +85,8 @@ bool SensorHandler::readWaterSensor()
     }
     const uint16_t value = this->getValidSensorValue<uint16_t>(waterBuffer);
     Serial.print("Water measured: ");
-    Serial.println(value);
-    return (value > 1000U);
+    Serial.println(value < 800U ? 1 : 0);    // We have water when the sensor reads a big value
+    return (value < 800U ? 1 : 0);
 }
 
 float SensorHandler::readPhSensor()

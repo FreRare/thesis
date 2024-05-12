@@ -1,7 +1,7 @@
 #include "SensorData.h"
 
 SensorData::SensorData(
-    const float& temp, const float& ph, const LightIntensity& light, const bool& waterLvl, const time_t& time)
+    const float& temp, const float& ph, const LightIntensity& light, const uint8_t& waterLvl, const time_t& time)
     : temperature(temp)
     , ph(ph)
     , lightAmount(light)
@@ -18,9 +18,9 @@ LightIntensity SensorData::getLightAmount() const { return lightAmount; }
 
 void SensorData::setLightAmount(LightIntensity lightAmount) { lightAmount = lightAmount; }
 
-bool SensorData::getWaterLvl() const { return waterLvl; }
+uint8_t SensorData::getWaterLvl() const { return waterLvl; }
 
-void SensorData::setWaterLvl(bool waterLvl) { waterLvl = waterLvl; }
+void SensorData::setWaterLvl(uint8_t waterLvl) { waterLvl = waterLvl; }
 
 float SensorData::getPh() const { return ph; }
 

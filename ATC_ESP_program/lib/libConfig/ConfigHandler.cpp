@@ -103,7 +103,7 @@ std::vector<ConfigStatus> ConfigHandler::checkFullfillmentStatus(const SensorDat
             statuses.push_back(ConfigStatus::HIGH_PH);
         }
         if (data->getWaterLvl() < 1) {
-            // TODO: This 1 should be a valid enum number [OK, MEDIUM, LOW] enum for water level
+            // Water is only 0 or 1 value
             statuses.push_back(ConfigStatus::LOW_WATER);
         }
         // ! OUTLET 1 should be the light switching outlet

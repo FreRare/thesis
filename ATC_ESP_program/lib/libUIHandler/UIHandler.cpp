@@ -49,7 +49,7 @@ void UIHandler::makeWiFiConfigMessage(const char* ssid, const char* ip)
 
 void UIHandler::writeStartupWelcome(){
     UIHandler::writeLine("Hello there!", 1);
-    UIHandler::makeScrollingText("Welcome to the ATC system! Your personal aquarium manager is getting ready to work...", 3);
+    UIHandler::makeScrollingText("Welcome to the ATC system, getting ready to work...", 3);
     UIHandler::clear();
 }
 

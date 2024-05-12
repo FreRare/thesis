@@ -318,6 +318,7 @@ void loop()
         Serial.println("******************");
 
         // If running low on stack or heap reset the MCU and send log
+        // Some extra protection agains memory leak, what based on testing shouldn't occur
         char memoryLog[52];
         if (ESP.getFreeContStack() < 300) {
             sprintf(memoryLog, "!!!!!! STACK memory is running low RESETTING !!!!!!");

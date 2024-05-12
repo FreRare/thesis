@@ -65,9 +65,9 @@ private:
     /**
      * @brief Reads the water sensor
      * @private
-     * @return True if water is present near sensor
+     * @return A number different from 0 if water is present near sensor
      */
-    bool readWaterSensor();
+    uint8_t readWaterSensor();
     /**
      * @brief Reads the Ph sensor
      * @private
