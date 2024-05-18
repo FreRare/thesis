@@ -25,7 +25,7 @@ function StatisticsScreen(props: StatisticsScreenProps) {
   let refreshKey = 0;
 
   React.useEffect(() => {
-    if(isAfterFirtsLoad > 3 && samples.length <= 0){
+    if (isAfterFirtsLoad > 3 && samples.length <= 0) {
       alert(strings.ALERTS.loadErrorAlert);
       return;
     }
@@ -33,16 +33,16 @@ function StatisticsScreen(props: StatisticsScreenProps) {
       setLoading(true);
       loadData();
       setLoading(false);
-      setTimeout(()=>setIsAfetrFirstLoad(isAfterFirtsLoad + 1), 1000);
+      setTimeout(() => setIsAfetrFirstLoad(isAfterFirtsLoad + 1), 1000);
     }
   });
 
-  const loadData = ()=>{
+  const loadData = () => {
     SensorSampleService.getSamples(selectedAquarium.id, false).then(
       (samples) => {
         if (typeof samples === "string") {
           alert(samples);
-        } else if(samples.length <= 0){
+        } else if (samples.length <= 0) {
           alert("No samples available! Using one default!");
           setSamples([new SensorSample()]);
         } else {
@@ -51,7 +51,7 @@ function StatisticsScreen(props: StatisticsScreenProps) {
         }
       }
     );
-  }
+  };
 
   const refreshCallback = React.useCallback(async () => {
     setLoading(true);
@@ -89,12 +89,6 @@ function StatisticsScreen(props: StatisticsScreenProps) {
             <StatisticsChartDisplayer
               key={refreshKey + 2}
               label={strings.light}
-              data={samples}
-              samplePeriod={selectedAquarium.config.samplePeriod}
-            />
-            <StatisticsChartDisplayer
-              key={refreshKey + 3}
-              label={strings.waterLevel}
               data={samples}
               samplePeriod={selectedAquarium.config.samplePeriod}
             />

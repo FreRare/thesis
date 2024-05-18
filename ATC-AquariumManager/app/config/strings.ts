@@ -57,7 +57,7 @@ export default {
   length: "Length",
   height: "Height",
   width: "Width",
-  outlet1: "Outlet 1",
+  outlet1: "Light",
   outlet2: "Outlet 2",
   outlet3: "Outlet 3",
   waterLevelAlert: "Water lvl. alert at (%)",
@@ -145,13 +145,15 @@ export default {
   oldPasswordAgain: "Confirm old password:",
   newPasswordAgain: "Confirm new password:",
   newPassword: "New password:",
-  successfulUpdate: "Successfully updated! Changes may take a few minutes to apply.",
+  successfulUpdate:
+    "Successfully updated! Changes may take a few minutes to apply.",
   ALERTS: {
     deleteAquariumAlertMessage:
       "Are you sure you want to delete this aquarium? By deleting it the ATC-system will set to factory reset and only be usable again after reboot.",
     deleteAndFactoryResetAlertMessage:
       "Are you sure you want to delete your last aquarium? By deleting an aquarium which is connected to an ATC-system you accept that the system will go into factory reset mode and only can be used again if rebooted (switching it on and off). Also by removing your last aquarium from the list your account will be inactivated since you have no working ATC-systems. Press YES if you still want to continue.",
-    loadErrorAlert: "For some reason the loading of necessary data was unsuccessful, make sure you have proper internet connection and check in later.",
+    loadErrorAlert:
+      "For some reason the loading of necessary data was unsuccessful, make sure you have proper internet connection and check in later.",
   },
   SERVICES: {
     networkErrorDetect: "Network request failed",
@@ -173,7 +175,8 @@ export default {
     newPassCannotBeOldMessage:
       "New password can't be the same as old password!",
   },
-  INFO:{
-    basicInformation: "This application is made to connect you with your aquarium's ATC system trough your phone. You can easily monitor your aquarium's status and see statistics made of it. (Status can only be monitored if your ATC system is set up properly) You can also configure the parameters and timings to your preference and get notifications if any of the measured values are out of your preferred range. You can also get notifications about your scheduled cleaning times. You can keep track of multiple aquariums at the same time if you have different ATC systems for them. Below you can see what options you have to manage your system(s) and how you can access them."
-  }
+  INFO: {
+    basicInformation:
+      "This application is made to connect you with your aquarium's ATC system trough your phone. You can easily monitor your aquarium's status and see statistics made of it. (Status can only be monitored if your ATC system is set up properly) You can also configure the parameters and timings to your preference and get notifications if any of the measured values are out of your preferred range. You can also get notifications about your scheduled cleaning times. You can keep track of multiple aquariums at the same time if you have different ATC systems for them. Below you can see what options you have to manage your system(s) and how you can access them.",
+  },
 };

@@ -13,32 +13,25 @@ ActuatorHandler::ActuatorHandler()
     #if MODE_TEST_ON == 1
     
     Serial.println("Testing relays...");
-    this->channelSwithcer(1, true);
-    delay(2000);
-    this->channelSwithcer(2, true);
-    delay(2000);
-    this->channelSwithcer(3, true);
-    delay(2000);
-    this->channelSwithcer(1, false);
-    delay(2000);
-    this->channelSwithcer(2, false);
-    delay(2000);
-    this->channelSwithcer(3, false);
-    delay(2000);
+    for(uint8_t i = 0; i < 3; i++){
+        this->channelSwithcer(1, true);
+        delay(3000);
+        this->channelSwithcer(2, true);
+        delay(3000);
+        this->channelSwithcer(3, true);
+        delay(3000);
+        this->channelSwithcer(1, false);
+        delay(3000);
+        this->channelSwithcer(2, false);
+        delay(3000);
+        this->channelSwithcer(3, false);
+        delay(3000);
+    }
     Serial.println("Relay test finished!");
 
     Serial.println("Testing feeder...");
     this->feed(3);
     Serial.println("Feeder test finished!");
-
-    Serial.println("Testing problem LED");
-    for(int i = 0; i<5;i++){
-        this->turnProblemLed(true);
-        delay(3000);
-        this->turnProblemLed(false);
-        delay(3000);
-    }
-    Serial.println("LED test finished!");
 
     #endif
 

@@ -120,7 +120,7 @@ template<typename SensorCalcT> float SensorHandler::getValidSensorValue(SensorCa
     }
     // Calculating average in the range of given below (in case of 10 samples, the middle 6)
     SensorCalcT avgSum = 0u;
-    uint8_t startValue = (uint8_t)SENSOR_BUF_SIZE / SENSOR_MEAN_START_DIVIDER;
+    uint8_t startValue = (uint8_t)SENSOR_DAT_ARRAY_AVG_WINDOW_DIFF;
     uint8_t endValue = (uint8_t)SENSOR_BUF_SIZE - startValue;
     for (uint8_t i = startValue; i < endValue; i++) {
         avgSum += buffer[i];

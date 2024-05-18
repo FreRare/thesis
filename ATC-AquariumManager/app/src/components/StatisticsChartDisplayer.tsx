@@ -41,8 +41,7 @@ function StatisticsChartDisplayer(
   const [ySuffix, setYSuffix] = React.useState<string>(""); // The suffix for Y axis
   const [chartData, setChartData] = React.useState<LineChartData>(); // The data for the line chart (contains the displayable data and the labels)
   const [highlighted, setHighlighted] = React.useState<number>(0);
-  const barChartType =
-    props.label === strings.light || props.label === strings.waterLevel;
+  const barChartType = props.label === strings.light;
   const monthList = [
     "Jan",
     "Feb",
@@ -73,10 +72,6 @@ function StatisticsChartDisplayer(
     {
       label: strings.light,
       yAxisSuffix: " ",
-    },
-    {
-      label: strings.waterLevel,
-      yAxisSuffix: "%",
     },
   ];
 
@@ -357,14 +352,6 @@ function StatisticsChartDisplayer(
           });
         });
         break;
-      case strings.waterLevel:
-        samplesInDateRange.forEach((sample) => {
-          valuesToWorkWith.push({
-            value: sample.waterLvl,
-            time: sample.sampleTime,
-          });
-        });
-        break;
     }
     // The final data to return
     const finalDataset = [];
@@ -458,7 +445,7 @@ function StatisticsChartDisplayer(
       // ! All values should be missing the same number of data, so it's enough to check on one set
       // Fill out the holes if we have any
       if (maxValues.size < daysCount) {
-        const dataDates = Array.from(maxValues.keys()).sort();
+        const dataDates = Array.from(maxValues.keys());
         const lastDataDate = new Date(dataDates[0]);
         const firstDataDate = new Date(dataDates[dataDates.length - 1]);
         // Filling up holes before and after

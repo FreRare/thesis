@@ -9,7 +9,13 @@ bool isWiFiConnected()
     return true;
 }
 
-ServerConnector::ServerConnector(): lowTempNotificationSent(false), highTempNotificationSent(false), lowPhNotificationSent(false), highPhNotificationSent(false),  brokenLightNotificationSent(false), lowWaterNotificationSent(false)
+ServerConnector::ServerConnector(): 
+lowTempNotificationSent(false), 
+highTempNotificationSent(false), 
+lowPhNotificationSent(false), 
+highPhNotificationSent(false),
+brokenLightNotificationSent(false),
+lowWaterNotificationSent(false)
 {
     // Set up wifi config
     this->config = new WiFiConfig();
@@ -19,6 +25,7 @@ ServerConnector::ServerConnector(): lowTempNotificationSent(false), highTempNoti
         UIHandler::getInstance()->writeLine("Successful", 1);
         UIHandler::getInstance()->writeLine("     connection!", 2);
         char systemIdText[SYSTEMID_TEXT_LENGTH + 1];
+        systemIdText[SYSTEMID_TEXT_LENGTH] = '\0';
         sprintf(systemIdText, "Your system ID: %d", this->config->getSystemID());
         UIHandler::getInstance()->writeLine(systemIdText, 3);
         UIHandler::getInstance()->makeScrollingText("Use this ID for registration inside the app!", 4);

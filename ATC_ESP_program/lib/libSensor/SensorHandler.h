@@ -15,7 +15,6 @@
 #define PHOTORES_LIGHT_LIMIT 494U
 // ################################
 #define SENSOR_BUF_SIZE 50U // How many samples should be collected !!Shouldn't be higher than 256
-#define SENSOR_MEAN_START_DIVIDER 10U // The number to use to divide the buf size and leave the values from the beggining and the end of the measured values 
 #define SENSOR_DAT_ARRAY_AVG_WINDOW_DIFF SENSOR_BUF_SIZE / 5U
 #define SENSOR_AVG_TIME_DIFF_MS 200U
 // The ph sensor is using 5 V, but it's devided down to 3.3V level so this is what the analog port will reference to
